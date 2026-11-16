@@ -112,3 +112,25 @@
   .door__leaf { transition: none; }
   .door--swing .door__leaf { animation: none; }
 }
+
+/* Loading placeholders: a slow, quiet breath; still under reduced motion. */
+.skeleton { background: var(--color-paper-deep); animation: skeleton-breathe 1.6s ease-in-out infinite; }
+@keyframes skeleton-breathe { 50% { opacity: 0.55; } }
+
+/* The open door used as a success mark. */
+.door--open-mark { background: var(--color-maroon); }
+
+/* Modal dialog (sign-in prompt): paper sheet, arch top, dimmed page behind. */
+.sheet {
+  width: min(92vw, 30rem);
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--color-ink);
+}
+.sheet::backdrop { background: rgb(19 32 29 / 0.55); }
+.sheet__body { background: var(--color-paper); border-radius: 9999px 9999px 8px 8px / 7rem 7rem 8px 8px; padding: 5rem 1.75rem 1.75rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton { animation: none; }
+}

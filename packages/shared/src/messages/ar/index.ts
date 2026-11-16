@@ -1,4 +1,5 @@
 import { arSite } from './site'
+import { arUi } from './ui'
 
 /**
  * Arabic interface text (the default language). Every visible string lives here or in the English
@@ -17,6 +18,7 @@ export const ar = {
     homeLabel: 'فرصة، الصفحة الرئيسية',
   },
   ...arSite,
+  ...arUi,
   notFound: {
     title: 'الصفحة غير موجودة',
     body: 'ربما تغيّر العنوان أو حُذفت الصفحة.',

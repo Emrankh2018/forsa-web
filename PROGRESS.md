@@ -1,8 +1,8 @@
 # Forsa platform v4 — progress
 
 ## Resume here
-Phase 2, slice 1 — direction A promoted to the real site (D-114). Last commit: see `git log -1`. State: done.
-Next exact step: phase 2 slice 2 — component library (`components/ui`) and the `/showcase` page with every state.
+Phase 2, slice 2 — component library and showcase. Last commit: see `git log -1`. State: done.
+Next exact step: phase 2 slice 3 — `/projects` list (search, field and join-mode filters) and the project page's sign-in prompt.
 
 ---
 
@@ -89,4 +89,5 @@ Owner chose direction A «العتبة» on 2026-11-17 (D-114). Direction B and 
 
 | Slice | What | Commit |
 |---|---|---|
+| 2 | Component library `components/ui`: fields (text, textarea, select, checkbox group; label, hint, error linked by aria-describedby; LTR for email/url/tel), submit button with sending state, sign-in prompt dialog (returns with `?next=`), room header, loading/empty/error/success states, tags; `/showcase` (noindex) shows each in every state; evidence `docs/evidence/showcase-*.png` | (next commit) |
 | 1 | Direction A becomes the site: `app/site.css` (arch, door, room, floor, hall, arch buttons), `components/site/{header,footer,door}`, `components/ui/section-heading`, home at `/[locale]` with the arrival, public project page at `/projects/[slug]` (sample data until phase 4), messages regrouped by area (`messages/{ar,en}/site.ts`) | (this commit) |
