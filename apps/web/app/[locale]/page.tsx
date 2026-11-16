@@ -1,28 +1,147 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
+import { fields, sampleProjects, sampleWorkshops, seatsLeft } from '@forsa/shared/seed'
 import { Link } from '@/i18n/navigation'
-import { SiteHeader } from '@/components/site-header'
+import { formatters } from '@/lib/format'
+import { ArrivalGate } from '@/components/arrival/arrival-gate'
+import { ArrivalDoor } from '@/components/arrival/arrival-door'
+import { Door, seatAngle } from '@/components/site/door'
+import { SiteHeader } from '@/components/site/header'
+import { SiteFooter } from '@/components/site/footer'
+import { SectionHeading, Divider } from '@/components/ui/section-heading'
 
-/** Phase 0 shell: proves languages, direction, fonts and tokens. Replaced at the design gate. */
-export default async function ShellPage({ params }: PageProps<'/[locale]'>) {
-  const { locale } = await params
-  setRequestLocale(locale as Locale)
-  const t = await getTranslations('shell')
+export default async function Home({ params }: PageProps<'/[locale]'>) {
+  const { locale: raw } = await params
+  const locale = raw as Locale
+  setRequestLocale(locale)
+  const t = await getTranslations('home')
+  const p = await getTranslations('project')
+  const w = await getTranslations('workshop')
+  const a = await getTranslations('arrival')
+  const f = formatters(locale)
+  const open = sampleProjects.filter((x) => seatsLeft(x) > 0)
+  const nextWorkshop = sampleWorkshops[0]!
+
+  const rooms = [
+    { id: 'projects', href: '/projects', name: t('roomProjects'), line: t('roomProjectsLine'), behind: t('behindProjects', { title: f.pick(open[0]!.title) }), open: 64 },
+    { id: 'training', href: '/learn', name: t('roomTraining'), line: t('roomTrainingLine'), behind: t('behindTraining', { date: f.day(nextWorkshop.startsAt) }), open: 60 },
+    { id: 'partners', href: '/partners', name: t('roomPartners'), line: t('roomPartnersLine'), behind: t('behindPartners'), open: 56 },
+  ] as const
+
   return (
     <>
-    <SiteHeader />
-    <main id="content" tabIndex={-1} className="outline-none">
-    <section className="mx-auto max-w-6xl px-4 pb-24 pt-16 sm:px-8 sm:pt-28">
-      <p className="text-sm font-medium text-ink-soft">{t('label')}</p>
-      <div className="first-line mt-4 max-w-xl" aria-hidden="true" />
-      <h1 className="font-display mt-8 max-w-3xl text-5xl font-bold sm:text-7xl">{t('headline')}</h1>
-      <p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink-soft sm:text-xl">{t('lead')}</p>
-      <p className="mt-12 text-sm text-ink-soft">{t('note')}</p>
-      <Link href="/design" className="mt-6 inline-flex min-h-11 items-center rounded-md bg-ink px-5 font-medium text-paper">
-        {t('designLink')}
-      </Link>
-    </section>
-    </main>
+      <ArrivalGate storageKey="forsa.arrival" />
+      <ArrivalDoor skipLabel={a('skip')} />
+      <SiteHeader />
+      <main id="content" tabIndex={-1} className="outline-none">
+        <section className="mx-auto max-w-7xl px-4 pt-10 sm:px-8 sm:pt-16">
+          <h1 className="font-display max-w-4xl text-[clamp(2.5rem,6.2vw,5.75rem)] font-bold">{t('promise')}</h1>
+          <p className="mt-6 max-w-2xl text-lg leading-relaxed text-ink-soft sm:text-xl">{t('lead')}</p>
+        </section>
+
+        {/* The hall: three doorways, each opened a little onto its room. */}
+        <section className="mx-auto mt-12 max-w-7xl px-4 sm:mt-16 sm:px-8" aria-label={t('hallLabel')}>
+          <ul className="hall" role="list">
+            {rooms.map((r) => (
+              <li key={r.id}>
+                <Link href={r.href} className="room block rounded-md">
+                  <Door
+                    open={r.open}
+                    openHover={80}
+                    className="door--framed h-[clamp(300px,30vw,400px)]"
+                    light={<p className="font-medium leading-snug">{r.behind}</p>}
+                  />
+                  <div className="floor mx-[8%] -mt-[10px]" aria-hidden="true" />
+                  <h2 className="font-display mt-5 text-3xl font-bold">{r.name}</h2>
+                  <p className="mt-2 text-ink-soft">{r.line}</p>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        {/* Open now: narrow doors standing ajar; the wider the gap, the more seats are left. */}
+        <section className="mx-auto mt-24 max-w-7xl px-4 sm:px-8" aria-labelledby="open-now">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <SectionHeading id="open-now" size="lg">{t('openNow')}</SectionHeading>
+            <Link href="/projects" className="btn-quiet underline underline-offset-4">{t('allProjects')}</Link>
+          </div>
+          <ul className="mt-10 grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-4" role="list">
+            {sampleProjects.map((x) => {
+              const left = seatsLeft(x)
+              return (
+                <li key={x.slug}>
+                  <Link href={`/projects/${x.slug}`} className="room block rounded-md">
+                    <Door
+                      open={seatAngle(left, x.seats)}
+                      className="mx-auto h-64 w-[min(100%,15rem)] sm:mx-0"
+                      light={<p className="text-sm font-medium leading-snug">{p('seatsLeft', { count: left, n: f.num(left) })}</p>}
+                    />
+                    <p className="mt-5 text-sm text-ink-soft">{f.pick(x.company)}</p>
+                    <h3 className="font-display mt-1 text-2xl font-bold leading-snug">{f.pick(x.title)}</h3>
+                    <p className="mt-2 text-sm text-ink-soft">
+                      <span>{f.pick(fields[x.field])}</span>
+                      <Divider />
+                      <span>{x.joinMode === 'open' ? p('modeOpen') : p('modeApply')}</span>
+                    </p>
+                    <p className="mt-1 text-sm font-medium">{left > 0 ? p('due', { date: f.day(x.dueAt) }) : p('fullCta')}</p>
+                  </Link>
+                </li>
+              )
+            })}
+          </ul>
+        </section>
+
+        {/* Workshops: a corridor of dated doors. */}
+        <section className="mx-auto mt-28 max-w-7xl px-4 sm:px-8" aria-labelledby="workshops">
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <SectionHeading id="workshops" size="lg">{t('workshops')}</SectionHeading>
+            <Link href="/workshops" className="btn-quiet underline underline-offset-4">{t('allTraining')}</Link>
+          </div>
+          <ul className="mt-8 divide-y divide-line border-y border-line" role="list">
+            {sampleWorkshops.map((ws) => {
+              const left = ws.capacity - ws.booked
+              return (
+                <li key={ws.slug}>
+                  <Link href={`/workshops/${ws.slug}`} className="grid grid-cols-[4.5rem_1fr] items-center gap-x-5 gap-y-1 py-6 sm:grid-cols-[6rem_1fr_auto]">
+                    <span className="row-span-2 sm:row-span-1">
+                      <span className="arch flex h-24 w-16 flex-col items-center justify-end bg-paper-deep pb-2 sm:w-20">
+                        <span className="font-display text-3xl font-bold leading-none">{f.dayNum(ws.startsAt)}</span>
+                      </span>
+                    </span>
+                    <span>
+                      <span className="font-display block text-2xl font-bold">{f.pick(ws.title)}</span>
+                      <span className="mt-1 block text-sm text-ink-soft">
+                        {f.dayWeekday(ws.startsAt)}
+                        <Divider />
+                        {f.time(ws.startsAt)}
+                        <Divider />
+                        {ws.online ? w('online') : w('inPerson')}
+                        <Divider />
+                        {w('minutes', { count: ws.minutes, n: f.num(ws.minutes) })}
+                      </span>
+                    </span>
+                    <span className="col-start-2 flex items-center gap-4 sm:col-start-3 sm:flex-col sm:items-end sm:gap-1">
+                      <span className="text-lg font-bold text-maroon">{f.money(ws.priceDirhams)}</span>
+                      <span className="text-sm text-ink-soft">{w('seatsLeft', { count: left, n: f.num(left) })}</span>
+                    </span>
+                  </Link>
+                </li>
+              )
+            })}
+          </ul>
+        </section>
+
+        {/* For organisations: one large doorway with the invitation written inside it. */}
+        <section className="mx-auto mt-28 max-w-7xl px-4 sm:px-8">
+          <div className="arch-wide bg-night px-6 pb-12 pt-[clamp(110px,16vw,190px)] text-on-night sm:px-16">
+            <h2 className="font-display max-w-2xl text-4xl font-bold sm:text-5xl">{t('partnersTitle')}</h2>
+            <p className="mt-5 max-w-2xl text-lg leading-relaxed text-on-night-soft">{t('partnersBody')}</p>
+            <Link href="/partners" className="btn-arch btn-arch--sand mt-8">{t('partnersCta')}</Link>
+          </div>
+        </section>
+      </main>
+      <SiteFooter sample />
     </>
   )
 }

@@ -1,8 +1,8 @@
 # Forsa platform v4 — progress
 
 ## Resume here
-Phase 1 — design gate. Last commit: see `git log -1`. State: **STOP — waiting for the owner to choose direction A, B or a mix.** Both directions are built and checked locally and on the online preview.
-Next exact step: when the owner answers, record the choice as a decision, then start phase 2 (design system and public site) in the chosen direction. Until then build nothing that depends on the choice.
+Phase 2, slice 1 — direction A promoted to the real site (D-114). Last commit: see `git log -1`. State: done.
+Next exact step: phase 2 slice 2 — component library (`components/ui`) and the `/showcase` page with every state.
 
 ---
 
@@ -82,3 +82,11 @@ Shared: arrival plays once per session (`?intro=1` replays), ends on any key, cl
 | By eye (Claude opened the screenshots) | A home, A arrival, B participant home (phone and desktop) looked at; fixed: heavy doors (smaller, wider open, logo frame line), headline widows (`text-wrap: balance`), tick marks drawn as chevrons in Arabic (now a physical check mark) |
 
 Known limits of the gate pages (they are design samples, not features): buttons lead to the participant page instead of signing in; "save" does nothing; the hall's room links jump to sections of the same page. Performance (largest paint) is not measured yet; it is part of phase 2's proof.
+
+## Phase 2 — Design system and public site
+
+Owner chose direction A «العتبة» on 2026-11-17 (D-114). Direction B and the gate pages were removed (git history and `docs/phase-1/` keep them).
+
+| Slice | What | Commit |
+|---|---|---|
+| 1 | Direction A becomes the site: `app/site.css` (arch, door, room, floor, hall, arch buttons), `components/site/{header,footer,door}`, `components/ui/section-heading`, home at `/[locale]` with the arrival, public project page at `/projects/[slug]` (sample data until phase 4), messages regrouped by area (`messages/{ar,en}/site.ts`) | (this commit) |

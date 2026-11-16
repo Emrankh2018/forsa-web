@@ -2,7 +2,11 @@ import AxeBuilder from '@axe-core/playwright'
 import { expect, test, type Page } from '@playwright/test'
 import { messages } from '../packages/shared/src/messages'
 
-/** Phase 0 proof: the empty shell opens in both languages, with the right direction and fonts. */
+/** The site frame: both languages, direction, fonts, language switch, keyboard order, 404, axe. */
+
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript(() => sessionStorage.setItem('forsa.arrival', 'seen'))
+})
 
 function watchConsole(page: Page) {
   const errors: string[] = []
@@ -19,13 +23,13 @@ test('the bare address goes to Arabic', async ({ page }) => {
 for (const locale of ['ar', 'en'] as const) {
   const t = messages[locale]
 
-  test(`${locale}: shell renders with language, direction and fonts`, async ({ page }) => {
+  test(`${locale}: home renders with language, direction and fonts`, async ({ page }) => {
     const errors = watchConsole(page)
     await page.goto(`/${locale}`)
     const html = page.locator('html')
     await expect(html).toHaveAttribute('lang', locale)
     await expect(html).toHaveAttribute('dir', locale === 'ar' ? 'rtl' : 'ltr')
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText(t.shell.headline)
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(t.home.promise)
     await expect(page).toHaveTitle(t.meta.title)
     // Preview builds are never indexed.
     await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/)
@@ -48,14 +52,14 @@ for (const locale of ['ar', 'en'] as const) {
     await expect(page.locator('html')).toHaveAttribute('dir', other === 'ar' ? 'rtl' : 'ltr')
   })
 
-  test(`${locale}: keyboard reaches skip link, home and language switch`, async ({ page }) => {
+  test(`${locale}: keyboard reaches skip link, home and the main navigation`, async ({ page }) => {
     await page.goto(`/${locale}`)
     await page.keyboard.press('Tab')
     await expect(page.getByRole('link', { name: t.common.skipToContent })).toBeFocused()
     await page.keyboard.press('Tab')
     await expect(page.getByRole('link', { name: t.common.homeLabel })).toBeFocused()
     await page.keyboard.press('Tab')
-    await expect(page.getByRole('link', { name: t.common.languageSwitch })).toBeFocused()
+    await expect(page.getByRole('navigation', { name: t.nav.main }).getByRole('link', { name: t.nav.projects })).toBeFocused()
   })
 
   test(`${locale}: unknown address shows the not-found page`, async ({ page }) => {

@@ -6,6 +6,7 @@ import { direction } from '@forsa/shared'
 import { routing } from '@/i18n/routing'
 import { amiri, plex, plexArabic } from '@/lib/fonts'
 import '../globals.css'
+import '../site.css'
 
 const isProduction = process.env.FORSA_ENV === 'production'
 

@@ -1,6 +1,6 @@
 import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
-import { SiteHeader } from '@/components/site-header'
+import { SiteHeader } from '@/components/site/header'
 
 export default async function NotFound() {
   const t = await getTranslations('notFound')

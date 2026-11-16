@@ -8,14 +8,14 @@ import { useArrival } from './use-arrival'
 gsap.registerPlugin(useGSAP)
 
 /**
- * Direction A arrival: night, the Forsa door closed; the leaf swings on its hinge until the door
+ * The arrival (decision D-114): night, the Forsa door closed; the leaf swings on its hinge until the door
  * stands as it does in the logo, light falls on the floor, then the view passes through the gap.
  * Geometry is the logo's own (design/logo/forsa-symbol.svg). Only transform and opacity animate.
  */
 export function ArrivalDoor({ skipLabel }: { skipLabel: string }) {
   const scope = useRef<HTMLDivElement>(null)
   const finish = useRef<() => void>(() => {})
-  const { state, done } = useArrival('forsa.arrival.a', finish)
+  const { state, done } = useArrival('forsa.arrival', finish)
 
   useGSAP(
     () => {

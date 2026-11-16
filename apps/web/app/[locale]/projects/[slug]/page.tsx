@@ -3,21 +3,23 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
 import { fields, projectBySlug, sampleProjects, seatsLeft } from '@forsa/shared/seed'
 import { Link } from '@/i18n/navigation'
-import { formatters } from '@/lib/design'
-import { Door, seatAngle } from '@/components/design-a/door'
-import { HeaderA, SampleNote } from '@/components/design-a/header-a'
+import { formatters } from '@/lib/format'
+import { Door, seatAngle } from '@/components/site/door'
+import { SiteHeader } from '@/components/site/header'
+import { SiteFooter } from '@/components/site/footer'
+import { SectionHeading, Divider } from '@/components/ui/section-heading'
 
 export function generateStaticParams() {
   return sampleProjects.map((p) => ({ slug: p.slug }))
 }
 
-export default async function ProjectA({ params }: PageProps<'/[locale]/design/a/projects/[slug]'>) {
+export default async function ProjectPage({ params }: PageProps<'/[locale]/projects/[slug]'>) {
   const { locale: raw, slug } = await params
   const locale = raw as Locale
   setRequestLocale(locale)
   const project = projectBySlug(slug)
   if (!project) notFound()
-  const t = await getTranslations('design.project')
+  const t = await getTranslations('project')
   const f = formatters(locale)
   const left = seatsLeft(project)
   const full = left === 0
@@ -25,18 +27,18 @@ export default async function ProjectA({ params }: PageProps<'/[locale]/design/a
 
   return (
     <>
-      <HeaderA />
+      <SiteHeader />
       <main id="content" tabIndex={-1} className="outline-none">
         <div className="mx-auto max-w-7xl px-4 pt-6 sm:px-8">
-          <Link href="/design/a#projects" className="a-btn-quiet -ms-3 text-ink-soft underline underline-offset-4">{t('back')}</Link>
+          <Link href="/projects" className="btn-quiet -ms-3 text-ink-soft underline underline-offset-4">{t('back')}</Link>
         </div>
 
         {/* You have walked in: the room's arch frames the title. */}
         <section className="mx-auto mt-4 max-w-7xl px-4 sm:px-8">
-          <div className="a-arch-wide bg-night px-6 pb-10 pt-[clamp(96px,14vw,170px)] text-on-night sm:px-14">
+          <div className="arch-wide bg-night px-6 pb-10 pt-[clamp(96px,14vw,170px)] text-on-night sm:px-14">
             <p className="text-on-night-soft">
               {f.pick(project.company)}
-              <span className="mx-3 inline-block h-3 w-px bg-night-line align-middle" aria-hidden="true" />
+              <Divider tone="night" />
               {f.pick(fields[project.field])}
             </p>
             <h1 className="font-display mt-3 max-w-4xl text-[clamp(2.25rem,5vw,4.25rem)] font-bold">{f.pick(project.title)}</h1>
@@ -48,20 +50,18 @@ export default async function ProjectA({ params }: PageProps<'/[locale]/design/a
         <div className="mx-auto mt-14 grid max-w-7xl gap-12 px-4 sm:px-8 lg:grid-cols-[1fr_20rem]">
           <article className="max-w-3xl">
             <section>
-              <h2 className="font-display text-3xl font-bold">{t('brief')}</h2>
-              <div className="first-line first-line-static mt-3 w-32" aria-hidden="true" />
+              <SectionHeading>{t('brief')}</SectionHeading>
               {project.brief.map((b, i) => (
                 <p key={i} className="mt-5 text-lg leading-relaxed">{f.pick(b)}</p>
               ))}
             </section>
 
             <section className="mt-12">
-              <h2 className="font-display text-3xl font-bold">{t('deliverables')}</h2>
-              <div className="first-line first-line-static mt-3 w-32" aria-hidden="true" />
+              <SectionHeading>{t('deliverables')}</SectionHeading>
               <ul className="mt-5 space-y-3" role="list">
                 {project.deliverables.map((d, i) => (
                   <li key={i} className="flex items-start gap-3 text-lg">
-                    <span className="a-arch mt-1.5 inline-block h-4 w-3 flex-none bg-maroon" aria-hidden="true" />
+                    <span className="arch mt-1.5 inline-block h-4 w-3 flex-none bg-maroon" aria-hidden="true" />
                     {f.pick(d)}
                   </li>
                 ))}
@@ -69,8 +69,7 @@ export default async function ProjectA({ params }: PageProps<'/[locale]/design/a
             </section>
 
             <section className="mt-12">
-              <h2 className="font-display text-3xl font-bold">{t('acceptance')}</h2>
-              <div className="first-line first-line-static mt-3 w-32" aria-hidden="true" />
+              <SectionHeading>{t('acceptance')}</SectionHeading>
               <ul className="mt-5 list-disc space-y-2 ps-6 text-lg marker:text-maroon">
                 {project.acceptance.map((d, i) => (
                   <li key={i}>{f.pick(d)}</li>
@@ -79,12 +78,11 @@ export default async function ProjectA({ params }: PageProps<'/[locale]/design/a
             </section>
 
             <section className="mt-12">
-              <h2 className="font-display text-3xl font-bold">{t('steps')}</h2>
-              <div className="first-line first-line-static mt-3 w-32" aria-hidden="true" />
+              <SectionHeading>{t('steps')}</SectionHeading>
               <ol className="mt-6 grid gap-3 sm:grid-cols-5" role="list">
                 {project.steps.map((s, i) => (
                   <li key={i} className="flex gap-3 sm:flex-col">
-                    <span className="a-arch flex h-14 w-10 flex-none items-end justify-center bg-paper-deep pb-1 font-display text-xl font-bold">
+                    <span className="arch flex h-14 w-10 flex-none items-end justify-center bg-paper-deep pb-1 font-display text-xl font-bold">
                       {f.num(i + 1)}
                     </span>
                     <span className="pt-2 sm:pt-0">{f.pick(s)}</span>
@@ -98,7 +96,7 @@ export default async function ProjectA({ params }: PageProps<'/[locale]/design/a
 
           {/* The side door: the facts and the one action. */}
           <aside className="lg:sticky lg:top-6 lg:self-start">
-            <div className="a-arch bg-paper-deep px-6 pb-8 pt-28">
+            <div className="arch bg-paper-deep px-6 pb-8 pt-28">
               <dl className="space-y-5">
                 <div>
                   <dt className="text-sm text-ink-soft">{t('mode')}</dt>
@@ -123,22 +121,20 @@ export default async function ProjectA({ params }: PageProps<'/[locale]/design/a
                 </div>
               </dl>
               <Link
-                href="/design/a/me"
+                href="/sign-in"
                 aria-disabled={full || undefined}
-                className="a-btn mt-8 w-full"
+                className="btn-arch mt-8 w-full"
               >
                 {cta}
               </Link>
               <p className="mt-3 text-sm text-ink-soft">{t('signInNote')}</p>
-              <button type="button" className="a-btn-quiet -ms-3 mt-2 underline underline-offset-4">{t('save')}</button>
+              <button type="button" className="btn-quiet -ms-3 mt-2 underline underline-offset-4">{t('save')}</button>
             </div>
           </aside>
         </div>
 
-        <footer className="mx-auto mt-20 max-w-7xl border-t border-line px-4 py-8 sm:px-8">
-          <SampleNote />
-        </footer>
       </main>
+      <SiteFooter sample />
     </>
   )
 }

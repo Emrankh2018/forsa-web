@@ -1,23 +1,23 @@
 /*
- * Direction A — «العتبة» The threshold. One shape: the arch from the logo. One meaning: how far a
+ * The site's shape language — «العتبة» The threshold (decision D-114). One shape: the arch from the logo. One meaning: how far a
  * door stands open. The light in every doorway is maroon on paper; on night it is sand.
  */
-.dir-a {
+:root {
   --hinge: left;
   --sign: 1;
 }
-.dir-a:dir(ltr) {
+:root[dir='ltr'] {
   --hinge: right;
   --sign: -1;
 }
 
 /* A semicircular top: oversized radii are scaled down by the browser to exactly half the width. */
-.a-arch { border-radius: 9999px 9999px 0 0; }
+.arch { border-radius: 9999px 9999px 0 0; }
 /* A wide, shallow arch for rooms wider than they are tall. */
-.a-arch-wide { border-radius: 50% 50% 0 0 / clamp(120px, 22vw, 260px) clamp(120px, 22vw, 260px) 0 0; }
+.arch-wide { border-radius: 50% 50% 0 0 / clamp(120px, 22vw, 260px) clamp(120px, 22vw, 260px) 0 0; }
 
 /* The button is a small arch: flat floor, round top. */
-.a-btn {
+.btn-arch {
   display: inline-flex;
   min-height: 48px;
   align-items: center;
@@ -30,9 +30,11 @@
   font-weight: 500;
   transition: background-color 200ms var(--ease-forsa);
 }
-.a-btn:hover { background: #761a32; }
-.a-btn[aria-disabled='true'] { background: var(--color-paper-deep); color: var(--color-ink-soft); }
-.a-btn-quiet {
+.btn-arch:hover { background: #761a32; }
+.btn-arch--sand { background: var(--color-sand); color: var(--color-ink); }
+.btn-arch--sand:hover { background: #d4af6e; }
+.btn-arch[aria-disabled='true'] { background: var(--color-paper-deep); color: var(--color-ink-soft); }
+.btn-quiet {
   display: inline-flex;
   min-height: 44px;
   align-items: center;
@@ -42,7 +44,7 @@
 }
 
 /* The doorway: light behind, the leaf in front, opened by --open degrees on its hinge. */
-.a-door {
+.door {
   position: relative;
   display: block;
   overflow: hidden;
@@ -51,7 +53,7 @@
   perspective: 1100px;
   isolation: isolate;
 }
-.a-door__leaf {
+.door__leaf {
   position: absolute;
   inset: 0;
   z-index: 1;
@@ -61,7 +63,7 @@
   transform: rotateY(calc(var(--open, 55) * var(--sign) * 1deg));
   transition: transform 600ms var(--ease-forsa);
 }
-.a-door__light {
+.door__light {
   position: absolute;
   inset-block-end: 0;
   inset-inline-start: 0;
@@ -70,28 +72,28 @@
   padding: 1rem 1rem 1.25rem;
   color: var(--color-on-night);
 }
-.a-door--night { background: var(--color-sand); }
-.a-door--night .a-door__light { color: var(--color-ink); }
-.a-door--closed .a-door__leaf { transform: none; }
+.door--night { background: var(--color-sand); }
+.door--night .door__light { color: var(--color-ink); }
+.door--closed .door__leaf { transform: none; }
 
 /* The logo's frame: a stroke standing off the arch. */
-.a-door--framed { box-shadow: 0 0 0 7px var(--color-paper), 0 0 0 10px var(--color-ink); margin: 10px; }
+.door--framed { box-shadow: 0 0 0 7px var(--color-paper), 0 0 0 10px var(--color-ink); margin: 10px; }
 
 /* A room is a link around a door: it opens further when you point at it or focus it. */
-.a-room:hover .a-door__leaf,
-.a-room:focus-visible .a-door__leaf { transform: rotateY(calc(var(--open-hover, 80) * var(--sign) * 1deg)); }
-.a-room:focus-visible { outline: none; }
-.a-room:focus-visible .a-door { outline: 3px solid var(--color-maroon); outline-offset: 4px; }
+.room:hover .door__leaf,
+.room:focus-visible .door__leaf { transform: rotateY(calc(var(--open-hover, 80) * var(--sign) * 1deg)); }
+.room:focus-visible { outline: none; }
+.room:focus-visible .door { outline: 3px solid var(--color-maroon); outline-offset: 4px; }
 
 /* The floor: a short slab of light under a door. */
-.a-floor { height: 6px; background: var(--color-maroon); clip-path: polygon(0 0, 100% 0, 92% 100%, 8% 100%); }
+.floor { height: 6px; background: var(--color-maroon); clip-path: polygon(0 0, 100% 0, 92% 100%, 8% 100%); }
 
 /* The participant's big door swings to its progress once, on arrival. */
-@keyframes a-swing { from { transform: rotateY(0deg); } }
-.a-door--swing .a-door__leaf { animation: a-swing 1100ms 200ms var(--ease-forsa) both; }
+@keyframes door-swing { from { transform: rotateY(0deg); } }
+.door--swing .door__leaf { animation: door-swing 1100ms 200ms var(--ease-forsa) both; }
 
 /* Phone: the hall becomes a row you swipe sideways. */
-.a-hall {
+.hall {
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: min(72vw, 300px);
@@ -101,12 +103,12 @@
   padding-block-end: 0.5rem;
   scrollbar-width: thin;
 }
-.a-hall > * { scroll-snap-align: start; }
+.hall > * { scroll-snap-align: start; }
 @media (min-width: 900px) {
-  .a-hall { grid-auto-flow: row; grid-template-columns: repeat(3, minmax(0, 18rem)); gap: clamp(2rem, 5vw, 5rem); overflow: visible; }
+  .hall { grid-auto-flow: row; grid-template-columns: repeat(3, minmax(0, 18rem)); gap: clamp(2rem, 5vw, 5rem); overflow: visible; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .a-door__leaf { transition: none; }
-  .a-door--swing .a-door__leaf { animation: none; }
+  .door__leaf { transition: none; }
+  .door--swing .door__leaf { animation: none; }
 }

@@ -24,11 +24,11 @@ export function Door({
   const vars = { '--open': open, '--open-hover': openHover ?? Math.min(84, open + 25), ...style } as CSSProperties
   return (
     <div
-      className={`a-door ${tone === 'night' ? 'a-door--night' : ''} ${open === 0 ? 'a-door--closed' : ''} ${swing ? 'a-door--swing' : ''} ${className}`}
+      className={`door ${tone === 'night' ? 'door--night' : ''} ${open === 0 ? 'door--closed' : ''} ${swing ? 'door--swing' : ''} ${className}`}
       style={vars}
     >
-      {light ? <div className="a-door__light">{light}</div> : null}
-      <div className="a-door__leaf" aria-hidden="true" />
+      {light ? <div className="door__light">{light}</div> : null}
+      <div className="door__leaf" aria-hidden="true" />
     </div>
   )
 }

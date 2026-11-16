@@ -1,4 +1,4 @@
-import { arDesign } from './design'
+import { arSite } from './site'
 
 /**
  * Arabic interface text (the default language). Every visible string lives here or in the English
@@ -16,14 +16,7 @@ export const ar = {
     languageSwitchLabel: 'اعرض الموقع بالإنجليزية',
     homeLabel: 'فرصة، الصفحة الرئيسية',
   },
-  shell: {
-    label: 'قيد البناء',
-    headline: 'خبرتك الأولى تبدأ من هنا',
-    lead: 'منصة فرصة تُبنى الآن من جديد. مشاريع حقيقية من شركات، وورش تجهّزك لسوق العمل.',
-    note: 'هذه نسخة تجريبية للمعاينة فقط، ولا تجمع أي بيانات.',
-    designLink: 'شاهد اتجاهي التصميم',
-  },
-  design: arDesign,
+  ...arSite,
   notFound: {
     title: 'الصفحة غير موجودة',
     body: 'ربما تغيّر العنوان أو حُذفت الصفحة.',
