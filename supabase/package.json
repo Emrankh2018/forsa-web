@@ -1,0 +1,11 @@
+{
+  "name": "@forsa/supabase",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Database migrations, seed and access-rule tests. Tests run the SQL on an embedded Postgres (PGlite), no Docker needed.",
+  "scripts": {
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run"
+  }
+}

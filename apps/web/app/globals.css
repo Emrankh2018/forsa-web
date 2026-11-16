@@ -1,0 +1,90 @@
+@import 'tailwindcss';
+
+/*
+ * Forsa identity tokens (design/tokens.json, "the first line"). One accent per screen: maroon on
+ * paper, sand on night. These are the only colours; layout and motion come in the design phases.
+ */
+@theme {
+  --color-paper: #f4efe6;
+  --color-paper-deep: #e9e1d2;
+  --color-ink: #17221f;
+  --color-ink-soft: #55615d;
+  --color-line: #cdbfa8;
+  --color-maroon: #8a1f3b;
+  --color-maroon-tint: #f2e1e4;
+  --color-night: #13201d;
+  --color-night-line: #2f3f3b;
+  --color-on-night: #f4efe6;
+  --color-on-night-soft: #b9b2a5;
+  --color-sand: #e0bf84;
+
+  --font-display: var(--font-amiri), 'Amiri', serif;
+  --font-text: var(--font-plex-arabic), var(--font-plex), 'IBM Plex Sans Arabic', system-ui, sans-serif;
+
+  --ease-forsa: cubic-bezier(0.2, 0.7, 0.2, 1);
+}
+
+/* English text uses IBM Plex Sans first; Arabic pages use the Arabic cut first. */
+:root:lang(en) {
+  --font-text: var(--font-plex), var(--font-plex-arabic), 'IBM Plex Sans', system-ui, sans-serif;
+}
+
+html {
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-text);
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  min-height: 100dvh;
+}
+
+:focus-visible {
+  outline: 3px solid var(--color-maroon);
+  outline-offset: 3px;
+}
+
+.font-display {
+  font-family: var(--font-display);
+  line-height: 1.15;
+}
+
+/* The first-line motif: a short maroon bar at the start of a long hairline. */
+.first-line {
+  display: flex;
+  align-items: center;
+  height: 4px;
+}
+.first-line::before {
+  content: '';
+  width: 28px;
+  height: 4px;
+  background: var(--color-maroon);
+  flex: none;
+}
+.first-line::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--color-line);
+  transform-origin: inline-start;
+  animation: draw-line 600ms var(--ease-forsa) both;
+}
+:root[dir='rtl'] .first-line::after { transform-origin: right; }
+:root[dir='ltr'] .first-line::after { transform-origin: left; }
+
+@keyframes draw-line {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
