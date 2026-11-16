@@ -29,6 +29,8 @@ export type SampleProject = {
 export type SampleWorkshop = {
   slug: string
   title: Bilingual
+  summary: Bilingual
+  outcomes: Bilingual[]
   field: FieldKey | 'career'
   startsAt: string
   minutes: number
@@ -191,6 +193,12 @@ export const sampleWorkshops: SampleWorkshop[] = [
   {
     slug: 'cv-thirty-seconds',
     title: { ar: 'سيرة ذاتية تُقرأ في ثلاثين ثانية', en: 'A CV that reads in thirty seconds' },
+    summary: { ar: 'تكتب سيرتك من جديد خلال الورشة، سطرًا بعد سطر، وتخرج بنسخة جاهزة للإرسال.', en: 'You rewrite your CV during the workshop, line by line, and leave with a version ready to send.' },
+    outcomes: [
+      { ar: 'سيرة من صفحة واحدة مرتبة حسب ما يبحث عنه صاحب العمل', en: 'A one-page CV ordered by what an employer looks for' },
+      { ar: 'ثلاثة أسطر تصف مشروعًا أنجزته بالأرقام والنتائج', en: 'Three lines that describe a project you did, with results' },
+      { ar: 'ملاحظات من المدرب على نسختك', en: "The trainer's notes on your version" },
+    ],
     field: 'career',
     startsAt: '2026-12-05T17:00:00+03:00',
     minutes: 120,
@@ -202,6 +210,11 @@ export const sampleWorkshops: SampleWorkshop[] = [
   {
     slug: 'linkedin-profile',
     title: { ar: 'ملف لينكدإن يعرّف بك', en: 'A LinkedIn profile that introduces you' },
+    summary: { ar: 'نراجع ملفك قسمًا قسمًا: الصورة والعنوان والنبذة والخبرات، ونكتب معًا ما ينقصه.', en: 'We go through your profile section by section: photo, headline, about and experience, and write what is missing together.' },
+    outcomes: [
+      { ar: 'عنوان ونبذة يقولان ما تبحث عنه بوضوح', en: 'A headline and summary that say clearly what you are looking for' },
+      { ar: 'طريقة لعرض مشاريع فرصة في ملفك', en: 'A way to show your Forsa projects on your profile' },
+    ],
     field: 'career',
     startsAt: '2026-12-12T17:00:00+03:00',
     minutes: 90,
@@ -213,6 +226,11 @@ export const sampleWorkshops: SampleWorkshop[] = [
   {
     slug: 'ai-for-marketing',
     title: { ar: 'الذكاء الاصطناعي في عمل التسويق اليومي', en: 'AI in everyday marketing work' },
+    summary: { ar: 'ورشة عملية تستعمل فيها أدوات الذكاء الاصطناعي في مهام تسويق حقيقية، وتتعلم متى لا تثق بنتائجها.', en: 'A hands-on workshop where you use AI tools on real marketing tasks, and learn when not to trust what they give you.' },
+    outcomes: [
+      { ar: 'طريقة لكتابة طلبات واضحة للأدوات', en: 'A way to write clear requests for the tools' },
+      { ar: 'قائمة تحقق قبل نشر أي محتوى مولّد', en: 'A checklist before publishing any generated content' },
+    ],
     field: 'applied_ai',
     startsAt: '2026-12-19T10:00:00+03:00',
     minutes: 180,
@@ -220,6 +238,84 @@ export const sampleWorkshops: SampleWorkshop[] = [
     priceDirhams: 25_000,
     capacity: 18,
     booked: 18,
+  },
+]
+
+export type SampleSessionType = {
+  slug: string
+  title: Bilingual
+  summary: Bilingual
+  minutes: number
+}
+
+/** 1-to-1 sessions. Prices are not set yet, so none is shown. */
+export const sampleSessionTypes: SampleSessionType[] = [
+  {
+    slug: 'cv-clinic',
+    title: { ar: 'عيادة السيرة الذاتية', en: 'CV clinic' },
+    summary: { ar: 'نصف ساعة مع مدرب يقرأ سيرتك ويقول لك ما يغيّره أولًا.', en: 'Half an hour with a trainer who reads your CV and tells you what to change first.' },
+    minutes: 30,
+  },
+  {
+    slug: 'linkedin-review',
+    title: { ar: 'مراجعة ملف لينكدإن', en: 'LinkedIn review' },
+    summary: { ar: 'مراجعة مباشرة لملفك مع تعديلات تكتبها أثناء الجلسة.', en: 'A live review of your profile, with changes you make during the session.' },
+    minutes: 30,
+  },
+  {
+    slug: 'career-guidance',
+    title: { ar: 'جلسة توجيه مهني', en: 'Career guidance' },
+    summary: { ar: 'حديث عن خطوتك القادمة: أي مجال، وأي مشروع، وأي ورشة تناسبك الآن.', en: 'A conversation about your next step: which field, which project and which workshop fit you now.' },
+    minutes: 45,
+  },
+]
+
+export type SampleCourse = {
+  slug: string
+  title: Bilingual
+  summary: Bilingual
+  field: FieldKey | 'career'
+  modules: Array<{ title: Bilingual; lessons: Array<{ title: Bilingual; minutes: number; preview?: boolean }> }>
+}
+
+/** Recorded courses. Prices are not set yet, so none is shown. */
+export const sampleCourses: SampleCourse[] = [
+  {
+    slug: 'content-basics',
+    title: { ar: 'أساسيات صناعة المحتوى لحسابات الشركات', en: 'Content basics for company accounts' },
+    summary: { ar: 'كيف تخطط وتكتب وتنشر محتوى لشركة صغيرة، بخطوات تطبقها على حساب حقيقي.', en: 'How to plan, write and publish content for a small company, in steps you apply to a real account.' },
+    field: 'marketing_media',
+    modules: [
+      { title: { ar: 'قبل أن تكتب', en: 'Before you write' }, lessons: [
+        { title: { ar: 'من الجمهور؟', en: 'Who is the audience?' }, minutes: 8, preview: true },
+        { title: { ar: 'نبرة الشركة', en: "The company's voice" }, minutes: 10 },
+      ] },
+      { title: { ar: 'الخطة', en: 'The plan' }, lessons: [
+        { title: { ar: 'تقويم أسبوعين', en: 'A two-week calendar' }, minutes: 12 },
+        { title: { ar: 'أنواع المنشورات', en: 'Kinds of posts' }, minutes: 9 },
+      ] },
+      { title: { ar: 'النشر والقياس', en: 'Publishing and measuring' }, lessons: [
+        { title: { ar: 'ماذا تقيس ولماذا', en: 'What to measure and why' }, minutes: 11 },
+      ] },
+    ],
+  },
+  {
+    slug: 'ai-at-work',
+    title: { ar: 'الذكاء الاصطناعي في العمل: من الطلب إلى التحقق', en: 'AI at work: from request to checking' },
+    summary: { ar: 'استعمال أدوات الذكاء الاصطناعي في مهام عمل حقيقية، مع طرق للتحقق من النتائج قبل الاعتماد عليها.', en: 'Using AI tools on real work tasks, with ways to check results before relying on them.' },
+    field: 'applied_ai',
+    modules: [
+      { title: { ar: 'كيف تعمل هذه الأدوات', en: 'How these tools work' }, lessons: [
+        { title: { ar: 'ما الذي تجيده وما الذي لا تجيده', en: 'What they are good and bad at' }, minutes: 10, preview: true },
+      ] },
+      { title: { ar: 'الطلب الجيد', en: 'A good request' }, lessons: [
+        { title: { ar: 'السياق والمثال والشكل', en: 'Context, example and format' }, minutes: 14 },
+        { title: { ar: 'تقسيم المهمة الكبيرة', en: 'Splitting a large task' }, minutes: 9 },
+      ] },
+      { title: { ar: 'التحقق', en: 'Checking' }, lessons: [
+        { title: { ar: 'قائمة تحقق قبل التسليم', en: 'A checklist before handing in' }, minutes: 8 },
+      ] },
+    ],
   },
 ]
 
@@ -236,6 +332,14 @@ export const sampleParticipant = {
 
 export function seatsLeft(p: SampleProject): number {
   return Math.max(0, p.seats - p.seatsTaken)
+}
+
+export function workshopBySlug(slug: string): SampleWorkshop | undefined {
+  return sampleWorkshops.find((w) => w.slug === slug)
+}
+
+export function courseBySlug(slug: string): SampleCourse | undefined {
+  return sampleCourses.find((c) => c.slug === slug)
 }
 
 export function projectBySlug(slug: string): SampleProject | undefined {

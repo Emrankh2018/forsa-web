@@ -1,6 +1,7 @@
 import type { Messages } from '../types'
 import { enSite } from './site'
 import { enUi } from './ui'
+import { enLearn } from './learn'
 
 /** English interface text. Must have exactly the same keys as the Arabic file (checked by type). */
 export const en = {
@@ -17,6 +18,7 @@ export const en = {
   },
   ...enSite,
   ...enUi,
+  ...enLearn,
   notFound: {
     title: 'Page not found',
     body: 'The address may have changed or the page was removed.',

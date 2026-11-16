@@ -7,16 +7,16 @@ import { ArrivalGate } from '@/components/arrival/arrival-gate'
 import { ArrivalDoor } from '@/components/arrival/arrival-door'
 import { Door } from '@/components/site/door'
 import { ProjectCard } from '@/components/site/project-card'
+import { WorkshopRow } from '@/components/site/workshop-row'
 import { SiteHeader } from '@/components/site/header'
 import { SiteFooter } from '@/components/site/footer'
-import { SectionHeading, Divider } from '@/components/ui/section-heading'
+import { SectionHeading } from '@/components/ui/section-heading'
 
 export default async function Home({ params }: PageProps<'/[locale]'>) {
   const { locale: raw } = await params
   const locale = raw as Locale
   setRequestLocale(locale)
   const t = await getTranslations('home')
-  const w = await getTranslations('workshop')
   const a = await getTranslations('arrival')
   const f = formatters(locale)
   const open = sampleProjects.filter((x) => seatsLeft(x) > 0)
@@ -82,36 +82,11 @@ export default async function Home({ params }: PageProps<'/[locale]'>) {
             <Link href="/workshops" className="btn-quiet underline underline-offset-4">{t('allTraining')}</Link>
           </div>
           <ul className="mt-8 divide-y divide-line border-y border-line" role="list">
-            {sampleWorkshops.map((ws) => {
-              const left = ws.capacity - ws.booked
-              return (
-                <li key={ws.slug}>
-                  <Link href={`/workshops/${ws.slug}`} className="grid grid-cols-[4.5rem_1fr] items-center gap-x-5 gap-y-1 py-6 sm:grid-cols-[6rem_1fr_auto]">
-                    <span className="row-span-2 sm:row-span-1">
-                      <span className="arch flex h-24 w-16 flex-col items-center justify-end bg-paper-deep pb-2 sm:w-20">
-                        <span className="font-display text-3xl font-bold leading-none">{f.dayNum(ws.startsAt)}</span>
-                      </span>
-                    </span>
-                    <span>
-                      <span className="font-display block text-2xl font-bold">{f.pick(ws.title)}</span>
-                      <span className="mt-1 block text-sm text-ink-soft">
-                        {f.dayWeekday(ws.startsAt)}
-                        <Divider />
-                        {f.time(ws.startsAt)}
-                        <Divider />
-                        {ws.online ? w('online') : w('inPerson')}
-                        <Divider />
-                        {w('minutes', { count: ws.minutes, n: f.num(ws.minutes) })}
-                      </span>
-                    </span>
-                    <span className="col-start-2 flex items-center gap-4 sm:col-start-3 sm:flex-col sm:items-end sm:gap-1">
-                      <span className="text-lg font-bold text-maroon">{f.money(ws.priceDirhams)}</span>
-                      <span className="text-sm text-ink-soft">{w('seatsLeft', { count: left, n: f.num(left) })}</span>
-                    </span>
-                  </Link>
-                </li>
-              )
-            })}
+            {sampleWorkshops.map((ws) => (
+              <li key={ws.slug}>
+                <WorkshopRow workshop={ws} locale={locale} />
+              </li>
+            ))}
           </ul>
         </section>
 
