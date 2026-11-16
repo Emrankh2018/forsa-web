@@ -13,7 +13,12 @@ export default defineConfig({
   fullyParallel: true,
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? 'github' : 'list',
-  use: { baseURL, trace: 'retain-on-failure' },
+  globalSetup: './e2e/global-setup.ts',
+  use: {
+    baseURL,
+    trace: 'retain-on-failure',
+    storageState: process.env.E2E_SHARE_URL ? 'test-results/share-state.json' : undefined,
+  },
   projects: [
     { name: 'phone', use: { ...devices['Desktop Chrome'], viewport: { width: 390, height: 844 }, hasTouch: true } },
     { name: 'tablet', use: { ...devices['Desktop Chrome'], viewport: { width: 820, height: 1180 } } },

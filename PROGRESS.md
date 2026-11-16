@@ -1,7 +1,7 @@
 # Forsa platform v4 — progress
 
 ## Resume here
-Phase 1 — design gate. Last commit: see `git log -1`. State: **STOP — waiting for the owner to choose direction A, B or a mix.** Both directions are built and checked locally; the online preview is the open item (see "Hosting" below).
+Phase 1 — design gate. Last commit: see `git log -1`. State: **STOP — waiting for the owner to choose direction A, B or a mix.** Both directions are built and checked locally and on the online preview.
 Next exact step: when the owner answers, record the choice as a decision, then start phase 2 (design system and public site) in the chosen direction. Until then build nothing that depends on the choice.
 
 ---
@@ -59,9 +59,9 @@ Decisions taken in phase 0:
 | Browser, shell (`e2e/shell.spec.ts`) at 390/820/1366, ar and en | 33 passed (render, `lang`/`dir`, Amiri + Plex fonts, noindex, no sideways overflow, language switch, keyboard order, 404, axe clean, no console errors) |
 | Base migration on the real `forsa-web-dev` | applied; 12 access assertions correct in a rolled-back transaction (sign-up gives participant even if the sign-up data asks for admin; own profile only; role change refused 42501; non-admin `set_setting` refused; admin sees all and is logged; payments flag refused even for admin; visitor reads 3 public settings and no profiles). Database left empty afterwards |
 | GitHub Actions CI | first run green (slice 3); later runs: see `gh run list` |
-| **Preview on Vercel** | **not yet working.** Two builds failed on my configuration (missing type packages, then a stray test config); both fixed in code. The next preview build is the proof; until it is READY the preview is **not run**. Owner said on 2026-11-17: if Vercel does not work, use Cloudflare Workers as a temporary host until his own server and domain exist |
+| Preview on Vercel | **working.** Two early builds failed on my configuration (missing type packages, then a stray test config); fixed. Preview `dpl_5eqCXNJbforiJK8SKU9t3frKFXNk` (commit aaaf3ad) READY at `forsa-web-git-preview-stark-2281.vercel.app`. **The full browser suite ran against it: 108 passed** (`E2E_BASE_URL=<preview> E2E_SHARE_URL=<temporary share link> npx playwright test`). Production build of the same commit skipped as intended. The owner offered Cloudflare Workers as a fallback if Vercel failed; not needed |
 
-Not run in phase 0: CI with the browser journeys on GitHub (runs on the next push), the shell journeys against an online preview.
+Not run in phase 0: nothing outstanding; GitHub CI (with browser journeys) runs on every push.
 
 ## Phase 1 — Design gate (STOP)
 
