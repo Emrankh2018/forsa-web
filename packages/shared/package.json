@@ -6,7 +6,8 @@
   "description": "Types, validation schemas, interface messages (ar, en) and state rules shared by the web app and, later, the phone app.",
   "exports": {
     ".": "./src/index.ts",
-    "./messages": "./src/messages/index.ts"
+    "./messages": "./src/messages/index.ts",
+    "./seed": "./src/seed/sample.ts"
   },
   "scripts": {
     "typecheck": "tsc -p tsconfig.json --noEmit",

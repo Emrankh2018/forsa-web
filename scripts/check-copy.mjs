@@ -8,9 +8,10 @@
  * Usage: node scripts/check-copy.mjs        (checks the repository)
  *        node scripts/check-copy.mjs --self-test
  */
-import { readdirSync, readFileSync, statSync } from 'node:fs'
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs'
+import { tmpdir } from 'node:os'
 import path from 'node:path'
-import { fileURLToPath } from 'node:url'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 
@@ -23,10 +24,10 @@ export const rules = [
   { re: /مكافأة|مكافآت/u, why: 'V4: no reward on projects (D-106)' },
   { re: /خريجو الثانوية/u, why: 'audience is new graduates and near-graduates' },
   { re: /\bQAR\b/u, lang: 'ar', why: 'Arabic text says ريال قطري, not QAR' },
-  { re: /[0-9]/u, lang: 'ar', why: 'Arabic text uses Arabic-Indic numerals', allow: [/^English$/] },
+  { re: /[0-9]/u, lang: 'ar', why: 'Arabic text uses Arabic-Indic numerals', allow: [/^English$/], strip: /=\d+/g },
   // Promises and claims (section 8)
   { re: /نضمن لك (?:وظيفة|عملًا|عملا)|وظيفة مضمونة|ضمان وظيفة|ضمان التوظيف/u, why: 'never promise a job' },
-  { re: /guarantee(?:d|s)? (?:a |you a )?(?:job|employment|hire)|job guarantee/i, why: 'never promise a job' },
+  { re: /(?<!(?:not|never|n't) )guarantee(?:d|s)? (?:a |you a )?(?:job|employment|hire)|job guarantee/i, why: 'never promise a job' },
   { re: /unemployment rate|نسبة البطالة|معدل البطالة/i, why: 'no unsourced statistics' },
   // Money on projects (D-106)
   { re: /\breward(?:s|ed)?\b|\bsalary\b|\bpaid project/i, lang: 'en', why: 'V4: projects carry no money' },
@@ -38,7 +39,8 @@ export function checkText(text, lang) {
   for (const rule of rules) {
     if (rule.lang && rule.lang !== lang) continue
     if (rule.allow?.some((a) => a.test(text))) continue
-    if (rule.re.test(text)) problems.push(rule.why)
+    const subject = rule.strip ? text.replace(rule.strip, '') : text
+    if (rule.re.test(subject)) problems.push(rule.why)
   }
   return problems
 }
@@ -59,22 +61,50 @@ function walk(dir, exts) {
   return out
 }
 
-/** Loads a messages file without a TypeScript build: the files are plain object literals. */
-async function loadMessages(lang) {
-  const file = path.join(root, 'packages/shared/src/messages', lang, 'index.ts')
-  const src = readFileSync(file, 'utf8')
-  const start = src.indexOf('{', src.indexOf(`export const ${lang}`))
-  const end = src.lastIndexOf('}')
-  const literal = src.slice(start, end + 1)
-  return new Function(`return (${literal})`)()
+/**
+ * Loads the shared messages and sample data by transpiling the TypeScript sources into a temporary
+ * folder (type-only imports disappear; relative imports get the .mjs extension).
+ */
+async function loadShared() {
+  const ts = (await import('typescript')).default
+  const srcRoot = path.join(root, 'packages/shared/src')
+  const out = mkdtempSync(path.join(tmpdir(), 'forsa-copy-'))
+  for (const file of walk(srcRoot, ['.ts'])) {
+    const rel = path.relative(srcRoot, file).replace(/\.ts$/, '.mjs')
+    const js = ts.transpileModule(readFileSync(file, 'utf8'), {
+      compilerOptions: { module: ts.ModuleKind.ESNext, target: ts.ScriptTarget.ES2022, verbatimModuleSyntax: false },
+    }).outputText.replace(/from '(\.{1,2}\/[^']+)'/g, (m, spec) => {
+      const target = path.resolve(path.dirname(file), spec)
+      const isDir = existsSync(target) && statSync(target).isDirectory()
+      return `from '${spec}${isDir ? '/index' : ''}.mjs'`
+    })
+    mkdirSync(path.dirname(path.join(out, rel)), { recursive: true })
+    writeFileSync(path.join(out, rel), js)
+  }
+  const { messages } = await import(pathToFileURL(path.join(out, 'messages/index.mjs')).href)
+  const seed = await import(pathToFileURL(path.join(out, 'seed/sample.mjs')).href)
+  rmSync(out, { recursive: true, force: true })
+  return { messages, seed }
+}
+
+/** Every bilingual { ar, en } pair inside the sample data. */
+function bilingual(value, at = 'seed') {
+  if (!value || typeof value !== 'object') return []
+  if (typeof value.ar === 'string' && typeof value.en === 'string') return [[at, value]]
+  return Object.entries(value).flatMap(([k, v]) => bilingual(v, `${at}.${k}`))
 }
 
 async function main() {
   const failures = []
+  const { messages, seed } = await loadShared()
   for (const lang of ['ar', 'en']) {
-    const messages = await loadMessages(lang)
-    for (const [key, text] of strings(messages)) {
+    for (const [key, text] of strings(messages[lang])) {
       for (const why of checkText(text, lang)) failures.push(`messages/${lang}: ${key}: ${why}: "${text}"`)
+    }
+  }
+  for (const [key, pair] of bilingual({ projects: seed.sampleProjects, workshops: seed.sampleWorkshops, participant: seed.sampleParticipant, fields: seed.fields })) {
+    for (const lang of ['ar', 'en']) {
+      for (const why of checkText(pair[lang], lang)) failures.push(`${key}.${lang}: ${why}: "${pair[lang]}"`)
     }
   }
   // No Arabic text inside components or pages: it belongs in the messages files.
@@ -104,6 +134,8 @@ function selfTest() {
     ['Earn a reward', 'en', true],
     ['QAR 250 per workshop', 'en', false],
     ['Real projects from companies', 'en', false],
+    ['Finishing a project does not guarantee a job', 'en', false],
+    ['{count, plural, =0 {لا مقاعد} other {{n} مقعدًا}}', 'ar', false],
   ]
   let bad = 0
   for (const [text, lang, shouldFail] of cases) {

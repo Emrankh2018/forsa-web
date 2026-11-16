@@ -67,7 +67,8 @@ describe('messages', () => {
     const walk = (o: object): string[] => Object.values(o).flatMap((v) => (typeof v === 'string' ? [v] : walk(v)))
     for (const text of walk(messages.ar)) {
       if (text === 'English') continue
-      expect(text).not.toMatch(/[0-9]/)
+      // ICU plural selectors such as =0 are syntax, not visible text.
+      expect(text.replace(/=\d+/g, '')).not.toMatch(/[0-9]/)
     }
   })
 })

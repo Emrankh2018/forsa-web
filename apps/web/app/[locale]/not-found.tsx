@@ -1,9 +1,13 @@
 import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
+import { SiteHeader } from '@/components/site-header'
 
 export default async function NotFound() {
   const t = await getTranslations('notFound')
   return (
+    <>
+    <SiteHeader />
+    <main id="content" tabIndex={-1} className="outline-none">
     <section className="mx-auto max-w-6xl px-4 py-24 sm:px-8">
       <div className="first-line max-w-sm" aria-hidden="true" />
       <h1 className="font-display mt-8 text-4xl font-bold sm:text-6xl">{t('title')}</h1>
@@ -12,5 +16,7 @@ export default async function NotFound() {
         {t('back')}
       </Link>
     </section>
+    </main>
+    </>
   )
 }

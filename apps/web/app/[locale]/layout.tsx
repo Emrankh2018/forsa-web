@@ -5,9 +5,6 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { direction } from '@forsa/shared'
 import { routing } from '@/i18n/routing'
 import { amiri, plex, plexArabic } from '@/lib/fonts'
-import { Link } from '@/i18n/navigation'
-import { DoorSymbol } from '@/components/door-symbol'
-import { LanguageSwitch } from '@/components/language-switch'
 import '../globals.css'
 
 const isProduction = process.env.FORSA_ENV === 'production'
@@ -42,7 +39,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
   const t = await getTranslations('common')
 
   return (
-    <html lang={locale} dir={direction(locale)} className={`${amiri.variable} ${plexArabic.variable} ${plex.variable}`}>
+    <html lang={locale} dir={direction(locale)} suppressHydrationWarning className={`${amiri.variable} ${plexArabic.variable} ${plex.variable}`}>
       <body className="bg-paper text-ink antialiased">
         <a
           href="#content"
@@ -51,16 +48,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
           {t('skipToContent')}
         </a>
         <NextIntlClientProvider>
-          <header className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-8">
-            <Link href="/" aria-label={t('homeLabel')} className="inline-flex min-h-11 items-center gap-3 rounded-md">
-              <DoorSymbol className="h-9 w-auto" />
-              <span className="font-display text-2xl font-bold">{t('brand')}</span>
-            </Link>
-            <LanguageSwitch />
-          </header>
-          <main id="content" tabIndex={-1} className="outline-none">
-            {children}
-          </main>
+          {children}
         </NextIntlClientProvider>
       </body>
     </html>
