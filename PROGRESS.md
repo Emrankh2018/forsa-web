@@ -1,8 +1,8 @@
 # Forsa platform v4 — progress
 
 ## Resume here
-Phase 2, slice 2 — component library and showcase. Last commit: see `git log -1`. State: done.
-Next exact step: phase 2 slice 3 — `/projects` list (search, field and join-mode filters) and the project page's sign-in prompt.
+Phase 2, slice 3 — projects list. Last commit: see `git log -1`. State: done.
+Next exact step: phase 2 slice 4 — `/learn` hub, `/workshops` list and detail, `/sessions`, `/courses` list and detail (prices only where known: workshops 250 QAR; sessions and courses say the price is announced when booking opens).
 
 ---
 
@@ -89,5 +89,6 @@ Owner chose direction A «العتبة» on 2026-11-17 (D-114). Direction B and 
 
 | Slice | What | Commit |
 |---|---|---|
-| 2 | Component library `components/ui`: fields (text, textarea, select, checkbox group; label, hint, error linked by aria-describedby; LTR for email/url/tel), submit button with sending state, sign-in prompt dialog (returns with `?next=`), room header, loading/empty/error/success states, tags; `/showcase` (noindex) shows each in every state; evidence `docs/evidence/showcase-*.png` | (next commit) |
+| 3 | `/projects`: text search (Arabic and English), field and join-mode filters as links and a plain GET form (works without scripts), result count, empty state with reset; `ProjectCard` shared with home (two doors per row on phones); project page join/apply/save open the sign-in prompt and return to the page | (next commit) |
+| 2 | Component library `components/ui`: fields (text, textarea, select, checkbox group; label, hint, error linked by aria-describedby; LTR for email/url/tel), submit button with sending state, sign-in prompt dialog (returns with `?next=`), room header, loading/empty/error/success states, tags; `/showcase` (noindex) shows each in every state; evidence `docs/evidence/showcase-*.png` | fd04b6f |
 | 1 | Direction A becomes the site: `app/site.css` (arch, door, room, floor, hall, arch buttons), `components/site/{header,footer,door}`, `components/ui/section-heading`, home at `/[locale]` with the arrival, public project page at `/projects/[slug]` (sample data until phase 4), messages regrouped by area (`messages/{ar,en}/site.ts`) | (this commit) |

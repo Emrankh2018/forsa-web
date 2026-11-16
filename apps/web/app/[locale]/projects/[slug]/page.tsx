@@ -8,6 +8,7 @@ import { Door, seatAngle } from '@/components/site/door'
 import { SiteHeader } from '@/components/site/header'
 import { SiteFooter } from '@/components/site/footer'
 import { SectionHeading, Divider } from '@/components/ui/section-heading'
+import { SignInPrompt } from '@/components/ui/sign-in-prompt'
 
 export function generateStaticParams() {
   return sampleProjects.map((p) => ({ slug: p.slug }))
@@ -20,6 +21,7 @@ export default async function ProjectPage({ params }: PageProps<'/[locale]/proje
   const project = projectBySlug(slug)
   if (!project) notFound()
   const t = await getTranslations('project')
+  const s = await getTranslations('signInPrompt')
   const f = formatters(locale)
   const left = seatsLeft(project)
   const full = left === 0
@@ -120,15 +122,17 @@ export default async function ProjectPage({ params }: PageProps<'/[locale]/proje
                   <dd>{t('due', { date: f.day(project.dueAt) })}</dd>
                 </div>
               </dl>
-              <Link
-                href="/sign-in"
-                aria-disabled={full || undefined}
-                className="btn-arch mt-8 w-full"
-              >
-                {cta}
-              </Link>
+              <div className="mt-8">
+                {full ? (
+                  <span className="btn-arch w-full" aria-disabled="true">{cta}</span>
+                ) : (
+                  <SignInPrompt label={cta} returnTo={`/projects/${project.slug}`} title={s('title')} body={s('body')} continueLabel={s('continue')} notNowLabel={s('notNow')} />
+                )}
+              </div>
               <p className="mt-3 text-sm text-ink-soft">{t('signInNote')}</p>
-              <button type="button" className="btn-quiet -ms-3 mt-2 underline underline-offset-4">{t('save')}</button>
+              <div className="mt-2">
+                <SignInPrompt variant="quiet" label={t('save')} returnTo={`/projects/${project.slug}`} title={s('title')} body={s('body')} continueLabel={s('continue')} notNowLabel={s('notNow')} />
+              </div>
             </div>
           </aside>
         </div>

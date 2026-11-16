@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef } from 'react'
+import { useId, useRef } from 'react'
 import { Link } from '@/i18n/navigation'
 
 /**
@@ -19,7 +19,7 @@ export function SignInPrompt({
   variant?: 'primary' | 'quiet'
 }) {
   const dialog = useRef<HTMLDialogElement>(null)
-  const titleId = `sign-in-title-${label.length}-${returnTo.length}`
+  const titleId = useId()
   return (
     <>
       <button

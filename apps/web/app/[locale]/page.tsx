@@ -1,11 +1,12 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
-import { fields, sampleProjects, sampleWorkshops, seatsLeft } from '@forsa/shared/seed'
+import { sampleProjects, sampleWorkshops, seatsLeft } from '@forsa/shared/seed'
 import { Link } from '@/i18n/navigation'
 import { formatters } from '@/lib/format'
 import { ArrivalGate } from '@/components/arrival/arrival-gate'
 import { ArrivalDoor } from '@/components/arrival/arrival-door'
-import { Door, seatAngle } from '@/components/site/door'
+import { Door } from '@/components/site/door'
+import { ProjectCard } from '@/components/site/project-card'
 import { SiteHeader } from '@/components/site/header'
 import { SiteFooter } from '@/components/site/footer'
 import { SectionHeading, Divider } from '@/components/ui/section-heading'
@@ -15,7 +16,6 @@ export default async function Home({ params }: PageProps<'/[locale]'>) {
   const locale = raw as Locale
   setRequestLocale(locale)
   const t = await getTranslations('home')
-  const p = await getTranslations('project')
   const w = await getTranslations('workshop')
   const a = await getTranslations('arrival')
   const f = formatters(locale)
@@ -66,29 +66,12 @@ export default async function Home({ params }: PageProps<'/[locale]'>) {
             <SectionHeading id="open-now" size="lg">{t('openNow')}</SectionHeading>
             <Link href="/projects" className="btn-quiet underline underline-offset-4">{t('allProjects')}</Link>
           </div>
-          <ul className="mt-10 grid grid-cols-1 gap-x-6 gap-y-12 sm:grid-cols-2 lg:grid-cols-4" role="list">
-            {sampleProjects.map((x) => {
-              const left = seatsLeft(x)
-              return (
-                <li key={x.slug}>
-                  <Link href={`/projects/${x.slug}`} className="room block rounded-md">
-                    <Door
-                      open={seatAngle(left, x.seats)}
-                      className="mx-auto h-64 w-[min(100%,15rem)] sm:mx-0"
-                      light={<p className="text-sm font-medium leading-snug">{p('seatsLeft', { count: left, n: f.num(left) })}</p>}
-                    />
-                    <p className="mt-5 text-sm text-ink-soft">{f.pick(x.company)}</p>
-                    <h3 className="font-display mt-1 text-2xl font-bold leading-snug">{f.pick(x.title)}</h3>
-                    <p className="mt-2 text-sm text-ink-soft">
-                      <span>{f.pick(fields[x.field])}</span>
-                      <Divider />
-                      <span>{x.joinMode === 'open' ? p('modeOpen') : p('modeApply')}</span>
-                    </p>
-                    <p className="mt-1 text-sm font-medium">{left > 0 ? p('due', { date: f.day(x.dueAt) }) : p('fullCta')}</p>
-                  </Link>
-                </li>
-              )
-            })}
+          <ul className="mt-10 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 sm:gap-y-12 lg:grid-cols-4" role="list">
+            {sampleProjects.map((x) => (
+              <li key={x.slug}>
+                <ProjectCard project={x} locale={locale} />
+              </li>
+            ))}
           </ul>
         </section>
 
