@@ -16,7 +16,7 @@ export function LanguageSwitch() {
       locale={target}
       hrefLang={target}
       lang={target}
-      aria-label={t('languageSwitchLabel')}
+      title={t('languageSwitchLabel')}
       className="inline-flex min-h-11 items-center rounded-md px-3 text-sm font-medium text-ink underline-offset-4 hover:underline"
     >
       {t('languageSwitch')}
