@@ -29,7 +29,16 @@ Plan: `../../production/PLATFORM-PLAN-V4.md`. Builder: Claude Opus 5.5 in the ow
 |---|---|---|
 | 1 | npm workspaces; `packages/shared` (locale, numerals, money in dirhams, Qatar date, messages ar/en with a type that forces the same keys); `apps/web` shell at `/ar` and `/en` with `lang`/`dir`, Amiri + IBM Plex Sans Arabic + IBM Plex Sans via `next/font/google`, identity colours as Tailwind tokens, first-line motif, door symbol, language switch, skip link, not-found, noindex and security headers | 093bbed |
 | 2 | Base migration `20261117000100_base.sql`: `profiles`, `settings`, `audit_log`; `private` schema for helpers; RLS forced; role guarded twice; `set_setting` (admin only, logged, payment flags can never be switched on); PGlite harness and 22 access tests; copy checker with self-test | 667a1e5 |
-| 3 | Playwright (390/820/1366 px, both languages: render, direction, fonts, noindex, no sideways overflow, language switch, keyboard order, 404, axe); CI workflow; README; this file; OWNER-TODO | (this commit) |
+| 3 | Playwright (390/820/1366 px, both languages: render, direction, fonts, noindex, no sideways overflow, language switch, keyboard order, 404, axe); CI workflow; README; this file; OWNER-TODO | 8bfc4a2 |
+| 4 | External setup: GitHub private repo `Emrankh2018/forsa-web` (pushed); Supabase `forsa-web-dev` (id `sqsrwlpbxnhfpollfqku`, ap-south-1, free, $0/month) with the base migration applied; Vercel project `forsa-web` (team STARK, root `apps/web`, framework Next.js, Node 24) | (this commit) |
+
+### Hosting rules (Vercel)
+- **No production deploys before the go-live gate.** Vercel links `main` as its production branch, so the project has an ignored-build-step command that skips every build whose `VERCEL_ENV` is `production`. The first automatic deployment Vercel started from `main` was a production one; it was cancelled before it finished (`dpl_CmbFpewdA4ggFW3SFMhyKnnFXpJj`, CANCELED).
+- **Previews come from the `preview` branch.** After each slice: `git push origin main` and `git push origin main:preview`. Stable preview address: `forsa-web-git-preview-stark-2281.vercel.app`.
+- Previews keep the team's Vercel Authentication (only signed-in team members see them) and send `noindex`.
+
+### Supabase advisor
+- One warning, accepted on purpose: `public.set_setting` is a security-definer function callable by signed-in users. It is the only write path to settings and checks for an admin itself (tested: participant and visitor refused with 42501). Every later state-change function follows the same pattern and will show the same warning.
 
 Decisions taken in phase 0:
 - The bare address always opens Arabic (`localeDetection: false`): the plan sets Arabic as the default and many Arabic readers use English-language browsers. A visitor switches with the language link.
