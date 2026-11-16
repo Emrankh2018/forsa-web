@@ -1,8 +1,8 @@
 # Forsa platform v4 — progress
 
 ## Resume here
-Phase 0, slice 3 — CI, docs, browser journeys. Last commit: see `git log -1`. State: half-done (GitHub repo, Supabase dev project and Vercel preview not yet created).
-Next exact step: create the private GitHub repo `forsa-web` and push `main`.
+Phase 0, slice 5 — preview check. Last commit: see `git log -1`. State: half-done (waiting for the first preview build from the `preview` branch, then run the shell journeys against it).
+Next exact step: confirm the preview deployment is READY, run `E2E_BASE_URL=<preview> npx playwright test` (via a share link if protected), then write the phase 0 report.
 
 ---
 
@@ -34,7 +34,7 @@ Plan: `../../production/PLATFORM-PLAN-V4.md`. Builder: Claude Opus 5.5 in the ow
 
 ### Hosting rules (Vercel)
 - **No production deploys before the go-live gate.** Vercel links `main` as its production branch, so the project has an ignored-build-step command that skips every build whose `VERCEL_ENV` is `production`. The first automatic deployment Vercel started from `main` was a production one; it was cancelled before it finished (`dpl_CmbFpewdA4ggFW3SFMhyKnnFXpJj`, CANCELED).
-- **Previews come from the `preview` branch.** After each slice: `git push origin main` and `git push origin main:preview`. Stable preview address: `forsa-web-git-preview-stark-2281.vercel.app`.
+- **Previews come from the `preview` branch.** After each slice push `preview` first, then `main` (`git push origin main:preview && git push origin main`); Vercel skips a commit it has already seen, so the order matters. Stable preview address: `forsa-web-git-preview-stark-2281.vercel.app`.
 - Previews keep the team's Vercel Authentication (only signed-in team members see them) and send `noindex`.
 
 ### Supabase advisor
