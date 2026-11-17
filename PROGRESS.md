@@ -193,4 +193,6 @@ The "Come in" page's chosen door links to its area. Sample data: `packages/share
 ### Checks
 - Copy check, lint, typecheck, 24 shared + 31 database tests, build.
 - Full browser suite locally: 492 passed, 3 failed (the project wizard showed the browser's own required-field popup instead of the site's message); fixed with `noValidate`, then the 33 interaction checks and the new arrival check passed.
+- **Live (forsa-demo.vercel.app, commit 9a8d34e, `dpl_5wBPuvm7HLLz5R2YjzcaLAqbmkaS`):** full browser suite 498 passed, 0 failed (39 skipped by design).
+- Lighthouse on live `/ar` after the change: performance 85, accessibility 100, best practices 100, LCP 1.1 s, TBT 430 ms (`docs/evidence/lighthouse/ar-home-after-lazy-gsap.json`). No gain over the earlier 88: Lighthouse always loads as a first visit, so the door plays and GSAP is fetched anyway. The saving applies to return visits and reduced motion only. Lowering first-visit blocking would mean replacing the GSAP arrival with a CSS animation (owner's call; not done).
 
