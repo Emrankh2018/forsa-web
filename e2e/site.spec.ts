@@ -161,7 +161,7 @@ test('moving between pages passes a threshold (view transition runs on navigatio
           }
         }
         const id = setInterval(tick, 16)
-        setTimeout(() => { clearInterval(id); resolve([...names]) }, 1200)
+        setTimeout(() => { clearInterval(id); resolve([...names]) }, 2500)
       }),
   )
   await page.locator('.hall a[href$="/learn"]').click()
@@ -235,3 +235,28 @@ test('arrival: the door plays when asked and ends by itself (GSAP is fetched on 
   await expect(page.locator('html')).toHaveAttribute('data-arrival-done', '', { timeout: 4500 })
   await expect(page.locator('.arrival-door')).toHaveCount(0)
 })
+
+for (const locale of ['ar', 'en'] as const) {
+  test(`${locale}: the arrival plays once per visit, not again when you come back home`, async ({ page }) => {
+    const t = messages[locale]
+    await page.goto(`/${locale}?intro=1`)
+    await expect(page.locator('html')).toHaveAttribute('data-arrival-done', '', { timeout: 4500 })
+    // Browse inside the site, then come back home by the logo, as a visitor would.
+    await page.getByRole('link', { name: t.nav.enterLabel }).click()
+    await expect(page).toHaveURL(new RegExp(`/${locale}/join$`))
+    // Count every time the door is put back on screen from here on.
+    await page.evaluate(() => {
+      const w = window as unknown as { replays: number }
+      w.replays = 0
+      new MutationObserver(() => {
+        if (!document.documentElement.hasAttribute('data-arrival-done')) w.replays++
+      }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-arrival-done'] })
+    })
+    await page.getByRole('link', { name: t.common.homeLabel }).click()
+    await expect(page).toHaveURL(new RegExp(`/${locale}$`))
+    await expect(page.locator('h1')).toBeVisible()
+    await page.waitForTimeout(800)
+    expect(await page.evaluate(() => (window as unknown as { replays: number }).replays)).toBe(0)
+    await expect(page.locator('.arrival-door')).toHaveCount(0)
+  })
+}

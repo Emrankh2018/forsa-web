@@ -196,3 +196,8 @@ The "Come in" page's chosen door links to its area. Sample data: `packages/share
 - **Live (forsa-demo.vercel.app, commit 9a8d34e, `dpl_5wBPuvm7HLLz5R2YjzcaLAqbmkaS`):** full browser suite 498 passed, 0 failed (39 skipped by design).
 - Lighthouse on live `/ar` after the change: performance 85, accessibility 100, best practices 100, LCP 1.1 s, TBT 430 ms (`docs/evidence/lighthouse/ar-home-after-lazy-gsap.json`). No gain over the earlier 88: Lighthouse always loads as a first visit, so the door plays and GSAP is fetched anyway. The saving applies to return visits and reduced motion only. Lowering first-visit blocking would mean replacing the GSAP arrival with a CSS animation (owner's call; not done).
 
+### Fix: the arrival replayed when coming back home (owner report, 2026-11-17)
+- Cause: the "already seen" mark stored the page load's start time, and moving inside the site does not start a new page load, so returning home by the logo counted as a first visit.
+- Fix (`components/arrival/use-arrival.ts`): the door plays once per visit (first page load in a tab). It is recorded in memory and in the tab's session storage only when it really starts; coming back home or reloading does not replay it; `?intro=1` still replays it on purpose.
+- Proof: new browser check (both languages, three sizes) counts replays after "Come in" then the logo; it failed before the fix (1 replay) and passes after. Full suite 504 passed, 0 failed. The view-transition check now watches 2.5 s instead of 1.2 s (it failed under heavy load, not because of this change: 19 repeated passes with the fix).
+
