@@ -1,8 +1,8 @@
 # Forsa platform v4 — progress
 
 ## Resume here
-Phase 2, slice 6 — partners page and stored interest form. Last commit: see `git log -1`. State: done (online storing waits for the two public database settings, see OWNER-TODO #2).
-Next exact step: phase 2 slice 7 — `/about`, `/faq`, `/privacy`, `/terms`, `/trainers`, and honest placeholder pages for `/sign-in` and `/join` (accounts arrive in phase 3).
+Phase 2, slice 7 — content pages. Last commit: see `git log -1`. State: done.
+Next exact step: phase 2 slice 8 — proof: `e2e/site.spec.ts` over every public page (3 widths, 2 languages, axe, overflow, console), journey 1 up to the sign-in prompt and back, performance numbers, phase 2 report; then push and check the Vercel preview.
 
 ---
 
@@ -89,7 +89,8 @@ Owner chose direction A «العتبة» on 2026-11-17 (D-114). Direction B and 
 
 | Slice | What | Commit |
 |---|---|---|
-| 6 | Partners: migration `20261117000200_partner_leads.sql` (table with forced RLS, `submit_partner_lead` for visitors with validation and at most three forms per email per day, `set_partner_lead_state` for admins, both logged), applied to `forsa-web-dev`; 9 new PGlite tests (31 total); shared zod schema (Arabic digits accepted in phone) with 3 unit tests; `/partners` with four ways (doors), the interest form as a server action (keeps values after errors, error summary gets focus, hidden field against bots), direct-registration panel; `e2e/partners.spec.ts` (6 passed locally: errors and kept values, preselected way, honest 'not set up' message when the site has no database settings) | (next commit) |
+| 7 | Content pages: `/about`, `/faq` (native disclosure list), `/privacy` and `/terms` (marked as drafts under legal review), `/trainers` (interest goes to the partner form with "give a workshop" ticked until accounts exist); honest `/sign-in` and `/join` placeholders that keep a safe `?next=` return path (`safeReturnPath` in shared, 2 unit tests against open redirects) | (next commit) |
+| 6 | Partners: migration `20261117000200_partner_leads.sql` (table with forced RLS, `submit_partner_lead` for visitors with validation and at most three forms per email per day, `set_partner_lead_state` for admins, both logged), applied to `forsa-web-dev`; 9 new PGlite tests (31 total); shared zod schema (Arabic digits accepted in phone) with 3 unit tests; `/partners` with four ways (doors), the interest form as a server action (keeps values after errors, error summary gets focus, hidden field against bots), direct-registration panel; `e2e/partners.spec.ts` (6 passed locally: errors and kept values, preselected way, honest 'not set up' message when the site has no database settings) | 4111737 |
 | 5 | Guides: `/guides` and three real guides (`packages/shared/src/content/guides.ts`: CV, LinkedIn, interview) with an "on this page" index, checklists, next steps to the matching workshop and 1-to-1 session; the interview guide has the STAR answer builder (nothing stored). Copy checker now also reads the guides | 0af344c |
 | 4 | Training: `/learn` hall of four doors, `/workshops` and `/workshops/[slug]` (facts, seats door, 250 QAR, book opens the sign-in prompt), `/sessions` (three kinds, booking not open, no price shown because none is set), `/courses` and `/courses/[slug]` (modules, lessons, free preview tag, enrol prompt, no price shown). Sample content extended (workshop outcomes, session types, courses) | 2f6c7f9 |
 | 3 | `/projects`: text search (Arabic and English), field and join-mode filters as links and a plain GET form (works without scripts), result count, empty state with reset; `ProjectCard` shared with home (two doors per row on phones); project page join/apply/save open the sign-in prompt and return to the page | 5929ca3 |

@@ -2,6 +2,7 @@ import { arSite } from './site'
 import { arUi } from './ui'
 import { arLearn } from './learn'
 import { arPartners } from './partners'
+import { arPages } from './pages'
 
 /**
  * Arabic interface text (the default language). Every visible string lives here or in the English
@@ -23,6 +24,7 @@ export const ar = {
   ...arUi,
   ...arLearn,
   ...arPartners,
+  ...arPages,
   notFound: {
     title: 'الصفحة غير موجودة',
     body: 'ربما تغيّر العنوان أو حُذفت الصفحة.',

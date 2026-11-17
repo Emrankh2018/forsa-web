@@ -3,6 +3,7 @@ import { enSite } from './site'
 import { enUi } from './ui'
 import { enLearn } from './learn'
 import { enPartners } from './partners'
+import { enPages } from './pages'
 
 /** English interface text. Must have exactly the same keys as the Arabic file (checked by type). */
 export const en = {
@@ -21,6 +22,7 @@ export const en = {
   ...enUi,
   ...enLearn,
   ...enPartners,
+  ...enPages,
   notFound: {
     title: 'Page not found',
     body: 'The address may have changed or the page was removed.',
