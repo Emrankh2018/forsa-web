@@ -2,6 +2,8 @@
 export const arSite = {
   sample: 'بيانات تجريبية: الشركات والأشخاص والتواريخ هنا متخيّلة إلى أن تبدأ الدفعة الأولى.',
   nav: {
+    enter: 'ادخل',
+    enterLabel: 'ادخل: أنشئ حسابك أو سجّل دخولك',
     main: 'التنقل الرئيسي',
     projects: 'المشاريع',
     learn: 'التدريب',
@@ -12,6 +14,7 @@ export const arSite = {
     myPage: 'صفحتي',
   },
   footer: {
+    roomsTitle: 'إلى أين الآن؟',
     label: 'روابط الموقع',
     about: 'عن فرصة',
     faq: 'أسئلة شائعة',
@@ -31,6 +34,9 @@ export const arSite = {
     roomProjectsLine: 'مشاريع من شركات، تنجزها وتُراجَع.',
     roomTraining: 'التدريب',
     roomTrainingLine: 'ورش وجلسات فردية وأدلة مجانية.',
+    roomYours: 'بابك',
+    roomYoursLine: 'أنشئ حسابك أو ادخل إليه، وتابع مشاريعك وتدريبك وشهاداتك.',
+    behindYours: 'مغلق حتى تدخل',
     roomPartners: 'للشركات والجهات',
     roomPartnersLine: 'اطرح مشروعًا أو قدّم ورشة أو أرسل دفعة للتدريب.',
     behindProjects: 'مفتوح الآن: {title}',

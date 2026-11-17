@@ -2,6 +2,8 @@
 export const enSite = {
   sample: 'Sample data: the companies, people and dates here are fictional until the first cohort starts.',
   nav: {
+    enter: 'Come in',
+    enterLabel: 'Come in: create your account or sign in',
     main: 'Main navigation',
     projects: 'Projects',
     learn: 'Training',
@@ -12,6 +14,7 @@ export const enSite = {
     myPage: 'My page',
   },
   footer: {
+    roomsTitle: 'Where next?',
     label: 'Site links',
     about: 'About Forsa',
     faq: 'Questions',
@@ -31,6 +34,9 @@ export const enSite = {
     roomProjectsLine: 'Projects from companies that you do and get reviewed on.',
     roomTraining: 'Training',
     roomTrainingLine: 'Workshops, 1-to-1 sessions and free guides.',
+    roomYours: 'Your door',
+    roomYoursLine: 'Create your account or sign in, and follow your projects, training and certificates.',
+    behindYours: 'Closed until you come in',
     roomPartners: 'For organisations',
     roomPartnersLine: 'Post a project, give a workshop or send a group for training.',
     behindProjects: 'Open now: {title}',

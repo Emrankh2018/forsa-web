@@ -26,6 +26,7 @@ export default async function Home({ params }: PageProps<'/[locale]'>) {
     { id: 'projects', href: '/projects', name: t('roomProjects'), line: t('roomProjectsLine'), behind: t('behindProjects', { title: f.pick(open[0]!.title) }), open: 64 },
     { id: 'training', href: '/learn', name: t('roomTraining'), line: t('roomTrainingLine'), behind: t('behindTraining', { date: f.day(nextWorkshop.startsAt) }), open: 60 },
     { id: 'partners', href: '/partners', name: t('roomPartners'), line: t('roomPartnersLine'), behind: t('behindPartners'), open: 56 },
+    { id: 'yours', href: '/join', name: t('roomYours'), line: t('roomYoursLine'), behind: t('behindYours'), open: 4 },
   ] as const
 
   return (
@@ -48,8 +49,9 @@ export default async function Home({ params }: PageProps<'/[locale]'>) {
                   <Door
                     open={r.open}
                     openHover={80}
-                    className="door--framed h-[clamp(300px,30vw,400px)]"
-                    light={<p className="font-medium leading-snug">{r.behind}</p>}
+                    keyhole={r.id === 'yours'}
+                    className={`door--framed h-[clamp(300px,28vw,380px)] ${r.id === 'yours' ? 'door--yours' : ''}`}
+                    light={<p className={`font-medium leading-snug ${r.id === 'yours' ? 'text-ink' : ''}`}>{r.behind}</p>}
                   />
                   <div className="floor mx-[8%] -mt-[10px]" aria-hidden="true" />
                   <h2 className="font-display mt-5 text-3xl font-bold">{r.name}</h2>
@@ -99,7 +101,7 @@ export default async function Home({ params }: PageProps<'/[locale]'>) {
           </div>
         </section>
       </main>
-      <SiteFooter sample />
+      <SiteFooter sample rooms={false} />
     </>
   )
 }

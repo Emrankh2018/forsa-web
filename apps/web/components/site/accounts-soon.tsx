@@ -23,7 +23,11 @@ export async function AccountsSoon({ title, next }: { title: string; next: strin
               {next ? <Link href={next} className="btn-arch">{t('backTo')}</Link> : null}
               <Link href="/projects" className={next ? 'btn-quiet underline underline-offset-4' : 'btn-arch'}>{t('browse')}</Link>
             </div>
-            <p className="mt-10 text-ink-soft">{t('orgNote')}</p>
+            <p className="mt-8 text-ink-soft">
+              {t('newHere')}{' '}
+              <Link href={next ? { pathname: '/join', query: { next } } : '/join'} className="font-medium text-ink underline underline-offset-4">{t('chooseCta')}</Link>
+            </p>
+            <p className="mt-6 text-ink-soft">{t('orgNote')}</p>
             <Link href="/partners" className="btn-quiet -ms-3 underline underline-offset-4">{t('orgCta')}</Link>
           </div>
         </section>

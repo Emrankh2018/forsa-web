@@ -52,14 +52,18 @@ for (const locale of ['ar', 'en'] as const) {
     await expect(page.locator('html')).toHaveAttribute('dir', other === 'ar' ? 'rtl' : 'ltr')
   })
 
-  test(`${locale}: keyboard reaches skip link, home and the main navigation`, async ({ page }) => {
+  test(`${locale}: keyboard reaches skip link, home, language, come in, then the hall doors`, async ({ page }) => {
     await page.goto(`/${locale}`)
     await page.keyboard.press('Tab')
     await expect(page.getByRole('link', { name: t.common.skipToContent })).toBeFocused()
     await page.keyboard.press('Tab')
     await expect(page.getByRole('link', { name: t.common.homeLabel })).toBeFocused()
     await page.keyboard.press('Tab')
-    await expect(page.getByRole('navigation', { name: t.nav.main }).getByRole('link', { name: t.nav.projects })).toBeFocused()
+    await expect(page.getByRole('link', { name: t.common.languageSwitch })).toBeFocused()
+    await page.keyboard.press('Tab')
+    await expect(page.getByRole('link', { name: t.nav.enterLabel })).toBeFocused()
+    await page.keyboard.press('Tab')
+    await expect(page.locator('.hall a').first()).toBeFocused()
   })
 
   test(`${locale}: unknown address shows the not-found page`, async ({ page }) => {

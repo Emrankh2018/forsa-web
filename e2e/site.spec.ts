@@ -34,6 +34,7 @@ const pages = [
   '/terms',
   '/sign-in?next=/projects',
   '/join',
+  '/join?as=organisation&next=/partners',
   '/showcase',
 ]
 
@@ -68,7 +69,9 @@ for (const locale of ['ar', 'en'] as const) {
   test(`${locale}: journey 1 — browse, open a project, ask to join, reach sign-in, come back`, async ({ page }) => {
     const t = messages[locale]
     await page.goto(`/${locale}`)
-    await page.getByRole('navigation', { name: t.nav.main }).getByRole('link', { name: t.nav.projects }).click()
+    // No menu: the hall's doors are the way in.
+    await expect(page.getByRole('navigation', { name: t.nav.main })).toHaveCount(0)
+    await page.locator('.hall a[href$="/projects"]').click()
     await expect(page).toHaveURL(new RegExp(`/${locale}/projects$`))
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(t.projectsPage.title)
 
@@ -132,9 +135,28 @@ test('moving between pages passes a threshold (view transition runs on navigatio
         setTimeout(() => { clearInterval(id); resolve([...names]) }, 1200)
       }),
   )
-  await page.getByRole('navigation', { name: messages.en.nav.main }).getByRole('link', { name: messages.en.nav.learn }).click()
+  await page.locator('.hall a[href$="/learn"]').click()
   const names = await seen
   expect(names.some((n) => n.includes('threshold-open'))).toBe(true)
   await expect(page).toHaveURL(/\/en\/learn$/)
 })
+
+for (const locale of ['ar', 'en'] as const) {
+  test(`${locale}: come in, choose a door, and move between rooms by the doors`, async ({ page }) => {
+    const t = messages[locale]
+    await page.goto(`/${locale}/projects`)
+    await page.getByRole('link', { name: t.nav.enterLabel }).click()
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(t.account.chooseTitle)
+    await page.locator('main a[href*="as=trainer"]').click()
+    await expect(page).toHaveURL(/as=trainer/)
+    await expect(page.getByRole('status')).toContainText(t.account.chosen.replace('{door}', t.account.trainer))
+    await expect(page.locator('main a[href*="as=trainer"]')).toHaveAttribute('aria-current', 'true')
+    // The doors at the end of the page lead to the other rooms; your own door is marked current here.
+    const rooms = page.getByRole('navigation', { name: t.footer.roomsTitle })
+    await expect(rooms.locator('a[href$="/join"]')).toHaveAttribute('aria-current', 'page')
+    await rooms.locator('a[href$="/learn"]').click()
+    await expect(page).toHaveURL(new RegExp(`/${locale}/learn$`))
+    await expect(page.getByRole('navigation', { name: t.footer.roomsTitle }).locator('a[href$="/learn"]')).toHaveAttribute('aria-current', 'page')
+  })
+}
 

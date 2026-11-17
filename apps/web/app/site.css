@@ -107,7 +107,7 @@
 }
 .hall > * { scroll-snap-align: start; }
 @media (min-width: 900px) {
-  .hall { grid-auto-flow: row; grid-template-columns: repeat(3, minmax(0, 18rem)); gap: clamp(2rem, 5vw, 5rem); overflow: visible; }
+  .hall { grid-auto-flow: row; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(1.5rem, 3vw, 3rem); overflow: visible; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -137,21 +137,9 @@
   .skeleton { animation: none; }
 }
 
-/* Header: the compact arch button on phones, and the current area marked with the first line. */
+/* The compact arch button (phone action bar). */
 .btn-arch--compact { min-height: 44px; padding: 0.5rem 1rem 0.4rem; font-size: 0.9375rem; }
 @media (min-width: 640px) { .btn-arch--compact { min-height: 48px; padding: 0.75rem 1.5rem 0.625rem; font-size: 1rem; } }
-.nav-link { position: relative; white-space: nowrap; }
-@media (max-width: 639px) { .nav-link { padding-inline: 0.55rem; font-size: 0.9375rem; } .nav-link--on::after { inset-inline: 0.55rem; } }
-.nav-link--on::after {
-  content: '';
-  position: absolute;
-  inset-inline: 0.75rem;
-  inset-block-end: 4px;
-  height: 2px;
-  background: linear-gradient(to var(--line-dir, left), var(--color-maroon) 0 14px, var(--color-line) 14px);
-}
-:root[dir='rtl'] .nav-link--on::after { --line-dir: left; }
-:root[dir='ltr'] .nav-link--on::after { --line-dir: right; }
 
 /* The language link is written in the language it leads to. */
 .lang-switch:lang(ar) { font-family: var(--font-plex-arabic), system-ui, sans-serif; font-size: 1rem; }
@@ -180,4 +168,56 @@
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-old(*), ::view-transition-new(*), ::view-transition-group(*) { animation-duration: 0s !important; animation-delay: 0s !important; }
 }
+
+  /* "Come in": an arch button with a small door that swings open on hover and focus. */
+  .come-in {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.45rem 1.1rem 0.4rem 0.9rem;
+    border-radius: 9999px 9999px 6px 6px;
+    background: var(--color-ink);
+    color: var(--color-paper);
+    font-weight: 500;
+    perspective: 200px;
+  }
+  .come-in__door {
+    position: relative;
+    width: 0.95rem;
+    height: 1.35rem;
+    border-radius: 9999px 9999px 0 0;
+    background: var(--color-sand);
+    overflow: hidden;
+  }
+  .come-in__leaf {
+    position: absolute;
+    inset: 0;
+    background: var(--color-maroon);
+    transform-origin: var(--hinge) 50%;
+    transform: rotateY(calc(12deg * var(--sign)));
+    transition: transform 450ms var(--ease-forsa);
+  }
+  .come-in:hover .come-in__leaf,
+  .come-in:focus-visible .come-in__leaf { transform: rotateY(calc(78deg * var(--sign))); }
+  .come-in:hover { background: #22312d; }
+  @media (prefers-reduced-motion: reduce) { .come-in__leaf { transition: none; } }
+
+  /* The visitor's own door in the hall: night, closed, a keyhole of light until you approach. */
+  .door--yours { background: var(--color-sand); }
+  .door--yours .door__leaf { background: var(--color-night); }
+  .keyhole {
+    position: absolute;
+    z-index: 2;
+    /* On the leaf's free edge, where a handle would be. */
+    inset-inline-start: 16%;
+    top: 58%;
+    width: 10px;
+    height: 22px;
+    background: var(--color-sand);
+    clip-path: polygon(30% 45%, 0 100%, 100% 100%, 70% 45%, 100% 30%, 100% 0, 0 0, 0 30%);
+    border-radius: 50% 50% 0 0;
+    transition: opacity 300ms var(--ease-forsa);
+  }
+  .room:hover .keyhole, .room:focus-visible .keyhole { opacity: 0; }
 }

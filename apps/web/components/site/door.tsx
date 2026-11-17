@@ -11,6 +11,7 @@ export function Door({
   className = '',
   tone = 'paper',
   swing = false,
+  keyhole = false,
   style,
 }: {
   open: number
@@ -19,6 +20,8 @@ export function Door({
   className?: string
   tone?: 'paper' | 'night'
   swing?: boolean
+  /** A keyhole of light on the closed leaf (the visitor's own door). */
+  keyhole?: boolean
   style?: CSSProperties
 }) {
   const vars = { '--open': open, '--open-hover': openHover ?? Math.min(84, open + 25), ...style } as CSSProperties
@@ -29,6 +32,7 @@ export function Door({
     >
       {light ? <div className="door__light">{light}</div> : null}
       <div className="door__leaf" aria-hidden="true" />
+      {keyhole ? <span className="keyhole" aria-hidden="true" /> : null}
     </div>
   )
 }
