@@ -1,9 +1,9 @@
 # Forsa platform v4 — progress
 
 ## Resume here
-**HOLD (D-115, owner, 2026-11-17): do not start phase 3 and do no database or back-end work until the owner's Hostinger VPS exists.** The database will live on that server, not on a third-party service. Until then: front-end polish only.
-Current work: front-end polish pass after phase 2. Last commit: see `git log -1`.
-Next exact step: continue the polish list in the "Front-end polish" section below; when the owner says the VPS is ready, plan how the database and sign-in run on it before resuming phase 3.
+**HOLD (D-115): no phase 3, no database or back-end work until the owner's Hostinger VPS exists.** Front-end only.
+Latest: doors replace the menu (D-116); site published at https://forsa-demo.vercel.app (D-117). Last commit: see `git log -1`.
+Next exact step: wait for the owner. After any push to `main`, re-point the `forsa-demo.vercel.app` alias to the new production deployment (see Hosting rules).
 
 ---
 
@@ -39,6 +39,7 @@ Plan: `../../production/PLATFORM-PLAN-V4.md`. Builder: Claude Opus 5.5 in the ow
 - Earlier rule, now replaced by the owner's instruction: production builds were skipped and the first automatic production deployment was cancelled.
 - The address `forsa-demo.vercel.app` is attached as an alias to the latest `forsa-web` production deployment (it is still registered as a domain of the old `forsa-demo` project, which no tool here can remove, so after each production deploy the alias is re-pointed). To show the old demo again: assign the alias back to `dpl_4cwRZ1wBg1LCUc38P5cJhs1vXss1`.
 - Previews still come from the `preview` branch and stay behind Vercel sign-in.
+- **Live check 2026-11-17:** `forsa-demo.vercel.app` is public (no sign-in), serves commit a754522 (`dpl_6gMHoJ4xcjUMLYXf4L7b7pjHgiNY`), sends `noindex`; the full browser suite against it: **240 passed**.
 
 ### Supabase advisor
 - One warning, accepted on purpose: `public.set_setting` is a security-definer function callable by signed-in users. It is the only write path to settings and checks for an admin itself (tested: participant and visitor refused with 42501). Every later state-change function follows the same pattern and will show the same warning.
