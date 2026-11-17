@@ -18,12 +18,12 @@ afterAll(async () => {
 })
 
 describe('every table', () => {
-  it('has row-level security enabled and forced', async () => {
+  it('has row-level security enabled and forced (every table in public, including later ones)', async () => {
     const tables = await rows<{ relname: string; relrowsecurity: boolean; relforcerowsecurity: boolean }>(`
       select c.relname, c.relrowsecurity, c.relforcerowsecurity
       from pg_class c join pg_namespace n on n.oid = c.relnamespace
       where n.nspname = 'public' and c.relkind = 'r'`)
-    expect(tables.map((t) => t.relname).sort()).toEqual(['audit_log', 'profiles', 'settings'])
+    expect(tables.map((t) => t.relname)).toEqual(expect.arrayContaining(['audit_log', 'profiles', 'settings']))
     for (const t of tables) {
       expect(t.relrowsecurity, t.relname).toBe(true)
       expect(t.relforcerowsecurity, t.relname).toBe(true)
