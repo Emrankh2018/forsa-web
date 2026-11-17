@@ -1,0 +1,41 @@
+{
+  "measured": "2026-11-17T02:08:47.344Z",
+  "conditions": "390px, CPU x4, 1.6 Mbps / 150 ms, local production build",
+  "results": [
+    {
+      "route": "/ar",
+      "lcpMs": 1488,
+      "transferKb": 687
+    },
+    {
+      "route": "/en",
+      "lcpMs": 1296,
+      "transferKb": 684
+    },
+    {
+      "route": "/ar/projects",
+      "lcpMs": 1544,
+      "transferKb": 707
+    },
+    {
+      "route": "/ar/projects/cafe-launch-campaign",
+      "lcpMs": 1304,
+      "transferKb": 688
+    },
+    {
+      "route": "/ar/learn",
+      "lcpMs": 1116,
+      "transferKb": 702
+    },
+    {
+      "route": "/ar/guides/interview",
+      "lcpMs": 1264,
+      "transferKb": 692
+    },
+    {
+      "route": "/ar/partners",
+      "lcpMs": 1268,
+      "transferKb": 698
+    }
+  ]
+}
