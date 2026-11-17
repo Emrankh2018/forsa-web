@@ -62,12 +62,8 @@ export default async function JoinPage({ params, searchParams }: PageProps<'/[lo
             {chosen ? (
               <>
                 <p className="font-medium text-maroon">{t('chosen', { door: t(chosen) })}</p>
-                <p className="font-display mt-2 text-2xl font-bold">{t('soonTitle')}</p>
-                <p className="mt-2 max-w-2xl">{t('soonBody')}</p>
-                <p className="mt-1 max-w-2xl text-ink-soft">{t('returnNote')}</p>
-                <div className="mt-5 flex flex-wrap gap-3">
-                  {next ? <Link href={next} className="btn-arch">{t('backTo')}</Link> : null}
-                  <Link href="/projects" className={next ? 'btn-quiet underline underline-offset-4' : 'btn-arch'}>{t('browse')}</Link>
+                <div className="mt-4 flex flex-wrap gap-3">
+                  <Link href={`/join/${chosen}`} className="btn-arch">{t('continue')}</Link>
                 </div>
                 <Link href={inside[chosen]} className="btn-quiet -ms-3 mt-4 underline underline-offset-4">{app('lookInside')}</Link>
               </>

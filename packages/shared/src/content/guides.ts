@@ -12,7 +12,7 @@ export type GuideSection = {
 }
 
 export type Guide = {
-  slug: 'cv' | 'linkedin' | 'interview' | 'networking'
+  slug: 'cv' | 'linkedin' | 'interview' | 'networking' | 'first-week' | 'portfolio'
   title: Bilingual
   summary: Bilingual
   minutes: number
@@ -265,6 +265,136 @@ export const guides: Guide[] = [
           { ar: 'عندي سؤالان أبدأ بهما الحديث', en: 'I have two questions to open a conversation' },
           { ar: 'ملفي على لينكدإن محدّث', en: 'My LinkedIn profile is up to date' },
           { ar: 'أتابع خلال يومين', en: 'I follow up within two days' },
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'first-week',
+    title: { ar: 'أسبوعك الأول في العمل', en: 'Your first week at work' },
+    summary: {
+      ar: 'ما الذي يُنتظر منك في الأيام الأولى، وكيف تسأل دون أن تتردد، وكيف تترك انطباعًا يبقى.',
+      en: 'What is expected of you in the first days, how to ask questions without hesitating, and how to leave an impression that lasts.',
+    },
+    minutes: 6,
+    sessionSlug: 'career-guidance',
+    sections: [
+      {
+        id: 'expect',
+        heading: { ar: 'ما الذي يُنتظر منك فعلًا', en: 'What is really expected of you' },
+        paragraphs: [
+          {
+            ar: 'لا أحد ينتظر منك أن تعرف كل شيء في الأسبوع الأول. المطلوب أن تفهم كيف يسير العمل، ومن تسأل عن ماذا، وأن تُنجز أول مهمة صغيرة بعناية.',
+            en: 'Nobody expects you to know everything in the first week. What matters is understanding how the work runs, who to ask about what, and finishing your first small task with care.',
+          },
+          {
+            ar: 'اسأل مديرك في اليوم الأول: «كيف أعرف بعد شهر أنني أؤدي جيدًا؟» الجواب يخبرك بما يهمه حقًا.',
+            en: 'Ask your manager on day one: “How will I know in a month that I am doing well?” The answer tells you what they really care about.',
+          },
+        ],
+      },
+      {
+        id: 'questions',
+        heading: { ar: 'كيف تسأل دون أن تتردد', en: 'Asking without hesitating' },
+        paragraphs: [
+          {
+            ar: 'جرّب وحدك ربع ساعة، ثم اسأل. وحين تسأل، قل ما جربته: «بحثت في الملف المشترك ولم أجد النموذج، أين أجده؟» هذا سؤال يحترم وقت من تسأله.',
+            en: 'Try on your own for fifteen minutes, then ask. When you do, say what you tried: “I looked in the shared folder and could not find the template, where is it?” That kind of question respects the other person’s time.',
+          },
+          {
+            ar: 'اجمع الأسئلة غير العاجلة واطرحها مرة واحدة في اليوم بدل أن تقاطع كل ساعة.',
+            en: 'Collect the questions that can wait and ask them together once a day instead of interrupting every hour.',
+          },
+        ],
+      },
+      {
+        id: 'notes',
+        heading: { ar: 'دفتر الأسبوع الأول', en: 'A first-week notebook' },
+        paragraphs: [
+          {
+            ar: 'دوّن أسماء الناس وأدوارهم، والأدوات وكلمات الفريق الخاصة، وكل خطوة شُرحت لك. لن تحتاج أن تسأل السؤال نفسه مرتين.',
+            en: 'Write down people’s names and roles, the tools and the team’s own words, and every process someone explains to you. You will never need to ask the same question twice.',
+          },
+        ],
+      },
+      {
+        id: 'impression',
+        heading: { ar: 'الانطباع الذي يبقى', en: 'The impression that lasts' },
+        paragraphs: [
+          {
+            ar: 'الالتزام بالمواعيد، والرد على الرسائل، وإخبار مديرك مبكرًا حين تتأخر مهمة: هذه الأشياء الصغيرة يتذكرها الناس أكثر من أي إنجاز كبير في الأسبوع الأول.',
+            en: 'Being on time, answering messages, and telling your manager early when a task will be late: people remember these small things more than any big achievement in your first week.',
+          },
+          {
+            ar: 'في نهاية الأسبوع، أرسل لمديرك ثلاثة أسطر: ما تعلمته، وما أنجزته، وما ستعمل عليه في الأسبوع القادم.',
+            en: 'At the end of the week, send your manager three lines: what you learned, what you finished, and what you will work on next week.',
+          },
+        ],
+        checklist: [
+          { ar: 'سألت كيف يبدو الأداء الجيد بعد شهر', en: 'I asked what doing well looks like in a month' },
+          { ar: 'أعرف من أسأل عن ماذا', en: 'I know who to ask about what' },
+          { ar: 'بدأت دفتر الأسبوع الأول', en: 'I started a first-week notebook' },
+          { ar: 'أرسلت ملخص الأسبوع لمديري', en: 'I sent my manager a summary of the week' },
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'portfolio',
+    title: { ar: 'ملف أعمالك من الصفر', en: 'Building a portfolio from scratch' },
+    summary: {
+      ar: 'كيف تختار ما تعرضه حين تكون أعمالك قليلة، وكيف تكتب عن كل عمل بحيث يفهم القارئ ما فعلته أنت.',
+      en: 'How to choose what to show when you have little work yet, and how to write about each piece so a reader understands what you did.',
+    },
+    minutes: 7,
+    sessionSlug: 'career-guidance',
+    sections: [
+      {
+        id: 'what',
+        heading: { ar: 'ما الذي يدخل الملف', en: 'What goes in' },
+        paragraphs: [
+          {
+            ar: 'ثلاثة أعمال جيدة أفضل من عشرة متوسطة. اختر ما يقترب من العمل الذي تريده: مشروع لشركة، أو مشروع تخرج، أو عمل صنعته لنفسك وحللت فيه مشكلة حقيقية.',
+            en: 'Three good pieces beat ten average ones. Choose what is closest to the work you want: a project for a company, a graduation project, or something you made for yourself that solved a real problem.',
+          },
+          {
+            ar: 'المشاريع التي تنهيها في فرصة وتقبلها الشركة تُحفظ في سجلك مع ملاحظاتها، ويمكنك أن تضعها في ملفك مباشرة.',
+            en: 'Projects you finish on Forsa that the company accepts are kept on your record with their feedback, and you can put them in your portfolio straight away.',
+          },
+        ],
+      },
+      {
+        id: 'story',
+        heading: { ar: 'اكتب القصة لا القائمة', en: 'Tell the story, not the list' },
+        paragraphs: [
+          {
+            ar: 'لكل عمل أربعة أسطر: المشكلة، وما فعلته أنت تحديدًا، والنتيجة، وما تعلمته. وإن كان العمل جماعيًا فقل بوضوح ما كان دورك.',
+            en: 'Give each piece four lines: the problem, what you did yourself, the result, and what you learned. If it was group work, say clearly what your part was.',
+          },
+          {
+            ar: 'اعرض المراحل لا النتيجة وحدها: مسودة أولى، وما تغير بعد الملاحظات، والنسخة النهائية. صاحب العمل يريد أن يرى كيف تفكر.',
+            en: 'Show the stages, not only the result: a first draft, what changed after feedback, and the final version. An employer wants to see how you think.',
+          },
+        ],
+      },
+      {
+        id: 'where',
+        heading: { ar: 'أين تضعه', en: 'Where to put it' },
+        paragraphs: [
+          {
+            ar: 'رابط واحد يفتح بسرعة على الهاتف أهم من تصميم معقد. ملف مرتب أو صفحة بسيطة يكفي، وضع الرابط في سيرتك وفي ملفك على لينكدإن.',
+            en: 'One link that opens quickly on a phone matters more than a complex design. A tidy file or a simple page is enough; put the link in your CV and on your LinkedIn profile.',
+          },
+          {
+            ar: 'لا تنشر عملًا لشركة دون إذنها. اسأل أولًا، وإن رفضت فاعرض وصفًا للعمل دون بياناتها.',
+            en: 'Do not publish work for a company without its permission. Ask first; if it says no, describe the work without its data.',
+          },
+        ],
+        checklist: [
+          { ar: 'اخترت ثلاثة أعمال قريبة من الدور الذي أريده', en: 'I chose three pieces close to the role I want' },
+          { ar: 'لكل عمل مشكلة ودور ونتيجة', en: 'Each piece has a problem, my part and a result' },
+          { ar: 'الرابط يفتح على الهاتف', en: 'The link opens on a phone' },
+          { ar: 'أخذت إذن الشركات قبل النشر', en: 'I asked companies before publishing their work' },
         ],
       },
     ],

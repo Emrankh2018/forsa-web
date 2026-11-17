@@ -2,7 +2,7 @@
 
 ## Resume here
 **HOLD (D-115): no phase 3, no database or back-end work until the owner's Hostinger VPS exists.** Front-end only. Certificates (item 2 of the front-end list) are deferred by the owner.
-Latest: signed-in prototypes, networking guide and tools, motion, share images, email designs, accessibility and Lighthouse pass; live at https://forsa-demo.vercel.app (commit 201bf43). Last commit: see `git log -1`.
+Latest: the missing prototype screens (sign-in, onboarding, organisation and trainer sign-up, workshop booking, 1-to-1 slot picker, course player, settings, notices), the user-testing kit at `/test`, shared form rules, lazy arrival script, two more guides and a fuller FAQ. Last commit: see `git log -1`.
 Next exact step: wait for the owner. After any push to `main` that changes the site, re-point the `forsa-demo.vercel.app` alias to the new production deployment.
 
 ---
@@ -169,3 +169,28 @@ The "Come in" page's chosen door links to its area. Sample data: `packages/share
 - Fonts: already trimmed to the weights in use (Amiri Bold only; English text face loaded on demand); first visit about 570 KB. Removing more would drop weights the pages use.
 - Not possible here: a real screen-reader session (no screen reader on this machine); axe and keyboard checks stand in, and the gap is stated.
 - Checks: copy check, lint, typecheck, 16 unit + 31 database tests, build; **408 browser checks passed on the live site** (forsa-demo.vercel.app, commit 201bf43).
+
+## Front-end work during the hold, part 2 (owner: "you can do from 1 to 4")
+
+### 1. Missing prototype screens (all save nothing)
+- Sign-in `/sign-in`: email, then a six-digit code (any six digits in the prototype), Google shown where it will be, then the way back to `?next=` (still refuses links off the site).
+- Joining: the chosen door on `/join` continues to `/join/participant` (onboarding in four checked steps), `/join/organisation` (registration, then "under review") and `/join/trainer` (application, then "under review").
+- Booking: `/workshops/<slug>/book` (hold a seat, then the ticket once the team confirms payment; payment stays manual) and `/sessions/<slug>/book` (week of open times in Qatar time).
+- Participant area: course player `/me/learning/courses/<slug>/<lesson>` (progress kept for the browser tab only), `/me/settings` (language, notices, privacy, delete account with a typed word), `/me/notices`.
+
+### 2. User-testing kit
+- `/test` (not indexed): participant and company tasks that open in a new tab, an ease scale and a note after each, two closing questions, "Copy your answers" (clipboard only; nothing is sent). Facilitator script: `docs/user-testing.md`.
+
+### 3. Shared form rules
+- `packages/shared/src/schemas/forms.ts` (zod 4, messages are keys under `forms.errors`), 8 unit tests; used by every prototype form through `apps/web/lib/use-form-check.ts`. Forms use `noValidate` so the site's own messages show instead of the browser's.
+
+### 4. Polish
+- Arrival: GSAP is fetched only when the door plays (return visits and reduced motion never load it); the door stays hidden until it starts.
+- Guides: "Your first week at work" and "Building a portfolio from scratch".
+- FAQ: 14 questions (language, changes requested, trainers, posting a project, deleting an account, free guides).
+- Removed the unused "accounts soon" component.
+
+### Checks
+- Copy check, lint, typecheck, 24 shared + 31 database tests, build.
+- Full browser suite locally: 492 passed, 3 failed (the project wizard showed the browser's own required-field popup instead of the site's message); fixed with `noValidate`, then the 33 interaction checks and the new arrival check passed.
+

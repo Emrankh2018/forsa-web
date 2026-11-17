@@ -4,6 +4,8 @@ import { useId, useRef, useState, type KeyboardEvent } from 'react'
 import { useTranslations } from 'next-intl'
 import { SuccessState, EmptyState } from '@/components/ui/states'
 import { TextArea, TextField } from '@/components/ui/field'
+import { handInSchema, questionSchema, updateSchema } from '@forsa/shared'
+import { useFormCheck } from '@/lib/use-form-check'
 
 type Props = {
   brief: string[]
@@ -34,6 +36,7 @@ export function Workspace(props: Props) {
   const [questions, setQuestions] = useState(props.questions)
   const [handedIn, setHandedIn] = useState(false)
   const refs = useRef<Array<HTMLButtonElement | null>>([])
+  const { errors, check } = useFormCheck()
 
   const onKey = (e: KeyboardEvent, i: number) => {
     const rtl = document.documentElement.dir === 'rtl'
@@ -116,18 +119,18 @@ export function Workspace(props: Props) {
         {tab === 'updates' ? (
           <>
             <p className="text-ink-soft">{t('updatesLead')}</p>
-            <form
+            <form noValidate
               className="mt-6 space-y-3"
               onSubmit={(e) => {
                 e.preventDefault()
                 const text = new FormData(e.currentTarget).get('update')
-                if (typeof text === 'string' && text.trim()) {
+                if (typeof text === 'string' && check(updateSchema, { update: text })) {
                   setUpdates([...updates, { date: '', text: text.trim(), files: 0, filesText: '' }])
                   e.currentTarget.reset()
                 }
               }}
             >
-              <TextArea id="update" label={t('updateLabel')} placeholder={t('updatePlaceholder')} rows={3} />
+              <TextArea id="update" label={t('updateLabel')} placeholder={t('updatePlaceholder')} rows={3} error={errors.update} />
               <button type="submit" className="btn-arch">{t('post')}</button>
             </form>
             <ul className="mt-8 divide-y divide-line border-y border-line" role="list">
@@ -153,18 +156,18 @@ export function Workspace(props: Props) {
                 </li>
               ))}
             </ul>
-            <form
+            <form noValidate
               className="mt-8 space-y-3"
               onSubmit={(e) => {
                 e.preventDefault()
                 const text = new FormData(e.currentTarget).get('question')
-                if (typeof text === 'string' && text.trim()) {
+                if (typeof text === 'string' && check(questionSchema, { question: text })) {
                   setQuestions([...questions, { date: '', q: text.trim(), a: null }])
                   e.currentTarget.reset()
                 }
               }}
             >
-              <TextField id="question" label={t('askLabel')} />
+              <TextField id="question" label={t('askLabel')} error={errors.question} />
               <button type="submit" className="btn-arch">{t('ask')}</button>
             </form>
           </>
@@ -178,15 +181,17 @@ export function Workspace(props: Props) {
             </>
           ) : (
             <form
+              noValidate
               className="space-y-6"
               onSubmit={(e) => {
                 e.preventDefault()
-                setHandedIn(true)
+                const fd = new FormData(e.currentTarget)
+                if (check(handInSchema, { text: fd.get('handin-text') ?? '', links: fd.get('handin-links') ?? '' })) setHandedIn(true)
               }}
             >
               <p className="text-ink-soft">{t('handInLead')}</p>
-              <TextArea id="handin-text" label={t('handInText')} rows={5} />
-              <TextField id="handin-links" type="url" label={t('handInLinks')} placeholder="https://" />
+              <TextArea id="handin-text" label={t('handInText')} rows={5} error={errors.text} />
+              <TextField id="handin-links" type="url" label={t('handInLinks')} placeholder="https://" error={errors.links} />
               <div>
                 <label htmlFor="handin-files" className="block font-medium">{t('handInFiles')}</label>
                 <p id="handin-files-hint" className="mt-1 text-sm text-ink-soft">{t('handInFilesHint')}</p>

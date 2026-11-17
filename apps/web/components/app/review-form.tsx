@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { TextArea } from '@/components/ui/field'
 import { SuccessState } from '@/components/ui/states'
+import { reviewSchema } from '@forsa/shared'
+import { useFormCheck } from '@/lib/use-form-check'
 
 type Decision = 'accepted' | 'changes_requested' | 'declined'
 
@@ -17,6 +19,7 @@ export function ReviewForm({ ratingMarks }: { ratingMarks: string[] }) {
   const [decision, setDecision] = useState<Decision | null>(null)
   const [rating, setRating] = useState(0)
   const [sent, setSent] = useState(false)
+  const { errors, check } = useFormCheck()
 
   if (sent) {
     return (
@@ -35,10 +38,12 @@ export function ReviewForm({ ratingMarks }: { ratingMarks: string[] }) {
 
   return (
     <form
+      noValidate
       className="space-y-6"
       onSubmit={(e) => {
         e.preventDefault()
-        if (decision) setSent(true)
+        const fd = new FormData(e.currentTarget)
+        if (check(reviewSchema, { decision: decision ?? '', feedback: fd.get('feedback') ?? '', strengths: fd.get('strengths') ?? '', rating })) setSent(true)
       }}
     >
       <fieldset>
@@ -52,7 +57,7 @@ export function ReviewForm({ ratingMarks }: { ratingMarks: string[] }) {
           ))}
         </div>
       </fieldset>
-      <TextArea id="feedback" label={t('feedback')} hint={t('feedbackHint')} rows={5} required={decision !== 'accepted'} />
+      <TextArea id="feedback" label={t('feedback')} hint={t('feedbackHint')} rows={5} required={decision !== 'accepted'} error={errors.feedback} />
       {decision === 'accepted' ? <TextArea id="strengths" label={t('strengths')} hint={t('strengthsHint')} rows={3} /> : null}
       <fieldset>
         <legend className="font-medium">{t('rating')}</legend>

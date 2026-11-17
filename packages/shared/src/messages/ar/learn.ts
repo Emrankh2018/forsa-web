@@ -10,7 +10,7 @@ export const arLearn = {
     coursesRoom: 'الدورات المسجلة',
     coursesLine: 'دروس قصيرة تشاهدها في وقتك، وتحفظ المنصة أين وصلت.',
     guidesRoom: 'الأدلة المجانية',
-    guidesLine: 'السيرة الذاتية ولينكدإن والمقابلة والتعارف المهني، بخطوات وقوائم تحقق.',
+    guidesLine: 'السيرة الذاتية ولينكدإن والمقابلة والتعارف المهني وأسبوعك الأول وملف الأعمال، بخطوات وقوائم تحقق.',
     behindWorkshops: 'القادمة: {date}',
     behindSessions: '{count, plural, one {نوع واحد من الجلسات} two {نوعان من الجلسات} few {{n} أنواع من الجلسات} other {{n} نوعًا من الجلسات}}',
     behindCourses: '{count, plural, one {دورة واحدة} two {دورتان} few {{n} دورات} other {{n} دورة}}',

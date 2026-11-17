@@ -117,7 +117,7 @@ html[data-arrival-done] .arrival { display: none; }
 }
 
 .arrival-door { background: var(--color-night); color: var(--color-on-night-soft); }
-.arrival-door .door-svg { height: min(56vh, 70vw); width: auto; will-change: transform; }
+.arrival-door .door-svg { height: min(56vh, 70vw); width: auto; will-change: transform; opacity: 0; }
 
 .arrival-line { color: var(--color-ink-soft); }
 .arrival-line .line-paper { position: absolute; inset: 0; background: var(--color-paper); }

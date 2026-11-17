@@ -1,44 +1,57 @@
 'use client'
 
-import { useRef } from 'react'
-import gsap from 'gsap'
-import { useGSAP } from '@gsap/react'
+import { useEffect, useRef } from 'react'
 import { useArrival } from './use-arrival'
-
-gsap.registerPlugin(useGSAP)
 
 /**
  * The arrival (decision D-114): night, the Forsa door closed; the leaf swings on its hinge until the door
  * stands as it does in the logo, light falls on the floor, then the view passes through the gap.
  * Geometry is the logo's own (design/logo/forsa-symbol.svg). Only transform and opacity animate.
+ * GSAP is fetched only when the arrival plays, so return visits and reduced motion never load it.
  */
 export function ArrivalDoor({ skipLabel }: { skipLabel: string }) {
   const scope = useRef<HTMLDivElement>(null)
   const finish = useRef<() => void>(() => {})
   const { state, done } = useArrival('forsa.arrival', finish)
 
-  useGSAP(
-    () => {
-      if (state !== 'playing') return
-      const q = gsap.utils.selector(scope)
+  const doneRef = useRef(done)
+  useEffect(() => {
+    doneRef.current = done
+  })
+
+  useEffect(() => {
+    if (state !== 'playing') return
+    let cancelled = false
+    let kill = () => {}
+    import('gsap').then(({ gsap }) => {
+      const root = scope.current
+      if (cancelled || !root) return
+      const q = gsap.utils.selector(root)
+      const end = () => doneRef.current()
       gsap.set(q('.door-leaf'), { svgOrigin: '70 262', scaleX: 0.985 })
       gsap.set(q('.door-floor'), { svgOrigin: '186 262', scaleY: 0 })
       gsap.set(q('.door-svg'), { opacity: 0, scale: 0.94, transformOrigin: '50% 60%' })
 
-      const tl = gsap.timeline({ onComplete: done })
+      const tl = gsap.timeline({ onComplete: end })
       tl.to(q('.door-svg'), { opacity: 1, scale: 1, duration: 0.5, ease: 'power2.out' })
         .to(q('.door-leaf'), { scaleX: 0.725, duration: 0.9, ease: 'power2.inOut' }, '+=0.1')
         .to(q('.door-floor'), { scaleY: 1, duration: 0.6, ease: 'power2.out' }, '<0.35')
         .to(q('.door-svg'), { scale: 18, transformOrigin: '77.9% 52.6%', duration: 0.8, ease: 'power3.in' }, '+=0.15')
-        .to(scope.current, { opacity: 0, duration: 0.35, ease: 'power1.out' }, '-=0.2')
+        .to(root, { opacity: 0, duration: 0.35, ease: 'power1.out' }, '-=0.2')
 
+      kill = () => tl.kill()
       finish.current = () => {
         tl.kill()
-        gsap.to(scope.current, { opacity: 0, duration: 0.2, onComplete: done })
+        gsap.to(root, { opacity: 0, duration: 0.2, onComplete: end })
       }
-    },
-    { scope, dependencies: [state] },
-  )
+    }).catch(() => doneRef.current())
+    // Any input before GSAP arrives ends the arrival at once.
+    finish.current = () => doneRef.current()
+    return () => {
+      cancelled = true
+      kill()
+    }
+  }, [state])
 
   if (state === 'done') return null
   return (

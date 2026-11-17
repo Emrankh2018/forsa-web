@@ -4,6 +4,8 @@ import { useRef, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { SelectField, TextArea, TextField } from '@/components/ui/field'
 import { SuccessState } from '@/components/ui/states'
+import { projectBriefSchema, projectJoinSchema, projectWorkSchema } from '@forsa/shared'
+import { useFormCheck } from '@/lib/use-form-check'
 
 const steps = ['brief', 'work', 'join', 'review'] as const
 
@@ -16,7 +18,8 @@ export function NewProjectWizard({ fields, stepNumbers, stepOf }: { fields: Arra
   const p = useTranslations('project')
   const app = useTranslations('app')
   const [step, setStep] = useState(0)
-  const [values, setValues] = useState<Record<string, string>>({ mode: 'open', seats: '10' })
+  const [values, setValues] = useState<Record<string, string>>({ mode: 'open', seats: '10', field: fields[0]?.value ?? '' })
+  const { errors, check } = useFormCheck()
   const [sent, setSent] = useState(false)
   const heading = useRef<HTMLHeadingElement>(null)
 
@@ -50,9 +53,17 @@ export function NewProjectWizard({ fields, stepNumbers, stepOf }: { fields: Arra
       </ol>
 
       <form
+        noValidate
         className="max-w-2xl space-y-6"
         onSubmit={(e) => {
           e.preventDefault()
+          const v = values
+          const ok =
+            step === 0 ? check(projectBriefSchema, { title: v.title ?? '', brief: v.brief ?? '', field: v.field ?? '' })
+            : step === 1 ? check(projectWorkSchema, { deliverables: v.deliverables ?? '', acceptance: v.acceptance ?? '', steps: v.steps ?? '' })
+            : step === 2 ? check(projectJoinSchema, { mode: v.mode, seats: v.seats ?? '', applyBy: v.applyBy ?? '', due: v.due ?? '' })
+            : true
+          if (!ok) return
           if (step < steps.length - 1) go(step + 1)
           else setSent(true)
         }}
@@ -64,16 +75,16 @@ export function NewProjectWizard({ fields, stepNumbers, stepOf }: { fields: Arra
 
         {step === 0 ? (
           <>
-            <TextField id="title" label={t('fTitle')} required {...bind('title')} />
-            <TextArea id="brief" label={t('fBrief')} hint={t('fBriefHint')} rows={6} {...bind('brief')} />
-            <SelectField id="field" label={t('fField')} options={fields} {...bind('field')} />
+            <TextField id="title" label={t('fTitle')} required {...bind('title')} error={errors.title} />
+            <TextArea id="brief" label={t('fBrief')} hint={t('fBriefHint')} rows={6} {...bind('brief')} error={errors.brief} />
+            <SelectField id="field" label={t('fField')} options={fields} {...bind('field')} error={errors.field} />
           </>
         ) : null}
         {step === 1 ? (
           <>
-            <TextArea id="deliverables" label={t('fDeliverables')} hint={t('fDeliverablesHint')} rows={4} {...bind('deliverables')} />
-            <TextArea id="acceptance" label={t('fAcceptance')} rows={3} {...bind('acceptance')} />
-            <TextArea id="steps" label={t('fSteps')} hint={t('fDeliverablesHint')} rows={5} {...bind('steps')} />
+            <TextArea id="deliverables" label={t('fDeliverables')} hint={t('fDeliverablesHint')} rows={4} {...bind('deliverables')} error={errors.deliverables} />
+            <TextArea id="acceptance" label={t('fAcceptance')} rows={3} {...bind('acceptance')} error={errors.acceptance} />
+            <TextArea id="steps" label={t('fSteps')} hint={t('fDeliverablesHint')} rows={5} {...bind('steps')} error={errors.steps} />
           </>
         ) : null}
         {step === 2 ? (
@@ -93,9 +104,9 @@ export function NewProjectWizard({ fields, stepNumbers, stepOf }: { fields: Arra
               </div>
             </fieldset>
             <div className="grid gap-6 sm:grid-cols-3">
-              <TextField id="seats" type="number" min={1} max={50} label={t('fSeats')} {...bind('seats')} />
-              {values.mode === 'apply' ? <TextField id="applyBy" type="date" label={t('fApplyBy')} {...bind('applyBy')} /> : null}
-              <TextField id="due" type="date" label={t('fDue')} {...bind('due')} />
+              <TextField id="seats" type="number" min={1} max={50} label={t('fSeats')} {...bind('seats')} error={errors.seats} />
+              {values.mode === 'apply' ? <TextField id="applyBy" type="date" label={t('fApplyBy')} {...bind('applyBy')} error={errors.applyBy} /> : null}
+              <TextField id="due" type="date" label={t('fDue')} {...bind('due')} error={errors.due} />
             </div>
           </>
         ) : null}

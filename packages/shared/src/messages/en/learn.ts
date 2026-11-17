@@ -10,7 +10,7 @@ export const enLearn = {
     coursesRoom: 'Recorded courses',
     coursesLine: 'Short lessons you watch in your own time; the platform remembers where you stopped.',
     guidesRoom: 'Free guides',
-    guidesLine: 'CV, LinkedIn, interviews and networking, with steps and checklists.',
+    guidesLine: 'CV, LinkedIn, interviews, networking, your first week and a portfolio, with steps and checklists.',
     behindWorkshops: 'Next: {date}',
     behindSessions: '{count, plural, one {One kind of session} other {{n} kinds of session}}',
     behindCourses: '{count, plural, one {One course} other {{n} courses}}',

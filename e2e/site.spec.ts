@@ -27,13 +27,22 @@ const pages = [
   '/guides/linkedin',
   '/guides/interview',
   '/guides/networking',
+  '/guides/first-week',
+  '/guides/portfolio',
   '/partners',
   '/trainers',
   '/about',
   '/faq',
   '/privacy',
   '/terms',
+  '/sign-in',
   '/sign-in?next=/projects',
+  '/join/participant',
+  '/join/organisation',
+  '/join/trainer',
+  '/workshops/cv-thirty-seconds/book',
+  '/sessions/cv-clinic/book',
+  '/test',
   '/join',
   '/join?as=organisation&next=/partners',
   '/showcase',
@@ -94,7 +103,19 @@ for (const locale of ['ar', 'en'] as const) {
     await page.getByRole('button', { name: t.project.save }).click()
     await page.getByRole('dialog', { name: t.signInPrompt.title }).getByRole('link', { name: t.signInPrompt.continue }).click()
     await expect(page).toHaveURL(new RegExp(`/${locale}/sign-in\\?next=%2Fprojects%2Fstore-support-assistant`))
-    await expect(page.getByRole('heading', { level: 1 })).toHaveText(t.account.soonTitle)
+    await expect(page.getByRole('heading', { level: 1 })).toHaveText(t.account.signInTitle)
+
+    // Sign in with a code (prototype: any six digits), checked by the shared rules first.
+    await page.getByRole('button', { name: t.signInFlow.send }).click()
+    await expect(page.getByText(t.forms.errors.email)).toBeVisible()
+    await page.getByLabel(t.signInFlow.email).fill('sara@example.com')
+    await page.getByRole('button', { name: t.signInFlow.send }).click()
+    await page.getByLabel(t.signInFlow.code).fill('12')
+    await page.getByRole('button', { name: t.signInFlow.verify }).click()
+    await expect(page.getByText(t.forms.errors.code)).toBeVisible()
+    await page.getByLabel(t.signInFlow.code).fill('123456')
+    await page.getByRole('button', { name: t.signInFlow.verify }).click()
+    await expect(page.getByText(t.signInFlow.doneTitle)).toBeVisible()
 
     // And back to exactly where the visitor was.
     await page.getByRole('link', { name: t.account.backTo }).click()
@@ -115,7 +136,13 @@ for (const locale of ['ar', 'en'] as const) {
   })
 
   test(`${locale}: a sign-in link from elsewhere never sends you off the site`, async ({ page }) => {
+    const t = messages[locale]
     await page.goto(`/${locale}/sign-in?next=https://evil.example`)
+    await page.getByLabel(t.signInFlow.email).fill('sara@example.com')
+    await page.getByRole('button', { name: t.signInFlow.send }).click()
+    await page.getByLabel(t.signInFlow.code).fill('123456')
+    await page.getByRole('button', { name: t.signInFlow.verify }).click()
+    await expect(page.getByText(t.signInFlow.doneTitle)).toBeVisible()
     await expect(page.getByRole('link', { name: messages[locale].account.backTo })).toHaveCount(0)
   })
 }
@@ -201,3 +228,10 @@ test('guides: the pitch builder times the introduction, the CV checker flags a w
   await expect(page.getByText(t.cvcheck.ok)).toBeVisible()
 })
 
+
+test('arrival: the door plays when asked and ends by itself (GSAP is fetched on demand)', async ({ page }) => {
+  await page.goto('/en?intro=1')
+  await expect(page.locator('.arrival-door')).toBeAttached()
+  await expect(page.locator('html')).toHaveAttribute('data-arrival-done', '', { timeout: 4500 })
+  await expect(page.locator('.arrival-door')).toHaveCount(0)
+})

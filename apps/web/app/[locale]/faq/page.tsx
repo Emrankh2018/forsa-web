@@ -11,7 +11,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return { title: t('title') }
 }
 
-const ids = [1, 2, 3, 4, 5, 6, 7, 8] as const
+const ids = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14] as const
 
 /** Questions as native disclosure widgets: keyboard and screen-reader friendly without scripts. */
 export default async function FaqPage({ params }: PageProps<'/[locale]/faq'>) {

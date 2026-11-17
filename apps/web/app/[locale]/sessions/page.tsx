@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
 import { sampleSessionTypes } from '@forsa/shared/seed'
+import { Link } from '@/i18n/navigation'
 import { formatters } from '@/lib/format'
 import { SiteHeader } from '@/components/site/header'
 import { SiteFooter } from '@/components/site/footer'
@@ -34,8 +35,7 @@ export default async function SessionsPage({ params }: PageProps<'/[locale]/sess
               <p className="mt-1 text-sm text-ink-soft">{t('minutes', { count: st.minutes, n: f.num(st.minutes) })}</p>
               <p className="mt-3 flex-1">{f.pick(st.summary)}</p>
               <p className="mt-4 text-sm text-ink-soft">{t('priceLater')}</p>
-              <span className="btn-arch mt-4 self-start" aria-disabled="true">{t('book')}</span>
-              <p className="mt-2 text-sm text-ink-soft">{t('notOpen')}</p>
+              <Link href={`/sessions/${st.slug}/book`} className="btn-arch mt-4 self-start">{t('book')}</Link>
             </li>
           ))}
         </ul>

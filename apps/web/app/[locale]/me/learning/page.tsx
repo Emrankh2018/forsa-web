@@ -54,7 +54,7 @@ export default async function MyLearning({ params }: PageProps<'/[locale]/me/lea
             <div className="mt-2 h-2 overflow-hidden rounded-full bg-paper-deep" aria-hidden="true">
               <div className="h-full bg-maroon" style={{ width: `${(100 * done) / lessons.length}%` }} />
             </div>
-            <Link href={`/courses/${course.slug}`} className="btn-quiet -ms-3 mt-3 underline underline-offset-4">{t('continue')}</Link>
+            <Link href={`/me/learning/courses/${course.slug}/${done + 1}`} className="btn-quiet -ms-3 mt-3 underline underline-offset-4">{t('continue')}</Link>
           </div>
         </section>
       </div>

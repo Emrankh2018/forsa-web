@@ -9,6 +9,7 @@ import { messages } from '../packages/shared/src/messages'
 
 const pages = [
   '/me', '/me/projects', '/me/projects/cafe-launch-campaign', '/me/learning', '/me/saved', '/me/invitations',
+  '/me/notices', '/me/settings', '/me/learning/courses/content-basics/3',
   '/org', '/org/projects', '/org/projects/cafe-launch-campaign', '/org/projects/loyalty-programme',
   '/org/projects/cafe-launch-campaign/review/p2', '/org/new-project', '/org/talent',
   '/trainer', '/trainer/workshops', '/trainer/availability', '/trainer/courses',
@@ -56,19 +57,29 @@ test.describe('interactions', () => {
     await expect(page.getByRole('button', { name: t.workspace.undo })).toBeVisible()
     await page.getByRole('tab', { name: t.workspace.tabs.handIn }).click()
     await page.getByRole('button', { name: t.workspace.submit }).click()
+    await expect(page.getByText(t.forms.errors.handInShort)).toBeVisible()
+    await page.getByLabel(t.workspace.handInText).fill('The plan, three posts and the video script are attached, with notes on each.')
+    await page.getByRole('button', { name: t.workspace.submit }).click()
     await expect(page.getByText(t.workspace.submittedTitle)).toBeVisible()
     await expect(page.getByText(t.app.savedLocally)).toBeVisible()
   })
 
   test('post a project: four steps, values kept going back, then sent', async ({ page }) => {
     await page.goto('/en/org/new-project')
+    await page.getByRole('button', { name: t.org.next }).click()
+    await expect(page.getByText(t.forms.errors.briefShort)).toBeVisible()
     await page.getByLabel(t.org.fTitle).fill('A menu photo shoot')
+    await page.getByLabel(t.org.fBrief).fill('We need fresh photos of our ten best-selling dishes for the new menu and our delivery apps.')
     await page.getByRole('button', { name: t.org.next }).click()
     await expect(page.getByRole('heading', { level: 2 })).toHaveText(t.org.wizardSteps.work)
     await page.getByRole('button', { name: t.org.previous }).click()
     await expect(page.getByLabel(t.org.fTitle)).toHaveValue('A menu photo shoot')
     await page.getByRole('button', { name: t.org.next }).click()
+    await page.getByLabel(t.org.fDeliverables).fill('Ten photos\nA shot list')
+    await page.getByLabel(t.org.fAcceptance).fill('Natural light, no filters')
+    await page.getByLabel(t.org.fSteps).fill('Plan the shots\nShoot\nEdit\nHand in')
     await page.getByRole('button', { name: t.org.next }).click()
+    await page.getByLabel(t.org.fDue).fill('2027-01-20')
     await page.getByRole('button', { name: t.org.next }).click()
     await expect(page.getByText('A menu photo shoot')).toBeVisible()
     await page.getByRole('button', { name: t.org.sendForApproval }).click()
@@ -104,5 +115,51 @@ test.describe('interactions', () => {
     await page.goto('/en/join?as=organisation')
     await page.getByRole('link', { name: t.app.lookInside }).click()
     await expect(page).toHaveURL(/\/en\/org$/)
+  })
+  test('onboarding: each step is checked before moving on', async ({ page }) => {
+    await page.goto('/en/join/participant')
+    await page.getByRole('button', { name: t.org.next }).click()
+    await expect(page.getByText(t.forms.errors.name).first()).toBeVisible()
+    await expect(page.getByRole('heading', { level: 2 })).toHaveText(t.onboarding.steps.about)
+  })
+
+  test('workshop booking: hold a seat, then the ticket', async ({ page }) => {
+    await page.goto('/en/workshops/cv-thirty-seconds/book')
+    await page.getByRole('button', { name: t.booking.reserve }).click()
+    await expect(page.getByText(t.booking.reservedTitle)).toBeVisible()
+    await page.getByRole('button', { name: t.booking.simulate }).click()
+    await expect(page.getByText(t.booking.ticketConfirmed)).toBeVisible()
+  })
+
+  test('1-to-1: a time must be chosen before booking', async ({ page }) => {
+    await page.goto('/en/sessions/cv-clinic/book')
+    await page.getByRole('button', { name: t.slots.confirm }).click()
+    await expect(page.getByText(t.forms.errors.pickSlot)).toBeVisible()
+    await page.locator('input[name="slot"]').first().check({ force: true })
+    await page.getByRole('button', { name: t.slots.confirm }).click()
+    await expect(page.getByText(t.slots.doneTitle)).toBeVisible()
+  })
+
+  test('settings: deleting the account needs the exact word', async ({ page }) => {
+    await page.goto('/en/me/settings')
+    await page.getByLabel(t.settings.deleteLabel).fill('remove')
+    await page.getByRole('button', { name: t.settings.deleteCta }).click()
+    await expect(page.getByText(t.forms.errors.deleteConfirm)).toBeVisible()
+    await page.getByLabel(t.settings.deleteLabel).fill(t.settings.deleteWord)
+    await page.getByRole('button', { name: t.settings.deleteCta }).click()
+    await expect(page.getByText(t.settings.deletedTitle)).toBeVisible()
+  })
+
+  test('testing kit: answers are copied as text, nothing is sent', async ({ page, context, browserName }) => {
+    test.skip(browserName !== 'chromium', 'clipboard permissions are granted in Chromium')
+    await context.grantPermissions(['clipboard-read', 'clipboard-write'])
+    await page.goto('/en/test')
+    await page.getByRole('radio', { name: t.testKit.easyScale.split('|')[3] }).first().check({ force: true })
+    await page.getByLabel(t.testKit.overall2).fill('Bigger buttons')
+    await page.getByRole('button', { name: t.testKit.copy }).click()
+    await expect(page.getByRole('status').filter({ hasText: t.testKit.copied })).toBeVisible()
+    const text = await page.evaluate(() => navigator.clipboard.readText())
+    expect(text).toContain(t.testKit.tasks.p1)
+    expect(text).toContain('Bigger buttons')
   })
 })
