@@ -1,9 +1,9 @@
 # Forsa platform v4 — progress
 
 ## Resume here
-**HOLD (D-115): no phase 3, no database or back-end work until the owner's Hostinger VPS exists.** Front-end only.
-Latest: doors replace the menu (D-116); site published at https://forsa-demo.vercel.app (D-117). Last commit: see `git log -1`.
-Next exact step: wait for the owner. After any push to `main`, re-point the `forsa-demo.vercel.app` alias to the new production deployment (see Hosting rules).
+**HOLD (D-115): no phase 3, no database or back-end work until the owner's Hostinger VPS exists.** Front-end only. Certificates (item 2 of the front-end list) are deferred by the owner.
+Latest: signed-in prototypes, networking guide and tools, motion, share images, email designs, accessibility and Lighthouse pass; live at https://forsa-demo.vercel.app (commit 201bf43). Last commit: see `git log -1`.
+Next exact step: wait for the owner. After any push to `main` that changes the site, re-point the `forsa-demo.vercel.app` alias to the new production deployment.
 
 ---
 
@@ -165,5 +165,7 @@ The "Come in" page's chosen door links to its area. Sample data: `packages/share
 - Keyboard: a new check tabs through five pages and requires a visible focus mark on every stop; workspace tabs move with arrow keys.
 - Fixed from the accessibility run: prototype band moved inside the header landmark, a skipped heading level in the course builder, a low-contrast label on review tabs, scrolling tables made keyboard-reachable regions.
 - Fixed: a visually hidden table label escaped its scrolling box and widened the phone page by 160 px (scroll boxes are now positioning contexts).
+- **Lighthouse 13.6 on the live site** (mobile, `docs/evidence/lighthouse/*.json`): `/ar` performance 88, accessibility 100, best practices 100, LCP 1.2 s, CLS 0, TBT 330 ms (the arrival animation's script); `/en/projects` 96/100/100, LCP 1.1 s; `/ar/guides/cv` 96/100/100, LCP 1.1 s; `/ar/me` 99/100/100, LCP 1.1 s. SEO 60 everywhere only because pages ask not to be indexed until go-live (the single failing audit is `is-crawlable`).
+- Fonts: already trimmed to the weights in use (Amiri Bold only; English text face loaded on demand); first visit about 570 KB. Removing more would drop weights the pages use.
 - Not possible here: a real screen-reader session (no screen reader on this machine); axe and keyboard checks stand in, and the gap is stated.
-- Checks: copy check, lint, typecheck, 16 unit + 31 database tests, build, **406+ browser checks** (all suites; prototypes 138/138 after the last fix).
+- Checks: copy check, lint, typecheck, 16 unit + 31 database tests, build; **408 browser checks passed on the live site** (forsa-demo.vercel.app, commit 201bf43).
