@@ -134,4 +134,4 @@ Differences from the plan: sessions and courses show no price ("announced when b
 | Fonts: Amiri regular dropped (unused), English text face no longer preloaded | First visit about 690 KB → 570 KB; largest paint stays 1.2–1.6 s on the throttled phone |
 | A `loading.tsx` was tried and removed | It made unknown addresses answer 200 instead of 404, and pages are static until phase 3 |
 
-Checks after polish: copy check, lint, typecheck, 13 unit + 31 database tests, build, **228 browser checks passed** (local production build).
+Checks after polish: copy check, lint, typecheck, 13 unit + 31 database tests, build, **228 browser checks passed** on the local production build and on the online Vercel preview (`dpl_59Fp5HFX971nGcjgn6XRqDcFCSUx`, commit 4dfc3ea).
