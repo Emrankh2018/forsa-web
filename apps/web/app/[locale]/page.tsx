@@ -8,6 +8,7 @@ import { ArrivalDoor } from '@/components/arrival/arrival-door'
 import { Door } from '@/components/site/door'
 import { ProjectCard } from '@/components/site/project-card'
 import { WorkshopRow } from '@/components/site/workshop-row'
+import { ScrollSwing } from '@/components/motion/scroll-swing'
 import { SiteHeader } from '@/components/site/header'
 import { SiteFooter } from '@/components/site/footer'
 import { SectionHeading } from '@/components/ui/section-heading'
@@ -68,6 +69,7 @@ export default async function Home({ params }: PageProps<'/[locale]'>) {
             <SectionHeading id="open-now" size="lg">{t('openNow')}</SectionHeading>
             <Link href="/projects" className="btn-quiet underline underline-offset-4">{t('allProjects')}</Link>
           </div>
+          <ScrollSwing>
           <ul className="mt-10 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 sm:gap-y-12 lg:grid-cols-4" role="list">
             {sampleProjects.map((x) => (
               <li key={x.slug}>
@@ -75,6 +77,7 @@ export default async function Home({ params }: PageProps<'/[locale]'>) {
               </li>
             ))}
           </ul>
+          </ScrollSwing>
         </section>
 
         {/* Workshops: a corridor of dated doors. */}

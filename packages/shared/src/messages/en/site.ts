@@ -28,10 +28,10 @@ export const enSite = {
   },
   home: {
     promise: 'Your first experience starts with a real project',
-    lead: 'Companies post real projects, you do them and hand them in here, and the company reviews your work itself. Workshops get you ready for the job market.',
+    lead: 'Companies post real projects. You do the work, hand it in here, and the company reviews it itself. Workshops get you ready for the job market.',
     hallLabel: 'Areas of Forsa',
     roomProjects: 'Projects',
-    roomProjectsLine: 'Projects from companies that you do and get reviewed on.',
+    roomProjectsLine: 'Real projects from companies, reviewed by the company itself.',
     roomTraining: 'Training',
     roomTrainingLine: 'Workshops, 1-to-1 sessions and free guides.',
     roomYours: 'Your door',
@@ -52,7 +52,7 @@ export const enSite = {
   },
   projectsPage: {
     title: 'Projects',
-    lead: 'Real projects from companies. Pick one that fits your field, do it and hand it in here, and the company reviews it itself.',
+    lead: 'Real projects from companies. Pick one in your field, do the work, hand it in here, and the company reviews it.',
     filters: 'Filter projects',
     search: 'Search projects',
     searchPlaceholder: 'For example: Instagram, assistant, identity',
@@ -88,8 +88,8 @@ export const enSite = {
     applyCta: 'Apply',
     fullCta: 'All seats taken',
     save: 'Save project',
-    signInNote: 'You will need an account. We bring you back to this page after you sign in.',
-    noJobPromise: 'Finishing the project does not guarantee a job. The company reviews your work, writes you feedback and may choose to get in touch.',
+    signInNote: 'You will need an account. After you sign in, we will bring you back to this page.',
+    noJobPromise: 'Finishing the project does not guarantee a job. The company reviews your work, gives you written feedback, and may choose to get in touch.',
     back: 'All projects',
   },
   workshop: {
@@ -100,7 +100,7 @@ export const enSite = {
   },
   signInPrompt: {
     title: 'You need an account for this step',
-    body: 'Create your account or sign in, and we bring you back to this page to carry on where you left off.',
+    body: 'Create your account or sign in, and we will bring you back here to carry on.',
     continue: 'Continue to sign in',
     notNow: 'Not now',
   },

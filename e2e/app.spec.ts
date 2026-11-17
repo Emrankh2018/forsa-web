@@ -1,0 +1,108 @@
+import AxeBuilder from '@axe-core/playwright'
+import { expect, test, type Page } from '@playwright/test'
+import { messages } from '../packages/shared/src/messages'
+
+/**
+ * Signed-in area prototypes (sample data, nothing saved): every page opens cleanly in both
+ * languages at every width, says it is a prototype, and the main interactions respond.
+ */
+
+const pages = [
+  '/me', '/me/projects', '/me/projects/cafe-launch-campaign', '/me/learning', '/me/saved', '/me/invitations',
+  '/org', '/org/projects', '/org/projects/cafe-launch-campaign', '/org/projects/loyalty-programme',
+  '/org/projects/cafe-launch-campaign/review/p2', '/org/new-project', '/org/talent',
+  '/trainer', '/trainer/workshops', '/trainer/availability', '/trainer/courses',
+  '/admin', '/admin/queues', '/admin/settings',
+]
+
+function watchConsole(page: Page) {
+  const errors: string[] = []
+  page.on('console', (m) => m.type() === 'error' && errors.push(m.text()))
+  page.on('pageerror', (e) => errors.push(e.message))
+  return errors
+}
+
+for (const locale of ['ar', 'en'] as const) {
+  for (const path of pages) {
+    test(`${locale}${path}: prototype renders cleanly`, async ({ page }) => {
+      const errors = watchConsole(page)
+      const res = await page.goto(`/${locale}${path}`)
+      expect(res?.status()).toBe(200)
+      await expect(page.getByText(messages[locale].app.prototype)).toBeVisible()
+      await expect(page.locator('h1')).toHaveCount(1)
+      await expect(page.locator('meta[name="robots"]')).toHaveAttribute('content', /noindex/)
+      const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth)
+      expect(overflow).toBeLessThanOrEqual(0)
+      const results = await new AxeBuilder({ page }).analyze()
+      expect(results.violations.map((v) => `${v.id}: ${v.help} (${v.nodes.length})`)).toEqual([])
+      expect(errors).toEqual([])
+    })
+  }
+}
+
+test.describe('interactions', () => {
+  const t = messages.en
+
+  test('workspace: tabs work by keyboard, a step can be ticked, a hand-in responds', async ({ page }) => {
+    await page.goto('/en/me/projects/cafe-launch-campaign')
+    const stepsTab = page.getByRole('tab', { name: t.workspace.tabs.steps })
+    await expect(stepsTab).toHaveAttribute('aria-selected', 'true')
+    await stepsTab.focus()
+    await page.keyboard.press('ArrowRight')
+    await expect(page.getByRole('tab', { name: t.workspace.tabs.updates })).toBeFocused()
+    await expect(page.getByRole('tab', { name: t.workspace.tabs.updates })).toHaveAttribute('aria-selected', 'true')
+    await page.getByRole('tab', { name: t.workspace.tabs.steps }).click()
+    await page.getByRole('button', { name: t.workspace.markDone }).click()
+    await expect(page.getByRole('button', { name: t.workspace.undo })).toBeVisible()
+    await page.getByRole('tab', { name: t.workspace.tabs.handIn }).click()
+    await page.getByRole('button', { name: t.workspace.submit }).click()
+    await expect(page.getByText(t.workspace.submittedTitle)).toBeVisible()
+    await expect(page.getByText(t.app.savedLocally)).toBeVisible()
+  })
+
+  test('post a project: four steps, values kept going back, then sent', async ({ page }) => {
+    await page.goto('/en/org/new-project')
+    await page.getByLabel(t.org.fTitle).fill('A menu photo shoot')
+    await page.getByRole('button', { name: t.org.next }).click()
+    await expect(page.getByRole('heading', { level: 2 })).toHaveText(t.org.wizardSteps.work)
+    await page.getByRole('button', { name: t.org.previous }).click()
+    await expect(page.getByLabel(t.org.fTitle)).toHaveValue('A menu photo shoot')
+    await page.getByRole('button', { name: t.org.next }).click()
+    await page.getByRole('button', { name: t.org.next }).click()
+    await page.getByRole('button', { name: t.org.next }).click()
+    await expect(page.getByText('A menu photo shoot')).toBeVisible()
+    await page.getByRole('button', { name: t.org.sendForApproval }).click()
+    await expect(page.getByText(t.org.sentTitle)).toBeVisible()
+  })
+
+  test('applicants: no more than the seats can be selected', async ({ page }) => {
+    await page.goto('/en/org/projects/loyalty-programme')
+    const select = page.getByRole('button', { name: t.org.select, exact: true })
+    for (let i = 0; i < 3; i++) await select.first().click()
+    await expect(page.getByRole('button', { name: t.org.selected, exact: true })).toHaveCount(3)
+    await expect(select).toBeDisabled()
+    await page.getByRole('button', { name: t.org.confirmSelection }).click()
+    await expect(page.getByText(t.app.savedLocally)).toBeVisible()
+  })
+
+  test('review: a decision is required, then the review is sent', async ({ page }) => {
+    await page.goto('/en/org/projects/cafe-launch-campaign/review/p3')
+    await expect(page.getByRole('button', { name: t.org.sendReview })).toBeDisabled()
+    await page.getByLabel(t.org.changes).check()
+    await page.getByLabel(t.org.feedback).fill('Add the opening date to the video too.')
+    await page.getByRole('button', { name: t.org.sendReview }).click()
+    await expect(page.getByText(t.org.reviewSent)).toBeVisible()
+  })
+
+  test('invitation: accepting releases contact (in the prototype, nothing saved)', async ({ page }) => {
+    await page.goto('/en/me/invitations')
+    await page.getByRole('button', { name: t.invitations.accept }).click()
+    await expect(page.getByRole('status')).toContainText(t.invitations.acceptedNote)
+  })
+
+  test('come in: a chosen door leads inside its area', async ({ page }) => {
+    await page.goto('/en/join?as=organisation')
+    await page.getByRole('link', { name: t.app.lookInside }).click()
+    await expect(page).toHaveURL(/\/en\/org$/)
+  })
+})

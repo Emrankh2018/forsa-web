@@ -138,3 +138,32 @@ Differences from the plan: sessions and courses show no price ("announced when b
 | A `loading.tsx` was tried and removed | It made unknown addresses answer 200 instead of 404, and pages are static until phase 3 |
 
 Checks after polish: copy check, lint, typecheck, 13 unit + 31 database tests, build, **228 browser checks passed** on the local production build and on the online Vercel preview (`dpl_59Fp5HFX971nGcjgn6XRqDcFCSUx`, commit 4dfc3ea).
+
+## Front-end work during the hold (owner asked for items 1, 3, 4, 5; certificates later)
+
+### 1. Signed-in area prototypes (sample data, nothing saved, noindex, "prototype" band on every screen)
+| Area | Screens |
+|---|---|
+| Participant `/me` | home (doorway opened by progress, next step), projects (active, applications, finished), workspace `/me/projects/cafe-launch-campaign` (accessible tabs: brief, steps to tick, updates, questions, hand-in with files, review), learning (workshop link hidden until confirmed, session, course progress), saved, invitations (accept releases contact) |
+| Organisation `/org` | home ("what needs you" as doors), projects, project page (progress table per participant with step arches; questions with answer form; apply-first project: choose applicants up to the seats), review a hand-in (switch between hand-ins to compare; decision, feedback, strengths, rating as five small doors), post a project (four steps, values kept going back), talent (invite; contact shown only after acceptance) |
+| Trainer `/trainer` | home (workshops as doors opened by how full they are), workshops (attendance marking), availability (week grid of open hours, booked hour locked), course builder (add lesson, free-preview flag) |
+| Admin `/admin` | overview (counts per queue), queues (verify, approve, publish, paid or waived, leads), settings (prices and windows from the base migration; payments off) |
+The "Come in" page's chosen door links to its area. Sample data: `packages/shared/src/seed/app-sample.ts` (fictional, checked by the copy checker).
+
+### 3. Content and tools
+- Fourth guide: networking (`/guides/networking`) with the 30-second introduction builder (word count and spoken time).
+- CV guide: the CV line checker (`checkCvLine` in shared, 3 unit tests; flags duty openings, "I", no result, over 25 words; Arabic and English).
+- English wording pass on the public pages.
+
+### 4. Look and feel
+- Lenis smooth scrolling on public pages only (not in the tools), off under reduced motion, anchors kept.
+- One scroll moment on home: the "open now" doors swing to their seat angle in turn as they come into view (closed state added by script only, so no-script and reduced motion show the final state).
+- Share images `public/og/forsa-{ar,en}.png` (1200×630, drawn in the site fonts so Arabic is shaped) wired as Open Graph and Twitter images; regenerate with `OG=1 npx playwright test e2e/og.spec.ts --project=desktop`.
+- Email designs at `/showcase/emails` (sign-in code, booking confirmed, review received, company invitation) with inline styles ready to become real templates; nothing is sent.
+
+### 5. Quality
+- Keyboard: a new check tabs through five pages and requires a visible focus mark on every stop; workspace tabs move with arrow keys.
+- Fixed from the accessibility run: prototype band moved inside the header landmark, a skipped heading level in the course builder, a low-contrast label on review tabs, scrolling tables made keyboard-reachable regions.
+- Fixed: a visually hidden table label escaped its scrolling box and widened the phone page by 160 px (scroll boxes are now positioning contexts).
+- Not possible here: a real screen-reader session (no screen reader on this machine); axe and keyboard checks stand in, and the gap is stated.
+- Checks: copy check, lint, typecheck, 16 unit + 31 database tests, build, **406+ browser checks** (all suites; prototypes 138/138 after the last fix).

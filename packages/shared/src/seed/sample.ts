@@ -187,6 +187,41 @@ export const sampleProjects: SampleProject[] = [
       { ar: 'سلّم العمل', en: 'Hand in your work' },
     ],
   },
+  {
+    slug: 'loyalty-programme',
+    company: { ar: 'مقهى الرملة', en: 'Al Ramla Café' },
+    title: { ar: 'برنامج نقاط لزبائن المقهى', en: 'A points programme for café customers' },
+    summary: {
+      ar: 'فكرة برنامج نقاط بسيط، ونموذج لبطاقته، وطريقة لقياس أثره خلال شهر.',
+      en: 'A simple points programme idea, a mock-up of its card, and a way to measure its effect over a month.',
+    },
+    field: 'marketing_media',
+    joinMode: 'apply',
+    seats: 3,
+    seatsTaken: 0,
+    applyBy: '2026-12-22',
+    startsAt: '2026-12-27',
+    dueAt: '2027-01-20',
+    brief: [
+      {
+        ar: 'يعود إلينا كثير من الزبائن كل أسبوع، ونريد أن نشكرهم دون خصومات كبيرة تضر بالمقهى.',
+        en: 'Many customers come back every week, and we want to thank them without big discounts that hurt the café.',
+      },
+    ],
+    deliverables: [
+      { ar: 'فكرة البرنامج وقواعده في صفحة', en: 'The programme idea and its rules on one page' },
+      { ar: 'نموذج لبطاقة النقاط', en: 'A mock-up of the points card' },
+      { ar: 'طريقة قياس بسيطة لشهر واحد', en: 'A simple way to measure it for one month' },
+    ],
+    acceptance: [{ ar: 'تكلفة البرنامج واضحة ومعقولة', en: 'The programme cost is clear and reasonable' }],
+    steps: [
+      { ar: 'قدّم طلبك', en: 'Apply' },
+      { ar: 'تحدث إلى ثلاثة زبائن', en: 'Talk to three customers' },
+      { ar: 'اكتب الفكرة والقواعد', en: 'Write the idea and rules' },
+      { ar: 'صمّم البطاقة', en: 'Design the card' },
+      { ar: 'سلّم العمل', en: 'Hand in your work' },
+    ],
+  },
 ]
 
 export const sampleWorkshops: SampleWorkshop[] = [

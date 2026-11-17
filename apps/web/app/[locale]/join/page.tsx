@@ -25,6 +25,8 @@ export default async function JoinPage({ params, searchParams }: PageProps<'/[lo
   const next = safeReturnPath(sp.next)
   const chosen = doors.find((d) => d === sp.as) as DoorKey | undefined
   const t = await getTranslations('account')
+  const app = await getTranslations('app')
+  const inside = { participant: '/me', organisation: '/org', trainer: '/trainer' } as const
 
   return (
     <>
@@ -67,6 +69,7 @@ export default async function JoinPage({ params, searchParams }: PageProps<'/[lo
                   {next ? <Link href={next} className="btn-arch">{t('backTo')}</Link> : null}
                   <Link href="/projects" className={next ? 'btn-quiet underline underline-offset-4' : 'btn-arch'}>{t('browse')}</Link>
                 </div>
+                <Link href={inside[chosen]} className="btn-quiet -ms-3 mt-4 underline underline-offset-4">{app('lookInside')}</Link>
               </>
             ) : (
               <p className="text-ink-soft">{t('chooseCta')}</p>

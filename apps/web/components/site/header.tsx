@@ -2,6 +2,7 @@ import { getTranslations } from 'next-intl/server'
 import { Link } from '@/i18n/navigation'
 import { DoorSymbol } from '@/components/door-symbol'
 import { LanguageSwitch } from '@/components/language-switch'
+import { SmoothScroll } from '@/components/motion/smooth-scroll'
 
 /**
  * The site header has no menu: the doors are the way into each area (the hall on the home page,
@@ -13,6 +14,7 @@ export async function SiteHeader() {
   const c = await getTranslations('common')
   return (
     <header className="site-header mx-auto flex max-w-7xl items-center gap-x-4 px-4 py-3 sm:px-8 md:py-4">
+      <SmoothScroll />
       <Link href="/" aria-label={c('homeLabel')} className="inline-flex min-h-11 items-center gap-2.5 rounded-md">
         <DoorSymbol className="h-9 w-auto md:h-10" />
         <span className="font-display text-2xl font-bold">{c('brand')}</span>

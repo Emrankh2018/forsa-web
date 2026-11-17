@@ -8,7 +8,8 @@
     ".": "./src/index.ts",
     "./messages": "./src/messages/index.ts",
     "./seed": "./src/seed/sample.ts",
-    "./content": "./src/content/guides.ts"
+    "./content": "./src/content/guides.ts",
+    "./seed/app": "./src/seed/app-sample.ts"
   },
   "scripts": {
     "typecheck": "tsc -p tsconfig.json --noEmit",

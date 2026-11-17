@@ -4,6 +4,7 @@ import { enUi } from './ui'
 import { enLearn } from './learn'
 import { enPartners } from './partners'
 import { enPages } from './pages'
+import { enApp } from './app'
 
 /** English interface text. Must have exactly the same keys as the Arabic file (checked by type). */
 export const en = {
@@ -23,6 +24,7 @@ export const en = {
   ...enLearn,
   ...enPartners,
   ...enPages,
+  ...enApp,
   errorPage: {
     title: 'This page could not open',
     body: 'Something went wrong on our side, not yours. Try again in a moment.',

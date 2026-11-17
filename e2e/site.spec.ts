@@ -26,6 +26,7 @@ const pages = [
   '/guides/cv',
   '/guides/linkedin',
   '/guides/interview',
+  '/guides/networking',
   '/partners',
   '/trainers',
   '/about',
@@ -36,6 +37,7 @@ const pages = [
   '/join',
   '/join?as=organisation&next=/partners',
   '/showcase',
+  '/showcase/emails',
 ]
 
 function watchConsole(page: Page) {
@@ -159,4 +161,43 @@ for (const locale of ['ar', 'en'] as const) {
     await expect(page.getByRole('navigation', { name: t.footer.roomsTitle }).locator('a[href$="/learn"]')).toHaveAttribute('aria-current', 'page')
   })
 }
+
+for (const path of ['/ar', '/en/projects', '/ar/workshops/cv-thirty-seconds', '/en/me/projects/cafe-launch-campaign', '/ar/org/new-project']) {
+  test(`keyboard: every stop on ${path} shows a visible focus mark`, async ({ page }) => {
+    await page.addInitScript(() => sessionStorage.setItem('forsa.arrival', 'seen'))
+    await page.goto(path)
+    const seen = new Set<string>()
+    for (let i = 0; i < 20; i++) {
+      await page.keyboard.press('Tab')
+      const info = await page.evaluate(() => {
+        const el = document.activeElement as HTMLElement | null
+        if (!el || el === document.body) return null
+        const cs = getComputedStyle(el)
+        const visible = (cs.outlineStyle !== 'none' && parseFloat(cs.outlineWidth) > 0) || cs.boxShadow !== 'none'
+        // Some links draw focus on a child (the door); accept that too.
+        const child = el.querySelector('.door') as HTMLElement | null
+        const childVisible = child ? getComputedStyle(child).outlineStyle !== 'none' : false
+        return { key: el.outerHTML.slice(0, 80), visible: visible || childVisible }
+      })
+      if (!info || seen.has(info.key)) continue
+      seen.add(info.key)
+      expect(info.visible, info.key).toBe(true)
+    }
+    expect(seen.size).toBeGreaterThan(3)
+  })
+}
+
+test('guides: the pitch builder times the introduction, the CV checker flags a weak line', async ({ page }) => {
+  const t = messages.en
+  await page.goto('/en/guides/networking')
+  await page.getByLabel(t.pitch.who).fill('A marketing graduate from Qatar University')
+  await page.getByLabel(t.pitch.did).fill('I planned a launch campaign for a café')
+  await page.getByLabel(t.pitch.want).fill('Looking for a content role')
+  await expect(page.getByText(t.pitch.good)).toBeVisible()
+  await page.goto('/en/guides/cv')
+  await page.getByLabel(t.cvcheck.label).fill('Responsible for social media at the club' + String.fromCharCode(10) + 'Designed three posts, published on the café account')
+  await page.getByRole('button', { name: t.cvcheck.check }).click()
+  await expect(page.getByText(t.cvcheck.weakStart)).toBeVisible()
+  await expect(page.getByText(t.cvcheck.ok)).toBeVisible()
+})
 

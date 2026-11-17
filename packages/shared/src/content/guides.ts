@@ -12,14 +12,16 @@ export type GuideSection = {
 }
 
 export type Guide = {
-  slug: 'cv' | 'linkedin' | 'interview'
+  slug: 'cv' | 'linkedin' | 'interview' | 'networking'
   title: Bilingual
   summary: Bilingual
   minutes: number
   sections: GuideSection[]
   workshopSlug?: string
   sessionSlug: string
-  tool?: 'star'
+  /** A small tool shown after the section with the same id as `toolAfter`. */
+  tool?: 'star' | 'pitch' | 'cvcheck'
+  toolAfter?: string
 }
 
 export const guides: Guide[] = [
@@ -33,6 +35,8 @@ export const guides: Guide[] = [
     minutes: 8,
     workshopSlug: 'cv-thirty-seconds',
     sessionSlug: 'cv-clinic',
+    tool: 'cvcheck',
+    toolAfter: 'lines',
     sections: [
       {
         id: 'first-look',
@@ -156,6 +160,7 @@ export const guides: Guide[] = [
     minutes: 9,
     sessionSlug: 'career-guidance',
     tool: 'star',
+    toolAfter: 'star',
     sections: [
       {
         id: 'before',
@@ -200,6 +205,66 @@ export const guides: Guide[] = [
           { ar: 'تدربت على إجابة واحدة بصوت عالٍ', en: 'I practised one answer out loud' },
           { ar: 'عندي سؤالان أطرحهما', en: 'I have two questions to ask' },
           { ar: 'أعرف المكان أو جربت رابط الاجتماع', en: 'I know the place or tested the meeting link' },
+        ],
+      },
+    ],
+  },
+  {
+    slug: 'networking',
+    title: { ar: 'التعارف المهني دون إحراج', en: 'Networking without the awkwardness' },
+    summary: {
+      ar: 'كيف تعرّف بنفسك في ثلاثين ثانية، وكيف تبدأ حديثًا مع شخص في مجالك وتتابعه بعد ذلك.',
+      en: 'How to introduce yourself in thirty seconds, start a conversation with someone in your field, and follow up afterwards.',
+    },
+    minutes: 7,
+    sessionSlug: 'career-guidance',
+    tool: 'pitch',
+    toolAfter: 'pitch',
+    sections: [
+      {
+        id: 'why',
+        heading: { ar: 'لماذا يهم التعارف', en: 'Why it matters' },
+        paragraphs: [
+          {
+            ar: 'كثير من الفرص لا تُعلن. يسمع بها من يعرفه أحد في الشركة. التعارف ليس مجاملة؛ هو أن يعرف الناس ما تجيده وما تبحث عنه.',
+            en: 'Many openings are never advertised. People hear about them because someone at the company knows them. Networking is not flattery; it is letting people know what you are good at and what you are looking for.',
+          },
+        ],
+      },
+      {
+        id: 'pitch',
+        heading: { ar: 'تعريفك في ثلاثين ثانية', en: 'Your thirty-second introduction' },
+        paragraphs: [
+          {
+            ar: 'ثلاثة أجزاء: من أنت ومجالك، وشيء واحد أنجزته، وما تبحث عنه الآن. قلها بصوت عالٍ حتى تخرج طبيعية، لا محفوظة.',
+            en: 'Three parts: who you are and your field, one thing you have done, and what you are looking for now. Say it out loud until it sounds natural, not memorised.',
+          },
+        ],
+      },
+      {
+        id: 'start',
+        heading: { ar: 'كيف تبدأ الحديث', en: 'How to start the conversation' },
+        paragraphs: [
+          {
+            ar: 'ابدأ بسؤال عن عملهم لا بطلب: «كيف بدأت في هذا المجال؟» يفتح حديثًا أطول من «هل عندكم وظائف؟».',
+            en: 'Start with a question about their work, not a request: “How did you get into this field?” opens a longer conversation than “Do you have any jobs?”.',
+          },
+        ],
+      },
+      {
+        id: 'follow',
+        heading: { ar: 'المتابعة بعد اللقاء', en: 'Following up' },
+        paragraphs: [
+          {
+            ar: 'أرسل رسالة قصيرة خلال يومين: اذكر أين التقيتما، وشيئًا قاله وأفادك، وشكرًا. لا تطلب شيئًا في الرسالة الأولى.',
+            en: 'Send a short message within two days: where you met, one thing they said that helped you, and thanks. Do not ask for anything in the first message.',
+          },
+        ],
+        checklist: [
+          { ar: 'جهزت تعريفي في ثلاثين ثانية', en: 'I prepared my thirty-second introduction' },
+          { ar: 'عندي سؤالان أبدأ بهما الحديث', en: 'I have two questions to open a conversation' },
+          { ar: 'ملفي على لينكدإن محدّث', en: 'My LinkedIn profile is up to date' },
+          { ar: 'أتابع خلال يومين', en: 'I follow up within two days' },
         ],
       },
     ],

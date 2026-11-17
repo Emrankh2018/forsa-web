@@ -11,6 +11,8 @@ import { RoomHeader } from '@/components/ui/room-header'
 import { SectionHeading } from '@/components/ui/section-heading'
 import { StarBuilder } from '@/components/guides/star-builder'
 import { PrintButton } from '@/components/guides/print-button'
+import { PitchBuilder } from '@/components/guides/pitch-builder'
+import { CvChecker } from '@/components/guides/cv-checker'
 
 export function generateStaticParams() {
   return guides.map((g) => ({ slug: g.slug }))
@@ -82,9 +84,11 @@ export default async function GuidePage({ params }: PageProps<'/[locale]/guides/
                     </ul>
                   </div>
                 ) : null}
-                {g.tool === 'star' && s.id === 'star' ? (
+                {g.toolAfter === s.id ? (
                   <div className="mt-10">
-                    <StarBuilder labels={starLabels} marks={[1, 2, 3, 4].map(f.num)} />
+                    {g.tool === 'star' ? <StarBuilder labels={starLabels} marks={[1, 2, 3, 4].map(f.num)} /> : null}
+                    {g.tool === 'pitch' ? <PitchBuilder /> : null}
+                    {g.tool === 'cvcheck' ? <CvChecker /> : null}
                   </div>
                 ) : null}
               </section>

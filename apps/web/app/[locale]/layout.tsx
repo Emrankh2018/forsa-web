@@ -22,7 +22,17 @@ export async function generateMetadata({ params }: LayoutProps<'/[locale]'>): Pr
     title: { default: t('title'), template: `%s · ${t('title')}` },
     description: t('description'),
     robots: isProduction ? undefined : { index: false, follow: false },
+    metadataBase: new URL(process.env.SITE_URL ?? 'https://forsa-demo.vercel.app'),
     alternates: { languages: { ar: '/ar', en: '/en' } },
+    openGraph: {
+      type: 'website',
+      siteName: t('title'),
+      title: t('title'),
+      description: t('description'),
+      locale: locale === 'ar' ? 'ar_QA' : 'en_QA',
+      images: [{ url: `/og/forsa-${locale}.png`, width: 1200, height: 630, alt: t('description') }],
+    },
+    twitter: { card: 'summary_large_image', images: [`/og/forsa-${locale}.png`] },
     icons: { icon: '/icon.svg' },
   }
 }

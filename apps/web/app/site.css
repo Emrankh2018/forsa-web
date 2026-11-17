@@ -220,4 +220,34 @@
     transition: opacity 300ms var(--ease-forsa);
   }
   .room:hover .keyhole, .room:focus-visible .keyhole { opacity: 0; }
+
+  /* Signed-in areas: sections as doorway tabs. */
+  .door-tab {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1.1rem 0.5rem;
+    border: 1px solid transparent;
+    border-bottom: 0;
+    border-radius: 9999px 9999px 0 0 / 1.4rem 1.4rem 0 0;
+    font-weight: 500;
+    color: var(--color-ink-soft);
+    white-space: nowrap;
+  }
+  .door-tab:hover { color: var(--color-ink); background: var(--color-paper-deep); }
+  .door-tab--on { background: var(--color-ink); color: var(--color-paper); }
+  .door-tab--on:hover { background: var(--color-ink); color: var(--color-paper); }
+  .door-tab__badge { min-width: 1.4rem; border-radius: 9999px; background: var(--color-maroon); color: var(--color-on-night); font-size: 0.75rem; line-height: 1.4rem; text-align: center; padding-inline: 0.35rem; }
+
+  /* A quiet panel for tool screens. */
+  .panel { border: 1px solid var(--color-line); border-radius: 10px; background: color-mix(in srgb, var(--color-paper-deep) 35%, var(--color-paper)); }
+
+  /* Home scroll moment: doors wait closed, then swing open in turn (see ScrollSwing). */
+  .swing-wait:not(.is-in) .door__leaf { transform: none; }
+  .swing-wait li:nth-child(2) .door__leaf { transition-delay: 90ms; }
+  .swing-wait li:nth-child(3) .door__leaf { transition-delay: 180ms; }
+  .swing-wait li:nth-child(4) .door__leaf { transition-delay: 270ms; }
+  .swing-wait li:nth-child(5) .door__leaf { transition-delay: 360ms; }
+  .swing-wait.is-in .door__leaf { transition-duration: 900ms; }
 }
