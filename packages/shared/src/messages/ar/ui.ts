@@ -4,6 +4,7 @@ export const arUi = {
     required: 'مطلوب',
     sending: 'جارٍ الإرسال…',
     loading: 'جارٍ التحميل…',
+    pageAction: 'إجراء الصفحة',
     tryAgain: 'حاول مرة أخرى',
   },
   showcase: {

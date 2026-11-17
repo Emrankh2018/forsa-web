@@ -10,6 +10,7 @@ import { SiteFooter } from '@/components/site/footer'
 import { RoomHeader } from '@/components/ui/room-header'
 import { SectionHeading } from '@/components/ui/section-heading'
 import { StarBuilder } from '@/components/guides/star-builder'
+import { PrintButton } from '@/components/guides/print-button'
 
 export function generateStaticParams() {
   return guides.map((g) => ({ slug: g.slug }))
@@ -54,6 +55,9 @@ export default async function GuidePage({ params }: PageProps<'/[locale]/guides/
                 </li>
               ))}
             </ol>
+            <div className="mt-4">
+              <PrintButton label={t('print')} />
+            </div>
           </nav>
 
           <article className="max-w-3xl">

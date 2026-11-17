@@ -7,6 +7,7 @@ import { Link } from '@/i18n/navigation'
 import { formatters } from '@/lib/format'
 import { SiteHeader } from '@/components/site/header'
 import { SiteFooter } from '@/components/site/footer'
+import { PhoneActionBar } from '@/components/site/phone-action-bar'
 import { RoomHeader } from '@/components/ui/room-header'
 import { SectionHeading } from '@/components/ui/section-heading'
 import { SignInPrompt } from '@/components/ui/sign-in-prompt'
@@ -30,6 +31,7 @@ export default async function CoursePage({ params }: PageProps<'/[locale]/course
   if (!c) notFound()
   const t = await getTranslations('coursesPage')
   const s = await getTranslations('signInPrompt')
+  const u = await getTranslations('ui')
   const f = formatters(locale)
   const lessons = c.modules.flatMap((m) => m.lessons)
   const minutes = lessons.reduce((n, l) => n + l.minutes, 0)
@@ -75,7 +77,7 @@ export default async function CoursePage({ params }: PageProps<'/[locale]/course
               <p>{t('lessons', { count: lessons.length, n: f.num(lessons.length) })}</p>
               <p className="text-ink-soft">{t('totalMinutes', { count: minutes, n: f.num(minutes) })}</p>
               <p className="mt-4 text-sm text-ink-soft">{t('priceLater')}</p>
-              <div className="mt-6">
+              <div className="mt-6 hidden lg:block">
                 <SignInPrompt label={t('enrol')} returnTo={`/courses/${c.slug}`} title={s('title')} body={s('body')} continueLabel={s('continue')} notNowLabel={s('notNow')} />
               </div>
             </div>
@@ -83,6 +85,10 @@ export default async function CoursePage({ params }: PageProps<'/[locale]/course
         </div>
       </main>
       <SiteFooter sample />
+      <div className="h-20 lg:hidden" aria-hidden="true" />
+      <PhoneActionBar label={u('pageAction')} fact={<><span className="block font-medium">{t('lessons', { count: lessons.length, n: f.num(lessons.length) })}</span><span className="text-ink-soft">{t('priceLater')}</span></>}>
+        <SignInPrompt variant="compact" label={t('enrol')} returnTo={`/courses/${c.slug}`} title={s('title')} body={s('body')} continueLabel={s('continue')} notNowLabel={s('notNow')} />
+      </PhoneActionBar>
     </>
   )
 }

@@ -16,7 +16,7 @@ export function SignInPrompt({
   body: string
   continueLabel: string
   notNowLabel: string
-  variant?: 'primary' | 'quiet'
+  variant?: 'primary' | 'quiet' | 'compact'
 }) {
   const dialog = useRef<HTMLDialogElement>(null)
   const titleId = useId()
@@ -24,7 +24,7 @@ export function SignInPrompt({
     <>
       <button
         type="button"
-        className={variant === 'primary' ? 'btn-arch w-full' : 'btn-quiet -ms-3 underline underline-offset-4'}
+        className={variant === 'primary' ? 'btn-arch w-full' : variant === 'compact' ? 'btn-arch btn-arch--compact' : 'btn-quiet -ms-3 underline underline-offset-4'}
         onClick={() => dialog.current?.showModal()}
       >
         {label}

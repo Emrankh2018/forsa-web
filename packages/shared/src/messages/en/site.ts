@@ -8,6 +8,7 @@ export const enSite = {
     partners: 'For organisations',
     signIn: 'Sign in',
     join: 'Create your account',
+    joinShort: 'Join',
     myPage: 'My page',
   },
   footer: {

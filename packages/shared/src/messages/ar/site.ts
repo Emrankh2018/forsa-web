@@ -8,6 +8,7 @@ export const arSite = {
     partners: 'للشركات والجهات',
     signIn: 'دخول',
     join: 'أنشئ حسابك',
+    joinShort: 'انضم',
     myPage: 'صفحتي',
   },
   footer: {

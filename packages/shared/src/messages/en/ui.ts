@@ -4,6 +4,7 @@ export const enUi = {
     required: 'required',
     sending: 'Sending…',
     loading: 'Loading…',
+    pageAction: 'Page action',
     tryAgain: 'Try again',
   },
   showcase: {

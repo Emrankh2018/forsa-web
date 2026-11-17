@@ -7,6 +7,7 @@ import { Link } from '@/i18n/navigation'
 import { formatters } from '@/lib/format'
 import { SiteHeader } from '@/components/site/header'
 import { SiteFooter } from '@/components/site/footer'
+import { PhoneActionBar } from '@/components/site/phone-action-bar'
 import { Door, seatAngle } from '@/components/site/door'
 import { RoomHeader } from '@/components/ui/room-header'
 import { SectionHeading } from '@/components/ui/section-heading'
@@ -31,6 +32,7 @@ export default async function WorkshopPage({ params }: PageProps<'/[locale]/work
   const t = await getTranslations('workshopsPage')
   const w = await getTranslations('workshop')
   const s = await getTranslations('signInPrompt')
+  const u = await getTranslations('ui')
   const f = formatters(locale)
   const left = ws.capacity - ws.booked
   const full = left === 0
@@ -90,7 +92,7 @@ export default async function WorkshopPage({ params }: PageProps<'/[locale]/work
                   <dd className="text-2xl font-bold text-maroon">{f.money(ws.priceDirhams)}</dd>
                 </div>
               </dl>
-              <div className="mt-8">
+              <div className="mt-8 hidden lg:block">
                 {full ? (
                   <span className="btn-arch w-full" aria-disabled="true">{t('full')}</span>
                 ) : (
@@ -103,6 +105,14 @@ export default async function WorkshopPage({ params }: PageProps<'/[locale]/work
         </div>
       </main>
       <SiteFooter sample />
+      <div className="h-20 lg:hidden" aria-hidden="true" />
+      <PhoneActionBar label={u('pageAction')} fact={<><span className="block font-bold text-maroon">{f.money(ws.priceDirhams)}</span><span className="text-ink-soft">{w('seatsLeft', { count: left, n: f.num(left) })}</span></>}>
+        {full ? (
+          <span className="btn-arch btn-arch--compact" aria-disabled="true">{t('full')}</span>
+        ) : (
+          <SignInPrompt variant="compact" label={t('book')} returnTo={`/workshops/${ws.slug}`} title={s('title')} body={s('body')} continueLabel={s('continue')} notNowLabel={s('notNow')} />
+        )}
+      </PhoneActionBar>
     </>
   )
 }

@@ -2,6 +2,8 @@
  * The site's shape language — «العتبة» The threshold (decision D-114). One shape: the arch from the logo. One meaning: how far a
  * door stands open. The light in every doorway is maroon on paper; on night it is sand.
  */
+/* Inside Tailwind's components layer, so utilities such as `hidden` or `sm:inline-flex` win. */
+@layer components {
 :root {
   --hinge: left;
   --sign: 1;
@@ -133,4 +135,49 @@
 
 @media (prefers-reduced-motion: reduce) {
   .skeleton { animation: none; }
+}
+
+/* Header: the compact arch button on phones, and the current area marked with the first line. */
+.btn-arch--compact { min-height: 44px; padding: 0.5rem 1rem 0.4rem; font-size: 0.9375rem; }
+@media (min-width: 640px) { .btn-arch--compact { min-height: 48px; padding: 0.75rem 1.5rem 0.625rem; font-size: 1rem; } }
+.nav-link { position: relative; white-space: nowrap; }
+@media (max-width: 639px) { .nav-link { padding-inline: 0.55rem; font-size: 0.9375rem; } .nav-link--on::after { inset-inline: 0.55rem; } }
+.nav-link--on::after {
+  content: '';
+  position: absolute;
+  inset-inline: 0.75rem;
+  inset-block-end: 4px;
+  height: 2px;
+  background: linear-gradient(to var(--line-dir, left), var(--color-maroon) 0 14px, var(--color-line) 14px);
+}
+:root[dir='rtl'] .nav-link--on::after { --line-dir: left; }
+:root[dir='ltr'] .nav-link--on::after { --line-dir: right; }
+
+/* The language link is written in the language it leads to. */
+.lang-switch:lang(ar) { font-family: var(--font-plex-arabic), system-ui, sans-serif; font-size: 1rem; }
+.lang-switch:lang(en) { font-family: var(--font-plex), system-ui, sans-serif; }
+
+/* Printing (guides): no site frame, no controls, plain paper. */
+@media print {
+  header, footer, nav[aria-label], .phone-bar, button, .floor { display: none !important; }
+  body { background: #fff; }
+  .arch-wide { background: #fff !important; color: #000 !important; padding-top: 0 !important; }
+  a { text-decoration: none; color: inherit; }
+  section { break-inside: avoid; }
+}
+
+/* Page-to-page threshold (React ViewTransition, app/[locale]/template.tsx). The header keeps its
+   own name so it stays still while the room behind it changes. */
+.site-header { view-transition-name: site-header; }
+::view-transition-group(site-header) { animation: none; }
+::view-transition-old(.threshold-out) { animation: 140ms ease-in both threshold-leave; }
+::view-transition-new(.threshold-in) { animation: 460ms var(--ease-forsa) 100ms both threshold-open; }
+@keyframes threshold-leave { to { opacity: 0; transform: scale(0.985); } }
+@keyframes threshold-open {
+  from { opacity: 0.2; clip-path: inset(0 48% 0 48%); }
+  to { opacity: 1; clip-path: inset(0 0 0 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*), ::view-transition-new(*), ::view-transition-group(*) { animation-duration: 0s !important; animation-delay: 0s !important; }
+}
 }

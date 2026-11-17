@@ -1,8 +1,9 @@
 # Forsa platform v4 — progress
 
 ## Resume here
-Phase 2 — done (report below). Last commit: see `git log -1`. State: done; next is phase 3 (accounts and profiles).
-Next exact step: phase 3 slice 1 — fetch Supabase SSR auth docs through Context7, then the migration for organisations, trainer profiles and participant profiles with role choice at sign-up, and PGlite tests. Signed-in browser journeys need the two public database settings (OWNER-TODO #2); until they exist those journeys are reported as not run.
+**HOLD (D-115, owner, 2026-11-17): do not start phase 3 and do no database or back-end work until the owner's Hostinger VPS exists.** The database will live on that server, not on a third-party service. Until then: front-end polish only.
+Current work: front-end polish pass after phase 2. Last commit: see `git log -1`.
+Next exact step: continue the polish list in the "Front-end polish" section below; when the owner says the VPS is ready, plan how the database and sign-in run on it before resuming phase 3.
 
 ---
 
@@ -118,3 +119,19 @@ Owner chose direction A «العتبة» on 2026-11-17 (D-114). Direction B and 
 - Lighthouse itself was not run (not installed); the numbers above come from the browser's own paint timing under throttling.
 
 Differences from the plan: sessions and courses show no price ("announced when booking opens") because no price is set; the plan's "three-step explanation" on the partners page was left out on purpose (it is the old template's numbered-steps row); `/sign-in` and `/join` are honest placeholders until phase 3.
+
+## Front-end polish (during the back-end hold, D-115)
+
+| Change | Why |
+|---|---|
+| Header rebuilt: phone = logo and actions on one line, navigation on a second swipeable line (one landmark, DOM order follows the desktop visual order); short "انضم / Join" button on phones; current area marked with the first line and `aria-current` | The phone header took three rows and the join button wrapped |
+| `app/site.css` moved into Tailwind's components layer | Its classes overrode utilities such as `hidden` (sign-in showed twice on phones) |
+| Phone action bar on project, workshop and course pages (seats or price beside the one action); the side panel's button shows from desktop width | On phones the action came only after the whole page |
+| Not-found page as a closed door with the way home and the three main rooms; `error.tsx` for render failures | The old 404 did not use the design; there was no error screen |
+| Language link written in the language it leads to | «العربية» rendered small in the Latin face |
+| Guides: print button and print styles | The guide pages promised printing |
+| Threshold transition between pages (React `ViewTransition` in `app/[locale]/template.tsx`): the old page steps back, the new one opens from the middle; header stays still; instant under reduced motion. Proven by a browser test that sees the `threshold-open` animation on navigation | Plan section 8: moving between areas as passing a threshold |
+| Fonts: Amiri regular dropped (unused), English text face no longer preloaded | First visit about 690 KB → 570 KB; largest paint stays 1.2–1.6 s on the throttled phone |
+| A `loading.tsx` was tried and removed | It made unknown addresses answer 200 instead of 404, and pages are static until phase 3 |
+
+Checks after polish: copy check, lint, typecheck, 13 unit + 31 database tests, build, **228 browser checks passed** (local production build).

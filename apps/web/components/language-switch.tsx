@@ -17,7 +17,7 @@ export function LanguageSwitch() {
       hrefLang={target}
       lang={target}
       title={t('languageSwitchLabel')}
-      className="inline-flex min-h-11 items-center rounded-md px-3 text-sm font-medium text-ink underline-offset-4 hover:underline"
+      className="lang-switch inline-flex min-h-11 items-center rounded-md px-3 text-sm font-medium text-ink underline-offset-4 hover:underline"
     >
       {t('languageSwitch')}
     </Link>

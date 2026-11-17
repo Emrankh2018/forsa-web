@@ -1,41 +1,41 @@
 {
-  "measured": "2026-11-17T02:08:47.344Z",
+  "measured": "2026-11-17T05:04:37.402Z",
   "conditions": "390px, CPU x4, 1.6 Mbps / 150 ms, local production build",
   "results": [
     {
       "route": "/ar",
-      "lcpMs": 1488,
-      "transferKb": 687
+      "lcpMs": 1588,
+      "transferKb": 567
     },
     {
       "route": "/en",
-      "lcpMs": 1296,
-      "transferKb": 684
+      "lcpMs": 1316,
+      "transferKb": 563
     },
     {
       "route": "/ar/projects",
-      "lcpMs": 1544,
-      "transferKb": 707
+      "lcpMs": 1328,
+      "transferKb": 587
     },
     {
       "route": "/ar/projects/cafe-launch-campaign",
-      "lcpMs": 1304,
-      "transferKb": 688
+      "lcpMs": 1384,
+      "transferKb": 568
     },
     {
       "route": "/ar/learn",
-      "lcpMs": 1116,
-      "transferKb": 702
+      "lcpMs": 1224,
+      "transferKb": 581
     },
     {
       "route": "/ar/guides/interview",
-      "lcpMs": 1264,
-      "transferKb": 692
+      "lcpMs": 1376,
+      "transferKb": 572
     },
     {
       "route": "/ar/partners",
-      "lcpMs": 1268,
-      "transferKb": 698
+      "lcpMs": 1324,
+      "transferKb": 578
     }
   ]
 }

@@ -7,6 +7,7 @@ import { formatters } from '@/lib/format'
 import { Door, seatAngle } from '@/components/site/door'
 import { SiteHeader } from '@/components/site/header'
 import { SiteFooter } from '@/components/site/footer'
+import { PhoneActionBar } from '@/components/site/phone-action-bar'
 import { SectionHeading, Divider } from '@/components/ui/section-heading'
 import { SignInPrompt } from '@/components/ui/sign-in-prompt'
 
@@ -22,6 +23,7 @@ export default async function ProjectPage({ params }: PageProps<'/[locale]/proje
   if (!project) notFound()
   const t = await getTranslations('project')
   const s = await getTranslations('signInPrompt')
+  const u = await getTranslations('ui')
   const f = formatters(locale)
   const left = seatsLeft(project)
   const full = left === 0
@@ -122,14 +124,14 @@ export default async function ProjectPage({ params }: PageProps<'/[locale]/proje
                   <dd>{t('due', { date: f.day(project.dueAt) })}</dd>
                 </div>
               </dl>
-              <div className="mt-8">
+              <div className="mt-8 hidden lg:block">
                 {full ? (
                   <span className="btn-arch w-full" aria-disabled="true">{cta}</span>
                 ) : (
                   <SignInPrompt label={cta} returnTo={`/projects/${project.slug}`} title={s('title')} body={s('body')} continueLabel={s('continue')} notNowLabel={s('notNow')} />
                 )}
               </div>
-              <p className="mt-3 text-sm text-ink-soft">{t('signInNote')}</p>
+              <p className="mt-3 hidden text-sm text-ink-soft lg:block">{t('signInNote')}</p>
               <div className="mt-2">
                 <SignInPrompt variant="quiet" label={t('save')} returnTo={`/projects/${project.slug}`} title={s('title')} body={s('body')} continueLabel={s('continue')} notNowLabel={s('notNow')} />
               </div>
@@ -139,6 +141,14 @@ export default async function ProjectPage({ params }: PageProps<'/[locale]/proje
 
       </main>
       <SiteFooter sample />
+      <div className="h-20 lg:hidden" aria-hidden="true" />
+      <PhoneActionBar label={u('pageAction')} fact={<><span className="block font-medium">{t('seatsLeft', { count: left, n: f.num(left) })}</span><span className="text-ink-soft">{project.applyBy && !full ? t('applyBy', { date: f.day(project.applyBy) }) : t('due', { date: f.day(project.dueAt) })}</span></>}>
+        {full ? (
+          <span className="btn-arch btn-arch--compact" aria-disabled="true">{cta}</span>
+        ) : (
+          <SignInPrompt variant="compact" label={cta} returnTo={`/projects/${project.slug}`} title={s('title')} body={s('body')} continueLabel={s('continue')} notNowLabel={s('notNow')} />
+        )}
+      </PhoneActionBar>
     </>
   )
 }

@@ -114,3 +114,27 @@ for (const locale of ['ar', 'en'] as const) {
     await expect(page.getByRole('link', { name: messages[locale].account.backTo })).toHaveCount(0)
   })
 }
+
+test('moving between pages passes a threshold (view transition runs on navigation)', async ({ page, browserName }) => {
+  test.skip(browserName !== 'chromium', 'view transitions are checked in Chromium')
+  await page.goto('/en')
+  const seen = page.evaluate(
+    () =>
+      new Promise<string[]>((resolve) => {
+        const names = new Set<string>()
+        const tick = () => {
+          for (const a of document.getAnimations()) {
+            const pe = (a.effect as KeyframeEffect | null)?.pseudoElement
+            if (pe && pe.includes('view-transition')) names.add(`${pe} ${(a as CSSAnimation).animationName ?? ''}`)
+          }
+        }
+        const id = setInterval(tick, 16)
+        setTimeout(() => { clearInterval(id); resolve([...names]) }, 1200)
+      }),
+  )
+  await page.getByRole('navigation', { name: messages.en.nav.main }).getByRole('link', { name: messages.en.nav.learn }).click()
+  const names = await seen
+  expect(names.some((n) => n.includes('threshold-open'))).toBe(true)
+  await expect(page).toHaveURL(/\/en\/learn$/)
+})
+

@@ -23,9 +23,16 @@ export const en = {
   ...enLearn,
   ...enPartners,
   ...enPages,
+  errorPage: {
+    title: 'This page could not open',
+    body: 'Something went wrong on our side, not yours. Try again in a moment.',
+    retry: 'Try again',
+    home: 'Back to home',
+  },
   notFound: {
-    title: 'Page not found',
-    body: 'The address may have changed or the page was removed.',
+    title: 'This door leads nowhere',
+    body: 'The page does not exist. The address may have changed or the page was removed.',
     back: 'Back to home',
+    or: 'Or try:',
   },
 } satisfies Messages
