@@ -35,9 +35,10 @@ Plan: `../../production/PLATFORM-PLAN-V4.md`. Builder: Claude Opus 5.5 in the ow
 | 5 | Preview build fixes: the web workspace carries its own `typescript` and `@types/node` and has no test config (Vercel installs only that workspace) | b286bd8 and the phase 1 commit |
 
 ### Hosting rules (Vercel)
-- **No production deploys before the go-live gate.** Vercel links `main` as its production branch, so the project has an ignored-build-step command that skips every build whose `VERCEL_ENV` is `production`. The first automatic deployment Vercel started from `main` was a production one; it was cancelled before it finished (`dpl_CmbFpewdA4ggFW3SFMhyKnnFXpJj`, CANCELED).
-- **Previews come from the `preview` branch.** After each slice push `preview` first, then `main` (`git push origin main:preview && git push origin main`); Vercel skips a commit it has already seen, so the order matters. Stable preview address: `forsa-web-git-preview-stark-2281.vercel.app`.
-- Previews keep the team's Vercel Authentication (only signed-in team members see them) and send `noindex`.
+- **2026-11-17, owner's instruction:** the site is published at the old demo's address **https://forsa-demo.vercel.app** (it replaced the old demo there; the old demo still exists in the Vercel project `forsa-demo` and can be pointed back). Production builds of `forsa-web` are therefore switched on: every push to `main` builds production. The site still sends `noindex` (`FORSA_ENV` is not `production`) until the go-live gate.
+- Earlier rule, now replaced by the owner's instruction: production builds were skipped and the first automatic production deployment was cancelled.
+- The address `forsa-demo.vercel.app` is attached as an alias to the latest `forsa-web` production deployment (it is still registered as a domain of the old `forsa-demo` project, which no tool here can remove, so after each production deploy the alias is re-pointed). To show the old demo again: assign the alias back to `dpl_4cwRZ1wBg1LCUc38P5cJhs1vXss1`.
+- Previews still come from the `preview` branch and stay behind Vercel sign-in.
 
 ### Supabase advisor
 - One warning, accepted on purpose: `public.set_setting` is a security-definer function callable by signed-in users. It is the only write path to settings and checks for an admin itself (tested: participant and visitor refused with 42501). Every later state-change function follows the same pattern and will show the same warning.
