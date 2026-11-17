@@ -1,8 +1,8 @@
 # Forsa platform v4 — progress
 
 ## Resume here
-Phase 2, slice 7 — content pages. Last commit: see `git log -1`. State: done.
-Next exact step: phase 2 slice 8 — proof: `e2e/site.spec.ts` over every public page (3 widths, 2 languages, axe, overflow, console), journey 1 up to the sign-in prompt and back, performance numbers, phase 2 report; then push and check the Vercel preview.
+Phase 2 — done (report below). Last commit: see `git log -1`. State: done; next is phase 3 (accounts and profiles).
+Next exact step: phase 3 slice 1 — fetch Supabase SSR auth docs through Context7, then the migration for organisations, trainer profiles and participant profiles with role choice at sign-up, and PGlite tests. Signed-in browser journeys need the two public database settings (OWNER-TODO #2); until they exist those journeys are reported as not run.
 
 ---
 
@@ -89,10 +89,32 @@ Owner chose direction A «العتبة» on 2026-11-17 (D-114). Direction B and 
 
 | Slice | What | Commit |
 |---|---|---|
-| 7 | Content pages: `/about`, `/faq` (native disclosure list), `/privacy` and `/terms` (marked as drafts under legal review), `/trainers` (interest goes to the partner form with "give a workshop" ticked until accounts exist); honest `/sign-in` and `/join` placeholders that keep a safe `?next=` return path (`safeReturnPath` in shared, 2 unit tests against open redirects) | (next commit) |
+| 8 | Proof: `e2e/site.spec.ts` (26 public pages × 2 languages × 3 widths: status, one h1, direction, no overflow, axe clean, no console errors; journey 1; keyboard dialog; no off-site return), `e2e/perf.spec.ts` (largest paint, throttled phone), evidence screenshots in `docs/evidence/` | 0aab9f1 |
+| 7 | Content pages: `/about`, `/faq` (native disclosure list), `/privacy` and `/terms` (marked as drafts under legal review), `/trainers` (interest goes to the partner form with "give a workshop" ticked until accounts exist); honest `/sign-in` and `/join` placeholders that keep a safe `?next=` return path (`safeReturnPath` in shared, 2 unit tests against open redirects) | e00292e |
 | 6 | Partners: migration `20261117000200_partner_leads.sql` (table with forced RLS, `submit_partner_lead` for visitors with validation and at most three forms per email per day, `set_partner_lead_state` for admins, both logged), applied to `forsa-web-dev`; 9 new PGlite tests (31 total); shared zod schema (Arabic digits accepted in phone) with 3 unit tests; `/partners` with four ways (doors), the interest form as a server action (keeps values after errors, error summary gets focus, hidden field against bots), direct-registration panel; `e2e/partners.spec.ts` (6 passed locally: errors and kept values, preselected way, honest 'not set up' message when the site has no database settings) | 4111737 |
 | 5 | Guides: `/guides` and three real guides (`packages/shared/src/content/guides.ts`: CV, LinkedIn, interview) with an "on this page" index, checklists, next steps to the matching workshop and 1-to-1 session; the interview guide has the STAR answer builder (nothing stored). Copy checker now also reads the guides | 0af344c |
 | 4 | Training: `/learn` hall of four doors, `/workshops` and `/workshops/[slug]` (facts, seats door, 250 QAR, book opens the sign-in prompt), `/sessions` (three kinds, booking not open, no price shown because none is set), `/courses` and `/courses/[slug]` (modules, lessons, free preview tag, enrol prompt, no price shown). Sample content extended (workshop outcomes, session types, courses) | 2f6c7f9 |
 | 3 | `/projects`: text search (Arabic and English), field and join-mode filters as links and a plain GET form (works without scripts), result count, empty state with reset; `ProjectCard` shared with home (two doors per row on phones); project page join/apply/save open the sign-in prompt and return to the page | 5929ca3 |
 | 2 | Component library `components/ui`: fields (text, textarea, select, checkbox group; label, hint, error linked by aria-describedby; LTR for email/url/tel), submit button with sending state, sign-in prompt dialog (returns with `?next=`), room header, loading/empty/error/success states, tags; `/showcase` (noindex) shows each in every state; evidence `docs/evidence/showcase-*.png` | fd04b6f |
 | 1 | Direction A becomes the site: `app/site.css` (arch, door, room, floor, hall, arch buttons), `components/site/{header,footer,door}`, `components/ui/section-heading`, home at `/[locale]` with the arrival, public project page at `/projects/[slug]` (sample data until phase 4), messages regrouped by area (`messages/{ar,en}/site.ts`) | (this commit) |
+
+### Phase 2 report
+
+| Check | Result |
+|---|---|
+| Copy check (messages, sample data, guides) | passed |
+| Lint, typecheck (all workspaces + e2e) | passed |
+| Unit tests `packages/shared` | 13 passed (locale, money, Qatar date, messages, partner form schema, safe return path) |
+| Database tests on PGlite | 31 passed (base 22 + partner leads 9) |
+| Partner-leads migration on the real `forsa-web-dev` | applied; security advisor shows only the intended "security-definer function callable" warnings (`submit_partner_lead` for visitors, the two admin functions for signed-in users; each checks its caller itself) |
+| Build | passed |
+| Browser, full suite, **online Vercel preview** (`dpl_C8Cs42yeP5AhcEn5XUVJ3ev2ZeTS`, commit 0aab9f1) | **225 passed** (same suite as below, through a temporary share link) |
+| Browser, full suite, local production build | **225 passed**: every public page at 390/820/1366 in Arabic and English with axe clean and no console errors; journey 1 (home → projects → filter → apply-first project → apply prompt → not now → save prompt → continue to sign-in with `?next=` → back to the same project); keyboard opens and Escape closes the prompt with focus returned; an off-site `?next=` is ignored; partner form errors keep typed values; preselected way ticked |
+| Performance (`docs/evidence/perf.json`) | largest contentful paint on a simulated mid-range phone (390 px, CPU ×4, 1.6 Mbps / 150 ms, local production build): home ar 1.49 s, home en 1.30 s, projects 1.54 s, project 1.30 s, learn 1.12 s, interview guide 1.26 s, partners 1.27 s. All under the 2.5 s target. Transfer about 690 KB per first visit, mostly fonts; trimming font weights is a later optimisation |
+| By eye | Claude looked at showcase, projects (phone), workshop, learn (phone), interview guide, partners, sign-in (phone); fixed: email field direction, project doors two per row on phones, invisible disabled buttons, oversized closed door on phones, a wording issue |
+
+**Not proven in phase 2:**
+- **The form entry stored online.** The form, the server action and the database function are built and tested (PGlite; and the function is live on `forsa-web-dev`), but the site has no database settings yet (OWNER-TODO #2), so on the preview it shows the honest "sending is not set up yet" message. With the two settings in place, `E2E_DB=1 npx playwright test e2e/partners.spec.ts` proves storage.
+- Lighthouse itself was not run (not installed); the numbers above come from the browser's own paint timing under throttling.
+
+Differences from the plan: sessions and courses show no price ("announced when booking opens") because no price is set; the plan's "three-step explanation" on the partners page was left out on purpose (it is the old template's numbered-steps row); `/sign-in` and `/join` are honest placeholders until phase 3.
