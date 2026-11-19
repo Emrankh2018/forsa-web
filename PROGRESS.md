@@ -1,10 +1,9 @@
 # Forsa platform v4 — progress
 
 ## Resume here
-**HOLD (D-115): no phase 3, no database or back-end work until the owner's Hostinger VPS exists.** Front-end only. Certificates (item 2 of the front-end list) are deferred by the owner.
-Latest: roadmap steps 1 to 7 (`../../production/ROADMAP-PRE-VPS.md`) are done and live at https://forsa-demo.vercel.app. Only the VPS work is left (database, sign-in, the writes in `docs/BACKEND-CONTRACT.md`, file storage, sending `docs/EMAILS.md`), plus step 8 certificates when the owner says. Last commit: see `git log -1`.
-Audit, review and test done 2026-11-19: `docs/AUDIT-2026-11-19.md`. One live defect (five signed-in area addresses answered 500 instead of 404 for unknown items) fixed with a regression test and live (commit cf34bdd, `dpl_8Lq6h4q5CyDooQRgSZBs6RVL3Awo`, alias re-pointed; 606 browser tests passed on live).
-Next exact step: nothing open in the front end; step 8 certificates when the owner says, everything else on the VPS. Go-live items from the audit: CSP header, robots.txt, favicon.ico. Re-point `forsa-demo.vercel.app` after any push to `main` that changes the site.
+**HOLD (D-115): no phase 3, no database or back-end work until the owner's Hostinger VPS exists.** Front-end only. Certificates are deferred by the owner (not designed until the owner says).
+Latest: roadmap 2 (`../../production/ROADMAP-VPS-READY.md`) steps 1 to 7 are done (the website runs as a standalone Node server for the VPS, security headers, search basics, contact page, resilience, lighter pages, patch updates); step 8 audit: `docs/AUDIT-2026-11-19-B.md`. Deploying the website to the VPS: `docs/VPS-DEPLOY.md`. Last commit: see `git log -1`.
+Next exact step: nothing open in the front end. When the owner says the VPS is ready: follow `docs/VPS-DEPLOY.md` for the website, then plan PostgreSQL and sign-in on the VPS before phase 3. Re-point `forsa-demo.vercel.app` after any push to `main` that changes the site.
 
 ---
 
@@ -224,3 +223,17 @@ The "Come in" page's chosen door links to its area. Sample data: `packages/share
 - Checks: copy, seam, controls, lint, typecheck, 39 shared + 31 database tests, build; full browser suite 667 passed, 0 failed.
 - Live (commit c276d04, `dpl_wTAiSc1DMJhiefJNPjc7tMQVSZTP`): Lighthouse accessibility 100 and best practices 100 on `/ar`, `/en/projects`, `/ar/workshops`, `/en/me`, `/ar/admin/orders`; performance 86 to 92 (one outlier run of 69 on `/ar`, repeats 87 and 89); evidence `docs/evidence/lighthouse/step7-*.json`. Live link crawl and the interaction tests pass (the crawl's time limit raised to 7 minutes after it ran out once on the live site).
 
+
+## Roadmap 2: ready for the VPS (`../../production/ROADMAP-VPS-READY.md`), owner 2026-11-19
+
+| Step | What | Commit |
+|---|---|---|
+| 1 | `output: 'standalone'` (monorepo tracing root), `scripts/package-standalone.mjs` (`npm run standalone`, `--serve` for tests), `/api/health`, `deploy/nginx/forsa.conf`, `deploy/systemd/forsa-web.service`, `apps/web/.env.example`, `docs/VPS-DEPLOY.md`, one site address in `lib/site.ts`; `E2E_STANDALONE=1` runs the browser suite against the standalone server (CI does too) | 7da547a, 276c7c0 |
+| 2 | CSP (Next.js static form: self only, `'unsafe-inline'` for Next's inline data and the arrival gate), HSTS, COOP; private areas `noindex` by header after go-live too | 7da547a |
+| 3 | `robots.txt` (blocks all until `FORSA_ENV=production`; exact private rules from shared, unit-tested), `sitemap.xml` with language twins, canonical and per-page alternates on every public page (`lib/seo.ts`), descriptions on home and project pages, `favicon.ico`, Apple and manifest icons (`scripts/make-icons.mjs`), web app manifest, Organization data on home | 7da547a, 276c7c0 |
+| 4 | `/contact`: Instagram, organisations form, questions; email only when `NEXT_PUBLIC_CONTACT_EMAIL` is set; footer link; FAQ points to it | 7da547a |
+| 5 | `app/global-error.tsx` (both languages, text in `messages/fallback.ts`), reference code on the error page, tester kit keeps answers across reloads and shows the text when the clipboard is refused | 7da547a |
+| 6 | Speed: shared package `sideEffects: false` and the header imports `@forsa/shared/locale` (zod off pages without forms: Arabic home 735 → 632 KB of script before compression); the browser gets only the message groups its code reads (`lib/client-messages.ts`, guard `scripts/check-client-messages.mjs`; home HTML 131 → 104 KB, 28 → 22 KB compressed) | 7da547a |
+| 7 | Patch updates: next-intl 4.15.3, supabase-js 2.119.2, pglite 0.5.17, vitest 5.1.1; `npm audit` 0 | 276c7c0 |
+
+Checks: copy (with the new browser-messages guard), lint, typecheck, 41 shared + 31 database tests, build; full browser suite against the standalone server **714 passed, 0 failed** (three runs: after steps 1-5, after trimming messages, after the updates); go-live, shell and link crawl after the audit fixes 42 passed. Running the suite with 2 workers avoids this machine running out of memory (4 workers crashed tabs) and is faster (about 9.5 minutes).
