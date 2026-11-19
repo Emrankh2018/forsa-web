@@ -2,8 +2,8 @@
 
 ## Resume here
 **HOLD (D-115): no phase 3, no database or back-end work until the owner's Hostinger VPS exists.** Front-end only. Certificates (item 2 of the front-end list) are deferred by the owner.
-Latest: the missing prototype screens (sign-in, onboarding, organisation and trainer sign-up, workshop booking, 1-to-1 slot picker, course player, settings, notices), the user-testing kit at `/test`, shared form rules, lazy arrival script, two more guides and a fuller FAQ. Last commit: see `git log -1`.
-Next exact step: wait for the owner. After any push to `main` that changes the site, re-point the `forsa-demo.vercel.app` alias to the new production deployment.
+Latest: roadmap steps 1 to 7 (`../../production/ROADMAP-PRE-VPS.md`) are done and live at https://forsa-demo.vercel.app. Only the VPS work is left (database, sign-in, the writes in `docs/BACKEND-CONTRACT.md`, file storage, sending `docs/EMAILS.md`), plus step 8 certificates when the owner says. Last commit: see `git log -1`.
+Next exact step: the owner's separate audit, review and test session. Re-point `forsa-demo.vercel.app` after any push to `main` that changes the site.
 
 ---
 
@@ -221,4 +221,5 @@ The "Come in" page's chosen door links to its area. Sample data: `packages/share
 - Step 6, emails: 14 templates (Arabic and English, HTML and plain text, placeholders listed and tested, escaping, copy rules) in `packages/shared/src/emails/templates.ts`; `/showcase/emails` renders the real HTML; `docs/EMAILS.md`.
 - Step 7, hardening: `scripts/check-controls.mjs` (no button without an action), `e2e/links.spec.ts` (crawls every internal link from both languages and all areas, all 200). Fixed: "Send the course for publishing" did nothing; "Add to calendar" now downloads a real calendar file (`makeIcs`, tested).
 - Checks: copy, seam, controls, lint, typecheck, 39 shared + 31 database tests, build; full browser suite 667 passed, 0 failed.
+- Live (commit c276d04, `dpl_wTAiSc1DMJhiefJNPjc7tMQVSZTP`): Lighthouse accessibility 100 and best practices 100 on `/ar`, `/en/projects`, `/ar/workshops`, `/en/me`, `/ar/admin/orders`; performance 86 to 92 (one outlier run of 69 on `/ar`, repeats 87 and 89); evidence `docs/evidence/lighthouse/step7-*.json`. Live link crawl and the interaction tests pass (the crawl's time limit raised to 7 minutes after it ran out once on the live site).
 

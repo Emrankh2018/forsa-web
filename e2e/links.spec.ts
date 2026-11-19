@@ -8,7 +8,7 @@ const starts = ['/ar', '/en', '/ar/me', '/en/org', '/ar/trainer', '/en/admin', '
 
 test('every internal link opens', async ({ page, request, browserName }, info) => {
   test.skip(info.project.name !== 'desktop' || browserName !== 'chromium', 'one crawl is enough')
-  test.setTimeout(240_000)
+  test.setTimeout(420_000)
   await page.addInitScript(() => sessionStorage.setItem('forsa.arrival', 'seen'))
   const seen = new Set<string>()
   const queue = [...starts]
