@@ -6,9 +6,10 @@ import { SiteFooter } from '@/components/site/footer'
 import { RoomHeader } from '@/components/ui/room-header'
 import { PrototypeBand } from '@/components/flows/prototype-band'
 import { TestKit } from '@/components/flows/test-kit'
+import { localeOf, type MetaProps } from '@/lib/locale-param'
 
-export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations('testKit')
+export async function generateMetadata({ params }: MetaProps): Promise<Metadata> {
+  const t = await getTranslations({ locale: await localeOf(params), namespace: 'testKit' })
   return { title: t('title'), robots: { index: false, follow: false } }
 }
 

@@ -8,9 +8,10 @@ import { RoomHeader } from '@/components/ui/room-header'
 import { SectionHeading } from '@/components/ui/section-heading'
 import { EmptyState, ErrorState, LoadingState, SuccessState } from '@/components/ui/states'
 import { NotYours } from '@/components/ui/not-yours'
+import { localeOf, type MetaProps } from '@/lib/locale-param'
 
-export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations('statesPage')
+export async function generateMetadata({ params }: MetaProps): Promise<Metadata> {
+  const t = await getTranslations({ locale: await localeOf(params), namespace: 'statesPage' })
   return { title: t('title'), robots: { index: false, follow: false } }
 }
 

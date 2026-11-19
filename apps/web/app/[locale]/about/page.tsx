@@ -2,9 +2,10 @@ import type { Metadata } from 'next'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
 import { ArticlePage } from '@/components/site/article-page'
+import { localeOf, type MetaProps } from '@/lib/locale-param'
 
-export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations('about')
+export async function generateMetadata({ params }: MetaProps): Promise<Metadata> {
+  const t = await getTranslations({ locale: await localeOf(params), namespace: 'about' })
   return { title: t('title'), description: t('lead') }
 }
 

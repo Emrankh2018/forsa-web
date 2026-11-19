@@ -9,9 +9,10 @@ import { ProjectCard } from '@/components/site/project-card'
 import { RoomHeader } from '@/components/ui/room-header'
 import { EmptyState } from '@/components/ui/states'
 import { listProjects, type FieldKey, type JoinMode, fields } from '@/lib/data'
+import { localeOf, type MetaProps } from '@/lib/locale-param'
 
-export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations('projectsPage')
+export async function generateMetadata({ params }: MetaProps): Promise<Metadata> {
+  const t = await getTranslations({ locale: await localeOf(params), namespace: 'projectsPage' })
   return { title: t('title') }
 }
 

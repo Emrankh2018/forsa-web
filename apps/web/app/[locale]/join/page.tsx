@@ -5,9 +5,10 @@ import { Link } from '@/i18n/navigation'
 import { SiteHeader } from '@/components/site/header'
 import { SiteFooter } from '@/components/site/footer'
 import { Door } from '@/components/site/door'
+import { localeOf, type MetaProps } from '@/lib/locale-param'
 
-export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations('account')
+export async function generateMetadata({ params }: MetaProps): Promise<Metadata> {
+  const t = await getTranslations({ locale: await localeOf(params), namespace: 'account' })
   return { title: t('chooseTitle'), robots: { index: false, follow: false } }
 }
 

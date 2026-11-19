@@ -8,9 +8,10 @@ import { CheckboxGroup, SelectField, TextArea, TextField } from '@/components/ui
 import { EmptyState, ErrorState, LoadingState, SuccessState, Tag } from '@/components/ui/states'
 import { SignInPrompt } from '@/components/ui/sign-in-prompt'
 import { RoomHeader } from '@/components/ui/room-header'
+import { localeOf, type MetaProps } from '@/lib/locale-param'
 
-export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations('showcase')
+export async function generateMetadata({ params }: MetaProps): Promise<Metadata> {
+  const t = await getTranslations({ locale: await localeOf(params), namespace: 'showcase' })
   return { title: t('title'), robots: { index: false, follow: false } }
 }
 

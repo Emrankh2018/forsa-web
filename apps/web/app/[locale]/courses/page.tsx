@@ -10,9 +10,10 @@ import { Divider } from '@/components/ui/section-heading'
 import { EmptyState } from '@/components/ui/states'
 import { ListFilters } from '@/components/ui/list-filters'
 import { listCourses, fields } from '@/lib/data'
+import { localeOf, type MetaProps } from '@/lib/locale-param'
 
-export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations('coursesPage')
+export async function generateMetadata({ params }: MetaProps): Promise<Metadata> {
+  const t = await getTranslations({ locale: await localeOf(params), namespace: 'coursesPage' })
   return { title: t('title') }
 }
 

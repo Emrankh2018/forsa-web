@@ -7,9 +7,10 @@ import { SiteHeader } from '@/components/site/header'
 import { SiteFooter } from '@/components/site/footer'
 import { RoomHeader } from '@/components/ui/room-header'
 import { listSessionTypes } from '@/lib/data'
+import { localeOf, type MetaProps } from '@/lib/locale-param'
 
-export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations('sessionsPage')
+export async function generateMetadata({ params }: MetaProps): Promise<Metadata> {
+  const t = await getTranslations({ locale: await localeOf(params), namespace: 'sessionsPage' })
   return { title: t('title') }
 }
 

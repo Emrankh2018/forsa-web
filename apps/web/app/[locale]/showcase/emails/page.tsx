@@ -3,9 +3,10 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import { emailSamples, emailTemplates, renderEmail, type EmailKind, type Locale } from '@forsa/shared'
 import { SiteHeader } from '@/components/site/header'
 import { RoomHeader } from '@/components/ui/room-header'
+import { localeOf, type MetaProps } from '@/lib/locale-param'
 
-export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations('emails')
+export async function generateMetadata({ params }: MetaProps): Promise<Metadata> {
+  const t = await getTranslations({ locale: await localeOf(params), namespace: 'emails' })
   return { title: t('pageTitle'), robots: { index: false, follow: false } }
 }
 

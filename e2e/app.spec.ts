@@ -42,6 +42,26 @@ for (const locale of ['ar', 'en'] as const) {
   }
 }
 
+/**
+ * Unknown items inside the signed-in areas answer 404 with the not-found page, never 500.
+ * Audit 2026-11-19: these answered 500 on the live site ("Page changed from static to dynamic at
+ * runtime, reason: headers") because the area layouts' metadata did not pass the locale.
+ */
+const unknownInAreas = [
+  '/me/projects/no-such-project', '/me/learning/courses/content-basics/99',
+  '/org/projects/no-such-project', '/org/projects/cafe-launch-campaign/review/no-such-hand-in',
+  '/trainer/workshops/no-such-workshop/edit',
+]
+for (const locale of ['ar', 'en'] as const) {
+  for (const path of unknownInAreas) {
+    test(`${locale}${path}: answers 404, not 500`, async ({ page }) => {
+      const res = await page.goto(`/${locale}${path}`)
+      expect(res?.status()).toBe(404)
+      await expect(page.getByRole('heading', { level: 1 })).toHaveText(messages[locale].notFound.title)
+    })
+  }
+}
+
 test.describe('interactions', () => {
   const t = messages.en
 

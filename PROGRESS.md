@@ -3,7 +3,8 @@
 ## Resume here
 **HOLD (D-115): no phase 3, no database or back-end work until the owner's Hostinger VPS exists.** Front-end only. Certificates (item 2 of the front-end list) are deferred by the owner.
 Latest: roadmap steps 1 to 7 (`../../production/ROADMAP-PRE-VPS.md`) are done and live at https://forsa-demo.vercel.app. Only the VPS work is left (database, sign-in, the writes in `docs/BACKEND-CONTRACT.md`, file storage, sending `docs/EMAILS.md`), plus step 8 certificates when the owner says. Last commit: see `git log -1`.
-Next exact step: the owner's separate audit, review and test session. Re-point `forsa-demo.vercel.app` after any push to `main` that changes the site.
+Audit, review and test done 2026-11-19: `docs/AUDIT-2026-11-19.md`. One live defect (five signed-in area addresses answered 500 instead of 404 for unknown items) fixed locally with a regression test; not yet committed or deployed.
+Next exact step: with the owner's go-ahead, commit the audit fix, push `preview` then `main`, re-point `forsa-demo.vercel.app`, and run `E2E_BASE_URL=https://forsa-demo.vercel.app npx playwright test -g "answers 404"`. Re-point `forsa-demo.vercel.app` after any push to `main` that changes the site.
 
 ---
 

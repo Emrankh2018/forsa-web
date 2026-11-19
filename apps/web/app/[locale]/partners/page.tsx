@@ -8,9 +8,10 @@ import { Door } from '@/components/site/door'
 import { RoomHeader } from '@/components/ui/room-header'
 import { SectionHeading } from '@/components/ui/section-heading'
 import { InterestForm } from '@/components/partners/interest-form'
+import { localeOf, type MetaProps } from '@/lib/locale-param'
 
-export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations('partners')
+export async function generateMetadata({ params }: MetaProps): Promise<Metadata> {
+  const t = await getTranslations({ locale: await localeOf(params), namespace: 'partners' })
   return { title: t('title'), description: t('lead') }
 }
 

@@ -7,9 +7,10 @@ import { SiteFooter } from '@/components/site/footer'
 import { Door } from '@/components/site/door'
 import { PrototypeBand } from '@/components/flows/prototype-band'
 import { SignInFlow } from '@/components/flows/sign-in-flow'
+import { localeOf, type MetaProps } from '@/lib/locale-param'
 
-export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations('account')
+export async function generateMetadata({ params }: MetaProps): Promise<Metadata> {
+  const t = await getTranslations({ locale: await localeOf(params), namespace: 'account' })
   return { title: t('signInTitle'), robots: { index: false, follow: false } }
 }
 
