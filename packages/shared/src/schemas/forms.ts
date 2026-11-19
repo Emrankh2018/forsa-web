@@ -129,6 +129,43 @@ export const settingsSchema = z.object({
 export const deleteAccountSchema = (word: string) =>
   z.object({ confirm: z.string().trim().refine((v) => v === word, 'deleteConfirm') })
 
+// Participant profile (shown to companies and on the public page).
+export const profileSchema = z.object({ headline: optionalText(120), bio: optionalText(600), skills: z.string().transform((v) => v.split('\n').map((l) => l.trim()).filter(Boolean)).refine((l) => l.length <= 12, 'tooMany').refine((l) => l.every((x) => x.length <= 40), 'tooLong'), links: url })
+
+// Organisation: team invitations and settings.
+export const teamRoles = ['owner', 'reviewer', 'member'] as const
+export const teamInviteSchema = z.object({ email, role: z.enum(teamRoles, { error: 'pickOne' }) })
+export const orgSettingsSchema = z.object({ orgName: text(2, 120), sector: text(2, 80), website: url, about: optionalText(800) })
+
+// Trainer: session types and profile.
+export const sessionTypeSchema = z.object({
+  name: text(3, 80),
+  minutes: z.string().transform((v) => Number(toWesternDigits(v).trim())).refine((n) => Number.isInteger(n) && n >= 15 && n <= 120, 'minutes'),
+})
+export const trainerProfileSchema = z.object({ expertise: text(3, 160), bio: text(40, 1200, 'bioShort'), links: url })
+
+// Trainer: a workshop sent for publishing. In person needs a place; online needs nothing more
+// (the link is added by the team after payment is confirmed).
+export const workshopSchema = z
+  .object({
+    title: text(6, 120),
+    summary: text(20, 400),
+    outcomes: lines(6, 160),
+    date: isoDate,
+    time: z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, 'time'),
+    minutes: z.string().transform((v) => Number(toWesternDigits(v).trim())).refine((n) => Number.isInteger(n) && n >= 30 && n <= 240, 'workshopMinutes'),
+    mode: z.enum(['online', 'in_person'], { error: 'pickOne' }),
+    place: optionalText(160),
+    seats: z.string().transform((v) => Number(toWesternDigits(v).trim())).refine((n) => Number.isInteger(n) && n >= 1 && n <= 50, 'seats'),
+  })
+  .refine((v) => v.mode === 'online' || v.place.length >= 3, { message: 'required', path: ['place'] })
+
+// Admin: adding a skill (both languages) to a field.
+export const skillSchema = z.object({ field: z.enum(fieldKeys, { error: 'pickOne' }), skillAr: text(2, 40), skillEn: text(2, 40) })
+
+// Admin: editing a guide's card.
+export const guideCardSchema = z.object({ titleAr: text(4, 120), titleEn: text(4, 120), summaryAr: text(20, 300), summaryEn: text(20, 300) })
+
 /** Turns a failed parse into { field: messageKey }, keeping the first problem per field. */
 export function fieldErrors(error: z.ZodError): Record<string, string> {
   const out: Record<string, string> = {}

@@ -44,6 +44,7 @@ export const sampleLearning = {
 export const sampleOrg = {
   name: { ar: 'مقهى الرملة', en: 'Al Ramla Café' },
   contact: { ar: 'مريم', en: 'Maryam' },
+  sector: { ar: 'المطاعم والمقاهي', en: 'Restaurants and cafés' },
 }
 
 export type SampleCohortMember = {
@@ -137,5 +138,124 @@ export const sampleQueues = {
   leads: [
     { org: { ar: 'مؤسسة الغد للتدريب', en: 'Al Ghad Training Foundation' }, ways: ['train_batch'], at: '2026-12-16' },
     { org: { ar: 'مكتبة الفنار', en: 'Al Fanar Bookshop' }, ways: ['post_project', 'sponsor'], at: '2026-12-17' },
+  ],
+}
+
+/** Reem's public record at /p/reem: only accepted work and attended workshops. */
+export const sampleRecord = {
+  handle: 'reem',
+  name: { ar: 'ريم', en: 'Reem' },
+  city: { ar: 'الدوحة', en: 'Doha' },
+  headline: { ar: 'خريجة تسويق أبحث عن دور في صناعة المحتوى', en: 'Marketing graduate looking for a content role' },
+  fields: ['marketing_media'] as const,
+  skills: [
+    { ar: 'كتابة المحتوى', en: 'Copywriting' },
+    { ar: 'تخطيط المنشورات', en: 'Content planning' },
+    { ar: 'كانفا', en: 'Canva' },
+  ],
+  accepted: [
+    {
+      title: { ar: 'خطة محتوى لمكتبة حيّ', en: 'A content plan for a neighbourhood bookshop' },
+      company: { ar: 'مكتبة الفنار', en: 'Al Fanar Bookshop' },
+      at: '2026-10-28',
+      feedback: {
+        ar: 'خطة واضحة وواقعية لفريق صغير مثلنا. بدأنا تنفيذ الأسبوعين الأولين كما هما.',
+        en: 'A clear, realistic plan for a small team like ours. We started the first two weeks exactly as written.',
+      },
+      strengths: [
+        { ar: 'تكتب بلغة قريبة من زبائننا', en: 'Writes in our customers’ language' },
+        { ar: 'تسلّم في الموعد', en: 'Delivers on time' },
+      ],
+    },
+  ],
+  workshops: ['cv-thirty-seconds'],
+}
+
+/** The café's team. */
+export const sampleOrgTeam = [
+  { id: 'm1', name: { ar: 'مريم', en: 'Maryam' }, role: 'owner' as const, pending: false },
+  { id: 'm2', name: { ar: 'جاسم', en: 'Jassim' }, role: 'reviewer' as const, pending: false },
+  { id: 'm3', name: { ar: 'دانة', en: 'Dana' }, role: 'member' as const, pending: true },
+]
+
+/** Hala's 1-to-1 session types and bookings. */
+export const sampleSessionTypes = [
+  { id: 's1', name: { ar: 'عيادة السيرة الذاتية', en: 'CV clinic' }, minutes: 30 },
+  { id: 's2', name: { ar: 'مراجعة ملف لينكدإن', en: 'LinkedIn profile review' }, minutes: 45 },
+]
+export const sampleSessionBookings = [
+  { id: 'b1', who: { ar: 'ريم', en: 'Reem' }, type: 's1', at: '2026-12-10T16:30:00+03:00', state: 'confirmed' as const },
+  { id: 'b2', who: { ar: 'حمد', en: 'Hamad' }, type: 's2', at: '2026-12-11T18:00:00+03:00', state: 'awaiting' as const },
+  { id: 'b3', who: { ar: 'جود', en: 'Joud' }, type: 's1', at: '2026-11-30T17:00:00+03:00', state: 'done' as const },
+]
+
+/** Accounts as the admin sees them. */
+export const samplePeople = [
+  { id: 'u1', name: { ar: 'ريم', en: 'Reem' }, kind: 'participant' as const, joined: '2026-10-02', state: 'active' as const },
+  { id: 'u2', name: { ar: 'يوسف', en: 'Yousef' }, kind: 'participant' as const, joined: '2026-11-20', state: 'active' as const },
+  { id: 'u3', name: { ar: 'مقهى الرملة', en: 'Al Ramla Café' }, kind: 'organisation' as const, joined: '2026-09-14', state: 'active' as const },
+  { id: 'u4', name: { ar: 'شركة مدار للحلول', en: 'Madar Solutions' }, kind: 'organisation' as const, joined: '2026-12-16', state: 'pending' as const },
+  { id: 'u5', name: { ar: 'هالة', en: 'Hala' }, kind: 'trainer' as const, joined: '2026-09-30', state: 'active' as const },
+  { id: 'u6', name: { ar: 'طارق', en: 'Tariq' }, kind: 'trainer' as const, joined: '2026-12-13', state: 'pending' as const },
+  { id: 'u7', name: { ar: 'فهد', en: 'Fahad' }, kind: 'participant' as const, joined: '2026-11-05', state: 'suspended' as const },
+]
+
+/** The audit log: who changed what. */
+export const sampleAudit = [
+  { at: '2026-12-16T10:12:00+03:00', who: { ar: 'المشرف', en: 'Admin' }, action: { ar: 'تحقق من جهة: مقهى الرملة', en: 'Verified organisation: Al Ramla Café' } },
+  { at: '2026-12-16T11:40:00+03:00', who: { ar: 'المشرف', en: 'Admin' }, action: { ar: 'وافق على مشروع: برنامج نقاط لزبائن المقهى', en: 'Approved project: A points programme for café customers' } },
+  { at: '2026-12-16T15:05:00+03:00', who: { ar: 'المشرف', en: 'Admin' }, action: { ar: 'سجّل حجزًا مدفوعًا: يوسف', en: 'Marked booking paid: Yousef' } },
+  { at: '2026-12-17T09:30:00+03:00', who: { ar: 'المشرف', en: 'Admin' }, action: { ar: 'غيّر إعدادًا: مدة حجز المقعد', en: 'Changed a setting: seat hold time' } },
+]
+
+/** Hala's profile as participants read it. */
+export const sampleTrainerProfile = {
+  expertise: { ar: 'السير الذاتية والتقديم على الوظائف', en: 'CVs and job applications' },
+  bio: {
+    ar: 'عملت في التوظيف لدى شركات في الدوحة، وراجعت مئات السير الذاتية. أساعد الخريجين على كتابة سيرة تُقرأ بسرعة وتقول ما أنجزوه.',
+    en: 'I worked in recruitment for companies in Doha and have reviewed hundreds of CVs. I help graduates write a CV that reads quickly and says what they achieved.',
+  },
+}
+
+/** Organisations as the admin sees them. */
+export const sampleOrganisations = [
+  { id: 'o1', name: { ar: 'مقهى الرملة', en: 'Al Ramla Café' }, sector: { ar: 'المطاعم والمقاهي', en: 'Restaurants and cafés' }, joined: '2026-09-14', state: 'verified' as const, projects: 2 },
+  { id: 'o2', name: { ar: 'متجر سدرة للإلكترونيات', en: 'Sidra Electronics Store' }, sector: { ar: 'التجزئة', en: 'Retail' }, joined: '2026-09-20', state: 'verified' as const, projects: 1 },
+  { id: 'o3', name: { ar: 'معرض بيت الطين', en: 'Bait Al Teen Gallery' }, sector: { ar: 'الفنون', en: 'Arts' }, joined: '2026-10-03', state: 'verified' as const, projects: 1 },
+  { id: 'o4', name: { ar: 'مطعم ساحل', en: 'Sahel Restaurant' }, sector: { ar: 'المطاعم والمقاهي', en: 'Restaurants and cafés' }, joined: '2026-10-11', state: 'verified' as const, projects: 1 },
+  { id: 'o5', name: { ar: 'استوديو نخيل للتصميم', en: 'Nakheel Design Studio' }, sector: { ar: 'التصميم', en: 'Design' }, joined: '2026-12-15', state: 'pending' as const, projects: 0 },
+  { id: 'o6', name: { ar: 'شركة مدار للحلول', en: 'Madar Solutions' }, sector: { ar: 'التقنية', en: 'Technology' }, joined: '2026-12-16', state: 'pending' as const, projects: 0 },
+]
+
+/** Project states the admin sees (public projects are open; one waits for approval). */
+export const sampleProjectStates: Record<string, 'awaiting_approval' | 'open' | 'in_progress' | 'closed'> = {
+  'cafe-launch-campaign': 'in_progress',
+  'store-support-assistant': 'open',
+  'gallery-visual-identity': 'open',
+  'review-sorting': 'open',
+  'loyalty-programme': 'awaiting_approval',
+}
+
+/** Orders: workshop seats paid by hand (bank transfer or cash), confirmed by the team. */
+export const sampleOrders = [
+  { id: 'r1', who: { ar: 'يوسف', en: 'Yousef' }, item: { ar: 'سيرة ذاتية تُقرأ في ثلاثين ثانية', en: 'A CV that reads in thirty seconds' }, dirhams: 25_000, at: '2026-12-15', state: 'reserved' as const },
+  { id: 'r2', who: { ar: 'حمد', en: 'Hamad' }, item: { ar: 'سيرة ذاتية تُقرأ في ثلاثين ثانية', en: 'A CV that reads in thirty seconds' }, dirhams: 25_000, at: '2026-12-16', state: 'reserved' as const },
+  { id: 'r3', who: { ar: 'ريم', en: 'Reem' }, item: { ar: 'ملف لينكدإن يعرّف بك', en: 'A LinkedIn profile that introduces you' }, dirhams: 25_000, at: '2026-12-02', state: 'paid' as const },
+  { id: 'r4', who: { ar: 'نوف', en: 'Nouf' }, item: { ar: 'سيرة ذاتية تُقرأ في ثلاثين ثانية', en: 'A CV that reads in thirty seconds' }, dirhams: 25_000, at: '2026-12-01', state: 'waived' as const },
+  { id: 'r5', who: { ar: 'خالد', en: 'Khaled' }, item: { ar: 'ملف لينكدإن يعرّف بك', en: 'A LinkedIn profile that introduces you' }, dirhams: 25_000, at: '2026-11-28', state: 'cancelled' as const },
+]
+
+/** Skills participants can pick, per field. */
+export const sampleSkills = {
+  marketing_media: [
+    { ar: 'كتابة المحتوى', en: 'Copywriting' },
+    { ar: 'تخطيط المنشورات', en: 'Content planning' },
+    { ar: 'التصوير', en: 'Photography' },
+    { ar: 'تحرير الفيديو', en: 'Video editing' },
+  ],
+  applied_ai: [
+    { ar: 'كتابة التعليمات للنماذج', en: 'Prompt writing' },
+    { ar: 'تحليل البيانات', en: 'Data analysis' },
+    { ar: 'أتمتة المهام', en: 'Task automation' },
   ],
 }

@@ -12,6 +12,8 @@ export default async function TrainerLayout({ children, params }: LayoutProps<'/
   const { locale } = await params
   setRequestLocale(locale as Locale)
   const t = await getTranslations('trainerArea.nav')
+  const x_trainerSessions = await getTranslations('trainerSessions')
+  const x_trainerProfile = await getTranslations('trainerProfile')
   return (
     <AreaShell
       area="trainer"
@@ -20,6 +22,8 @@ export default async function TrainerLayout({ children, params }: LayoutProps<'/
         { href: '/trainer/workshops', label: t('workshops') },
         { href: '/trainer/availability', label: t('availability') },
         { href: '/trainer/courses', label: t('courses') },
+        { href: '/trainer/sessions', label: x_trainerSessions('title') },
+        { href: '/trainer/profile', label: x_trainerProfile('title') },
       ]}
     >
       {children}

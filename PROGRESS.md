@@ -201,3 +201,12 @@ The "Come in" page's chosen door links to its area. Sample data: `packages/share
 - Fix (`components/arrival/use-arrival.ts`): the door plays once per visit (first page load in a tab). It is recorded in memory and in the tab's session storage only when it really starts; coming back home or reloading does not replay it; `?intro=1` still replays it on purpose.
 - Proof: new browser check (both languages, three sizes) counts replays after "Come in" then the logo; it failed before the fix (1 replay) and passes after. Full suite 504 passed, 0 failed. The view-transition check now watches 2.5 s instead of 1.2 s (it failed under heavy load, not because of this change: 19 repeated passes with the fix).
 
+## Roadmap until the VPS (`../../production/ROADMAP-PRE-VPS.md`), owner 2026-11-19
+
+### Steps 1 to 3 (done)
+- Step 1: `/me/profile`, public record `/p/reem`, `/org/team`, `/org/settings`, `/trainer/sessions`, `/trainer/profile`, `/admin/people`, `/admin/guides` (edit a guide card in both languages with preview), `/admin/audit` (CSV download made in the browser).
+- Step 2: `/admin/organisations`, `/admin/projects`, `/admin/training`, `/admin/orders` (manual payment: mark paid or waive; online payment stated as off), `/admin/content` (fields, skills, switches; online payment locked). One shared `AdminList` (search, state filter, empty state, row actions).
+- Step 3: `/trainer/workshops/new` and `/trainer/workshops/<slug>/edit`, sent for publishing; the "New workshop" button now opens it.
+- New shared rules: profile, team invite, organisation settings, session type, trainer profile, guide card, skill, workshop (31 shared tests).
+- Checks: copy, lint, typecheck, unit tests, build; full browser suite 627 passed, 0 failed (the one failing test had an ambiguous selector, fixed).
+

@@ -1,5 +1,13 @@
 import { describe, expect, it } from 'vitest'
 import {
+  workshopSchema,
+  skillSchema,
+  guideCardSchema,
+  orgSettingsSchema,
+  profileSchema,
+  sessionTypeSchema,
+  teamInviteSchema,
+  trainerProfileSchema,
   deleteAccountSchema, fieldErrors, handInSchema, orgRegistrationSchema, participantOnboardingSchema,
   projectBriefSchema, projectJoinSchema, projectWorkSchema, reviewSchema, settingsSchema, signInCodeSchema,
   signInEmailSchema, slotBookingSchema, trainerApplicationSchema,
@@ -68,5 +76,42 @@ describe('review, hand-in, booking, settings', () => {
     expect(settingsSchema.safeParse({ locale: 'en', handle: 'reem-q' }).success).toBe(true)
     expect(errs(deleteAccountSchema('احذف').safeParse({ confirm: 'delete' }))).toEqual({ confirm: 'deleteConfirm' })
     expect(deleteAccountSchema('احذف').safeParse({ confirm: ' احذف ' }).success).toBe(true)
+  })
+})
+
+describe('profile, team, organisation, trainer and admin forms', () => {
+  it('keeps profile skills as a short list and checks the link', () => {
+    expect(profileSchema.safeParse({ headline: '', bio: '', skills: 'Canva\n\n Copywriting ', links: '' }).data?.skills).toEqual(['Canva', 'Copywriting'])
+    expect(errs(profileSchema.safeParse({ headline: '', bio: '', skills: Array(13).fill('x').join('\n'), links: 'www.x' }))).toEqual({ skills: 'tooMany', links: 'url' })
+  })
+  it('checks team invitations and organisation settings', () => {
+    expect(errs(teamInviteSchema.safeParse({ email: 'maryam@', role: 'boss' }))).toEqual({ email: 'email', role: 'pickOne' })
+    expect(teamInviteSchema.safeParse({ email: ' Maryam@Example.com ', role: 'reviewer' }).data?.email).toBe('maryam@example.com')
+    expect(errs(orgSettingsSchema.safeParse({ orgName: 'A', sector: 'Food', website: '', about: '' }))).toEqual({ orgName: 'tooShort' })
+  })
+  it('checks session lengths (Arabic digits too) and the trainer bio', () => {
+    expect(sessionTypeSchema.safeParse({ name: 'CV clinic', minutes: '٣٠' }).data?.minutes).toBe(30)
+    expect(errs(sessionTypeSchema.safeParse({ name: 'CV clinic', minutes: '5' }))).toEqual({ minutes: 'minutes' })
+    expect(errs(trainerProfileSchema.safeParse({ expertise: 'CVs', bio: 'Short.', links: '' }))).toEqual({ bio: 'bioShort' })
+  })
+  it('needs both languages on a guide card', () => {
+    expect(errs(guideCardSchema.safeParse({ titleAr: 'السيرة الأولى', titleEn: '', summaryAr: 'ملخص قصير جدا هنا للتجربة', summaryEn: 'A summary long enough to pass.' }))).toEqual({ titleEn: 'tooShort' })
+  })
+})
+
+describe('admin content', () => {
+  it('needs a field and the skill in both languages', () => {
+    expect(errs(skillSchema.safeParse({ field: 'law', skillAr: 'ت', skillEn: '' }))).toEqual({ field: 'pickOne', skillAr: 'tooShort', skillEn: 'tooShort' })
+    expect(skillSchema.safeParse({ field: 'applied_ai', skillAr: 'تحليل', skillEn: 'Analysis' }).success).toBe(true)
+  })
+})
+
+describe('trainer workshop', () => {
+  const ok = { title: 'A CV that reads fast', summary: 'You rewrite your CV line by line.', outcomes: 'A one-page CV', date: '2027-01-10', time: '17:00', minutes: '120', mode: 'online', place: '', seats: '25' }
+  it('accepts an online workshop without a place', () => {
+    expect(workshopSchema.safeParse(ok).success).toBe(true)
+  })
+  it('needs a place in person, a real time, and sensible length and seats', () => {
+    expect(errs(workshopSchema.safeParse({ ...ok, mode: 'in_person', time: '25:00', minutes: '10', seats: '٦٠' }))).toEqual({ time: 'time', minutes: 'workshopMinutes', seats: 'seats', place: 'required' })
   })
 })

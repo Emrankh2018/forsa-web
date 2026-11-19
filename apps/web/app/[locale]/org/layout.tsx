@@ -12,6 +12,8 @@ export default async function OrgLayout({ children, params }: LayoutProps<'/[loc
   const { locale } = await params
   setRequestLocale(locale as Locale)
   const t = await getTranslations('org.nav')
+  const x_orgTeam = await getTranslations('orgTeam')
+  const x_orgSettings = await getTranslations('orgSettings')
   return (
     <AreaShell
       area="org"
@@ -20,6 +22,8 @@ export default async function OrgLayout({ children, params }: LayoutProps<'/[loc
         { href: '/org/projects', label: t('projects'), badge: formatNumber(2, locale as Locale) },
         { href: '/org/new-project', label: t('newProject') },
         { href: '/org/talent', label: t('talent') },
+        { href: '/org/team', label: x_orgTeam('title') },
+        { href: '/org/settings', label: x_orgSettings('title') },
       ]}
     >
       {children}

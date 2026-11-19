@@ -14,6 +14,7 @@ export default async function ParticipantLayout({ children, params }: LayoutProp
   const t = await getTranslations('me.nav')
   const n = await getTranslations('noticesPage')
   const s = await getTranslations('settings')
+  const x_profile = await getTranslations('profile')
   return (
     <AreaShell
       area="participant"
@@ -24,6 +25,7 @@ export default async function ParticipantLayout({ children, params }: LayoutProp
         { href: '/me/saved', label: t('saved') },
         { href: '/me/invitations', label: t('invitations'), badge: formatNumber(1, locale as Locale) },
         { href: '/me/notices', label: n('title'), badge: formatNumber(2, locale as Locale) },
+        { href: '/me/profile', label: x_profile('title') },
         { href: '/me/settings', label: s('title') },
       ]}
     >

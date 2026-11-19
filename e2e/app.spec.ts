@@ -9,11 +9,12 @@ import { messages } from '../packages/shared/src/messages'
 
 const pages = [
   '/me', '/me/projects', '/me/projects/cafe-launch-campaign', '/me/learning', '/me/saved', '/me/invitations',
-  '/me/notices', '/me/settings', '/me/learning/courses/content-basics/3',
+  '/me/notices', '/me/settings', '/me/profile', '/me/learning/courses/content-basics/3',
   '/org', '/org/projects', '/org/projects/cafe-launch-campaign', '/org/projects/loyalty-programme',
-  '/org/projects/cafe-launch-campaign/review/p2', '/org/new-project', '/org/talent',
-  '/trainer', '/trainer/workshops', '/trainer/availability', '/trainer/courses',
-  '/admin', '/admin/queues', '/admin/settings',
+  '/org/projects/cafe-launch-campaign/review/p2', '/org/new-project', '/org/talent', '/org/team', '/org/settings',
+  '/trainer', '/trainer/workshops', '/trainer/availability', '/trainer/courses', '/trainer/sessions', '/trainer/profile', '/trainer/workshops/new', '/trainer/workshops/linkedin-profile/edit',
+  '/admin', '/admin/queues', '/admin/settings', '/admin/people', '/admin/guides', '/admin/audit',
+  '/admin/organisations', '/admin/projects', '/admin/training', '/admin/orders', '/admin/content',
 ]
 
 function watchConsole(page: Page) {
@@ -161,5 +162,96 @@ test.describe('interactions', () => {
     const text = await page.evaluate(() => navigator.clipboard.readText())
     expect(text).toContain(t.testKit.tasks.p1)
     expect(text).toContain('Bigger buttons')
+  })
+  test('profile: a bad link is caught, the public page opens', async ({ page }) => {
+    await page.goto('/en/me/profile')
+    await page.getByLabel(t.profile.links).fill('www.example')
+    await page.getByRole('button', { name: t.profile.save }).click()
+    await expect(page.getByText(t.forms.errors.url)).toBeVisible()
+    await page.getByLabel(t.profile.links).fill('https://example.com/reem')
+    await page.getByRole('button', { name: t.profile.save }).click()
+    await expect(page.getByText(t.profile.saved)).toBeVisible()
+    await page.getByRole('link', { name: t.profile.seePublic }).click()
+    await expect(page).toHaveURL(/\/en\/p\/reem$/)
+  })
+
+  test('team: an invitation needs a valid email', async ({ page }) => {
+    await page.goto('/en/org/team')
+    await page.getByRole('button', { name: t.orgTeam.inviteCta }).click()
+    await expect(page.getByText(t.forms.errors.email)).toBeVisible()
+    await page.getByLabel(t.orgTeam.email).fill('dana@example.com')
+    await page.getByRole('button', { name: t.orgTeam.inviteCta }).click()
+    await expect(page.getByText('dana@example.com')).toBeVisible()
+  })
+
+  test('sessions: a session length must be 15 to 120 minutes', async ({ page }) => {
+    await page.goto('/en/trainer/sessions')
+    await page.getByLabel(t.trainerSessions.typeName).fill('Interview practice')
+    await page.getByLabel(t.trainerSessions.typeMinutes).fill('5')
+    await page.getByRole('button', { name: t.trainerSessions.addCta, exact: true }).click()
+    await expect(page.getByText(t.forms.errors.minutes)).toBeVisible()
+    await page.getByLabel(t.trainerSessions.typeMinutes).fill('45')
+    await page.getByRole('button', { name: t.trainerSessions.addCta, exact: true }).click()
+    await expect(page.getByText(t.trainerSessions.added)).toBeVisible()
+  })
+
+  test('admin people: filter and search narrow the list', async ({ page }) => {
+    await page.goto('/en/admin/people')
+    await page.getByRole('button', { name: t.adminPeople.kinds.trainer }).click()
+    await expect(page.getByRole('row')).toHaveCount(3)
+    await page.getByLabel(t.adminPeople.search).fill('zzz')
+    await expect(page.getByText(t.adminPeople.none)).toBeVisible()
+  })
+
+  test('admin audit: the CSV download carries every row', async ({ page }) => {
+    await page.goto('/en/admin/audit')
+    const [download] = await Promise.all([page.waitForEvent('download'), page.getByRole('button', { name: t.adminAudit.export }).click()])
+    expect(download.suggestedFilename()).toBe('forsa-audit.csv')
+    const path = await download.path()
+    const text = (await import('node:fs')).readFileSync(path, 'utf8')
+    expect(text.trim().split('\r\n')).toHaveLength(5)
+    expect(text).toContain('Verified organisation')
+  })
+  test('admin orders: a held seat can be marked paid; the filter narrows the list', async ({ page }) => {
+    await page.goto('/en/admin/orders')
+    await page.getByRole('button', { name: t.adminLists.orders.states.paid, exact: true }).click()
+    await expect(page.getByRole('row')).toHaveCount(2)
+    await page.getByRole('button', { name: t.adminLists.all, exact: true }).click()
+    await page.getByRole('button', { name: t.adminLists.orders.markPaid }).first().click()
+    await expect(page.getByRole('status').filter({ hasText: 'Yousef' })).toBeVisible()
+  })
+
+  test('admin organisations: search finds one, and a waiting one can be verified', async ({ page }) => {
+    await page.goto('/en/admin/organisations')
+    await page.getByLabel(t.adminLists.search).fill('madar')
+    await expect(page.getByRole('row')).toHaveCount(2)
+    await page.getByRole('button', { name: t.adminLists.organisations.verify }).click()
+    await expect(page.getByRole('status').filter({ hasText: 'Madar Solutions' })).toBeVisible()
+  })
+
+  test('admin content: a skill needs both languages; online payment stays locked', async ({ page }) => {
+    await page.goto('/en/admin/content')
+    await expect(page.getByLabel(t.adminLists.content.switchPayments)).toBeDisabled()
+    await page.getByRole('button', { name: t.adminLists.content.add, exact: true }).click()
+    await expect(page.getByText(t.forms.errors.tooShort).first()).toBeVisible()
+    await page.getByLabel(t.adminLists.content.skillAr).fill('تحليل البيانات')
+    await page.getByLabel(t.adminLists.content.skillEn).fill('Data storytelling')
+    await page.getByRole('button', { name: t.adminLists.content.add, exact: true }).click()
+    await expect(page.getByRole('status').filter({ hasText: 'Marketing and media' })).toBeVisible()
+  })
+  test('trainer: a new workshop is checked, then sent for publishing', async ({ page }) => {
+    await page.goto('/en/trainer/workshops')
+    await page.getByRole('link', { name: t.trainerArea.newWorkshop }).click()
+    await expect(page).toHaveURL(/\/en\/trainer\/workshops\/new$/)
+    await page.getByLabel(t.workshopForm.inPerson).check()
+    await page.getByRole('button', { name: t.workshopForm.send }).click()
+    await expect(page.getByText(t.forms.errors.date)).toBeVisible()
+    await page.getByLabel(t.workshopForm.title).fill('Interview practice')
+    await page.getByLabel(t.workshopForm.summary).fill('You answer real interview questions and get notes.')
+    await page.getByLabel(t.workshopForm.outcomes).fill('Three answers ready')
+    await page.getByLabel(t.workshopForm.date).fill('2027-01-12')
+    await page.getByRole('textbox', { name: t.workshopForm.place }).fill('Forsa room, Doha')
+    await page.getByRole('button', { name: t.workshopForm.send }).click()
+    await expect(page.getByText(t.workshopForm.sentTitle)).toBeVisible()
   })
 })

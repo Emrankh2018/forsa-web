@@ -43,6 +43,7 @@ const pages = [
   '/workshops/cv-thirty-seconds/book',
   '/sessions/cv-clinic/book',
   '/test',
+  '/p/reem',
   '/join',
   '/join?as=organisation&next=/partners',
   '/showcase',

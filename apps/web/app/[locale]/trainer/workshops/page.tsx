@@ -2,6 +2,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
 import { workshopBySlug } from '@forsa/shared/seed'
 import { sampleTrainer } from '@forsa/shared/seed/app'
+import { Link } from '@/i18n/navigation'
 import { formatters } from '@/lib/format'
 import { SectionHeading } from '@/components/ui/section-heading'
 import { Tag } from '@/components/ui/states'
@@ -13,13 +14,14 @@ export default async function TrainerWorkshops({ params }: PageProps<'/[locale]/
   setRequestLocale(locale)
   const t = await getTranslations('trainerArea')
   const st = await getTranslations('app.state')
+  const w = await getTranslations('workshopForm')
   const f = formatters(locale)
   const [published, pending] = sampleTrainer.workshops.map((x) => ({ ...x, ws: workshopBySlug(x.slug)! }))
   return (
     <>
       <div className="flex flex-wrap items-end justify-between gap-4">
         <h1 className="font-display text-4xl font-bold">{t('nav.workshops')}</h1>
-        <button type="button" className="btn-arch">{t('newWorkshop')}</button>
+        <Link href="/trainer/workshops/new" className="btn-arch">{t('newWorkshop')}</Link>
       </div>
       <div className="mt-10 grid gap-12 lg:grid-cols-[1.4fr_1fr]">
         <section aria-labelledby="attendees">
@@ -34,6 +36,7 @@ export default async function TrainerWorkshops({ params }: PageProps<'/[locale]/
           <SectionHeading id="pending">{f.pick(pending!.ws.title)}</SectionHeading>
           <div className="mt-4"><Tag>{st(pending!.state)}</Tag></div>
           <p className="mt-3 text-ink-soft">{f.pick(pending!.ws.summary)}</p>
+          <Link href={`/trainer/workshops/${pending!.slug}/edit`} className="btn-quiet -ms-3 mt-2 underline underline-offset-4">{w('edit')}</Link>
         </section>
       </div>
     </>
