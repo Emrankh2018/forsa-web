@@ -221,6 +221,8 @@ export const enFlows = {
     copy: 'Copy your answers',
     newTab: '(opens in a new tab, so your answers stay here)',
     copied: 'Copied. Send them to the person who invited you.',
-    note: 'Your answers are not sent or saved automatically. Copy them and send them yourself.',
+    note: 'Your answers stay in this tab until you close it, even if you reload. They are not sent anywhere: copy them and send them yourself.',
+    copyFailed: 'Your browser did not allow copying. Select the text below and copy it yourself.',
+    manualLabel: 'Your answers as text'
   },
 }

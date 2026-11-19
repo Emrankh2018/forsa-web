@@ -1,7 +1,8 @@
 'use client'
 
 import { useLocale, useTranslations } from 'next-intl'
-import { otherLocale } from '@forsa/shared'
+// Direct path: the header is on every page, so it must not pull the whole shared package (forms, emails).
+import { otherLocale } from '@forsa/shared/locale'
 import { Link, usePathname } from '@/i18n/navigation'
 
 /** Same page in the other language. */

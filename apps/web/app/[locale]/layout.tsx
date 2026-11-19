@@ -1,14 +1,14 @@
 import type { Metadata, Viewport } from 'next'
 import { notFound } from 'next/navigation'
 import { hasLocale, NextIntlClientProvider } from 'next-intl'
-import { getTranslations, setRequestLocale } from 'next-intl/server'
+import { getMessages, getTranslations, setRequestLocale } from 'next-intl/server'
 import { direction } from '@forsa/shared'
 import { routing } from '@/i18n/routing'
 import { amiri, plex, plexArabic } from '@/lib/fonts'
+import { isProduction, siteUrl } from '@/lib/site'
+import { pickClientMessages } from '@/lib/client-messages'
 import '../globals.css'
 import '../site.css'
-
-const isProduction = process.env.FORSA_ENV === 'production'
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }))
@@ -22,8 +22,7 @@ export async function generateMetadata({ params }: LayoutProps<'/[locale]'>): Pr
     title: { default: t('title'), template: `%s · ${t('title')}` },
     description: t('description'),
     robots: isProduction ? undefined : { index: false, follow: false },
-    metadataBase: new URL(process.env.SITE_URL ?? 'https://forsa-demo.vercel.app'),
-    alternates: { languages: { ar: '/ar', en: '/en' } },
+    metadataBase: new URL(siteUrl),
     openGraph: {
       type: 'website',
       siteName: t('title'),
@@ -33,7 +32,8 @@ export async function generateMetadata({ params }: LayoutProps<'/[locale]'>): Pr
       images: [{ url: `/og/forsa-${locale}.png`, width: 1200, height: 630, alt: t('description') }],
     },
     twitter: { card: 'summary_large_image', images: [`/og/forsa-${locale}.png`] },
-    icons: { icon: '/icon.svg' },
+    icons: { icon: [{ url: '/icon.svg', type: 'image/svg+xml' }, { url: '/favicon.ico', sizes: '48x48' }], apple: '/apple-icon.png' },
+    manifest: '/manifest.webmanifest',
   }
 }
 
@@ -48,6 +48,8 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
   if (!hasLocale(routing.locales, locale)) notFound()
   setRequestLocale(locale)
   const t = await getTranslations('common')
+  // Only the groups browser code reads (lib/client-messages.ts), not every text of the site.
+  const clientMessages = pickClientMessages(await getMessages({ locale }))
 
   return (
     <html lang={locale} dir={direction(locale)} suppressHydrationWarning className={`${amiri.variable} ${plexArabic.variable} ${plex.variable}`}>
@@ -58,7 +60,7 @@ export default async function LocaleLayout({ children, params }: LayoutProps<'/[
         >
           {t('skipToContent')}
         </a>
-        <NextIntlClientProvider>
+        <NextIntlClientProvider messages={clientMessages}>
           {children}
         </NextIntlClientProvider>
       </body>

@@ -8,10 +8,12 @@ import { SiteFooter } from '@/components/site/footer'
 import { RoomHeader } from '@/components/ui/room-header'
 import { listSessionTypes } from '@/lib/data'
 import { localeOf, type MetaProps } from '@/lib/locale-param'
+import { publicMeta } from '@/lib/seo'
 
 export async function generateMetadata({ params }: MetaProps): Promise<Metadata> {
-  const t = await getTranslations({ locale: await localeOf(params), namespace: 'sessionsPage' })
-  return { title: t('title') }
+  const locale = await localeOf(params)
+  const t = await getTranslations({ locale, namespace: 'sessionsPage' })
+  return publicMeta(locale, '/sessions', t('title'), t('lead'))
 }
 
 /** 1-to-1 session types. Booking opens with trainers' availability (phase 6). */

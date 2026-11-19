@@ -4,10 +4,12 @@ import type { Locale } from '@forsa/shared'
 import { ArticlePage } from '@/components/site/article-page'
 import { ErrorState } from '@/components/ui/states'
 import { localeOf, type MetaProps } from '@/lib/locale-param'
+import { publicMeta } from '@/lib/seo'
 
 export async function generateMetadata({ params }: MetaProps): Promise<Metadata> {
-  const t = await getTranslations({ locale: await localeOf(params), namespace: 'terms' })
-  return { title: t('title') }
+  const locale = await localeOf(params)
+  const t = await getTranslations({ locale, namespace: 'terms' })
+  return publicMeta(locale, '/terms', t('title'), t('lead'))
 }
 
 export default async function TermsPage({ params }: PageProps<'/[locale]/terms'>) {

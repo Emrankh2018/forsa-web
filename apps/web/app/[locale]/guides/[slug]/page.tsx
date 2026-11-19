@@ -13,6 +13,7 @@ import { PrintButton } from '@/components/guides/print-button'
 import { PitchBuilder } from '@/components/guides/pitch-builder'
 import { CvChecker } from '@/components/guides/cv-checker'
 import { guideLookup, listGuides } from '@/lib/data'
+import { publicMeta } from '@/lib/seo'
 
 export async function generateStaticParams() {
   const guides = await listGuides()
@@ -23,7 +24,7 @@ export async function generateMetadata({ params }: PageProps<'/[locale]/guides/[
   const guideBySlug = await guideLookup()
   const { locale, slug } = await params
   const g = guideBySlug(slug)
-  return g ? { title: g.title[locale as Locale], description: g.summary[locale as Locale] } : {}
+  return g ? publicMeta(locale as Locale, `/guides/${slug}`, g.title[locale as Locale], g.summary[locale as Locale]) : {}
 }
 
 /** A guide: an "on this page" index, sections with checklists, a tool where it helps, next steps. */

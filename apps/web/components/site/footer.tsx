@@ -13,6 +13,7 @@ export async function SiteFooter({ sample = false, rooms = true }: { sample?: bo
   const links = [
     ['/about', t('about')],
     ['/faq', t('faq')],
+    ['/contact', t('contact')],
     ['/guides', t('guides')],
     ['/partners', t('partners')],
     ['/trainers', t('trainers')],

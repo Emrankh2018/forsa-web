@@ -4,6 +4,7 @@ import { emailSamples, emailTemplates, renderEmail, type EmailKind, type Locale 
 import { SiteHeader } from '@/components/site/header'
 import { RoomHeader } from '@/components/ui/room-header'
 import { localeOf, type MetaProps } from '@/lib/locale-param'
+import { siteUrl } from '@/lib/site'
 
 export async function generateMetadata({ params }: MetaProps): Promise<Metadata> {
   const t = await getTranslations({ locale: await localeOf(params), namespace: 'emails' })
@@ -27,7 +28,7 @@ export default async function EmailsShowcase({ params }: PageProps<'/[locale]/sh
         <RoomHeader title={t('pageTitle')} lead={t('pageLead')} tone="paper" />
         <ul className="mx-auto mt-14 grid max-w-6xl gap-14 px-4 sm:px-8 lg:grid-cols-2" role="list">
           {kinds.map((k) => {
-            const e = renderEmail(k, locale, emailSamples[locale], 'https://forsa-demo.vercel.app')
+            const e = renderEmail(k, locale, emailSamples[locale], siteUrl)
             return (
               <li key={k}>
                 <p className="text-sm text-ink-soft">{t('subject')}</p>

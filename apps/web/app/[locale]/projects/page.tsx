@@ -10,10 +10,12 @@ import { RoomHeader } from '@/components/ui/room-header'
 import { EmptyState } from '@/components/ui/states'
 import { listProjects, type FieldKey, type JoinMode, fields } from '@/lib/data'
 import { localeOf, type MetaProps } from '@/lib/locale-param'
+import { publicMeta } from '@/lib/seo'
 
 export async function generateMetadata({ params }: MetaProps): Promise<Metadata> {
-  const t = await getTranslations({ locale: await localeOf(params), namespace: 'projectsPage' })
-  return { title: t('title') }
+  const locale = await localeOf(params)
+  const t = await getTranslations({ locale, namespace: 'projectsPage' })
+  return publicMeta(locale, '/projects', t('title'), t('lead'))
 }
 
 const fieldKeys = Object.keys(fields) as FieldKey[]

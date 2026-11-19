@@ -1,0 +1,31 @@
+# systemd service for the Forsa website. Copy to /etc/systemd/system/forsa-web.service, then
+#   systemctl daemon-reload && systemctl enable --now forsa-web
+# The release folder is the standalone output prepared by scripts/package-standalone.mjs
+# (see docs/VPS-DEPLOY.md); /srv/forsa/current is a link to the release that is live.
+
+[Unit]
+Description=Forsa website (Next.js)
+After=network.target
+
+[Service]
+Type=simple
+User=forsa
+Group=forsa
+WorkingDirectory=/srv/forsa/current
+ExecStart=/usr/bin/node apps/web/server.js
+Environment=NODE_ENV=production
+Environment=PORT=3000
+Environment=HOSTNAME=127.0.0.1
+# Settings read at run time only (none secret today). Build-time settings live in .env on the build machine.
+EnvironmentFile=-/srv/forsa/shared/runtime.env
+Restart=always
+RestartSec=3
+# Hardening: the site writes nothing to disk except its cache.
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/srv/forsa/current/apps/web/.next/cache
+
+[Install]
+WantedBy=multi-user.target

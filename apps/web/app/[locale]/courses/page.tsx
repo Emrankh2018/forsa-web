@@ -11,10 +11,12 @@ import { EmptyState } from '@/components/ui/states'
 import { ListFilters } from '@/components/ui/list-filters'
 import { listCourses, fields } from '@/lib/data'
 import { localeOf, type MetaProps } from '@/lib/locale-param'
+import { publicMeta } from '@/lib/seo'
 
 export async function generateMetadata({ params }: MetaProps): Promise<Metadata> {
-  const t = await getTranslations({ locale: await localeOf(params), namespace: 'coursesPage' })
-  return { title: t('title') }
+  const locale = await localeOf(params)
+  const t = await getTranslations({ locale, namespace: 'coursesPage' })
+  return publicMeta(locale, '/courses', t('title'), t('lead'))
 }
 
 const topics = ['career', 'marketing_media', 'applied_ai'] as const

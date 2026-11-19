@@ -34,6 +34,7 @@ export const en = {
     body: 'Something went wrong on our side, not yours. Try again in a moment.',
     retry: 'Try again',
     home: 'Back to home',
+    reference: 'If you write to us about it, quote this code: {code}',
   },
   notFound: {
     title: 'This door leads nowhere',

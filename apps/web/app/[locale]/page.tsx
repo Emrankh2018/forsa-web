@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
 import { Link } from '@/i18n/navigation'
@@ -12,6 +13,13 @@ import { SiteHeader } from '@/components/site/header'
 import { SiteFooter } from '@/components/site/footer'
 import { SectionHeading } from '@/components/ui/section-heading'
 import { listProjects, listWorkshops, seatsLeft } from '@/lib/data'
+import { localeOf, type MetaProps } from '@/lib/locale-param'
+import { publicMeta } from '@/lib/seo'
+import { OrganizationData } from '@/components/site/structured-data'
+
+export async function generateMetadata({ params }: MetaProps): Promise<Metadata> {
+  return publicMeta(await localeOf(params), '/', undefined)
+}
 
 export default async function Home({ params }: PageProps<'/[locale]'>) {
   const sampleProjects = await listProjects()
@@ -35,6 +43,7 @@ export default async function Home({ params }: PageProps<'/[locale]'>) {
   return (
     <>
       <ArrivalGate storageKey="forsa.arrival" />
+      <OrganizationData locale={locale} />
       <ArrivalDoor skipLabel={a('skip')} />
       <SiteHeader />
       <main id="content" tabIndex={-1} className="outline-none">

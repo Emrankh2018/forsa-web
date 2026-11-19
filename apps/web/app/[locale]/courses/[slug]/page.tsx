@@ -12,6 +12,7 @@ import { SectionHeading } from '@/components/ui/section-heading'
 import { SignInPrompt } from '@/components/ui/sign-in-prompt'
 import { Tag } from '@/components/ui/states'
 import { courseLookup, listCourses, fields } from '@/lib/data'
+import { publicMeta } from '@/lib/seo'
 
 export async function generateStaticParams() {
   const sampleCourses = await listCourses()
@@ -22,7 +23,7 @@ export async function generateMetadata({ params }: PageProps<'/[locale]/courses/
   const courseBySlug = await courseLookup()
   const { locale, slug } = await params
   const c = courseBySlug(slug)
-  return c ? { title: c.title[locale as Locale] } : {}
+  return c ? publicMeta(locale as Locale, `/courses/${slug}`, c.title[locale as Locale], c.summary[locale as Locale]) : {}
 }
 
 export default async function CoursePage({ params }: PageProps<'/[locale]/courses/[slug]'>) {

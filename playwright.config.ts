@@ -3,7 +3,8 @@ import { defineConfig, devices } from '@playwright/test'
 /**
  * Browser journeys. Runs against the production build on port 8765 (4173 is blocked on the owner's
  * machine). Three widths from plan V4 section 11: phone 390, tablet 820, desktop 1366.
- * Set E2E_BASE_URL to run against a preview deployment instead.
+ * Set E2E_BASE_URL to run against a preview deployment instead, or E2E_STANDALONE=1 to run against the
+ * standalone server the VPS gets (scripts/package-standalone.mjs --serve).
  */
 const port = 8765
 const baseURL = process.env.E2E_BASE_URL ?? `http://localhost:${port}`
@@ -26,5 +27,10 @@ export default defineConfig({
   ],
   webServer: process.env.E2E_BASE_URL
     ? undefined
-    : { command: 'npm run start', url: `${baseURL}/ar`, reuseExistingServer: !process.env.CI, timeout: 120_000 },
+    : {
+        command: process.env.E2E_STANDALONE ? 'node scripts/package-standalone.mjs --serve' : 'npm run start',
+        url: `${baseURL}/ar`,
+        reuseExistingServer: !process.env.CI,
+        timeout: 120_000,
+      },
 })

@@ -183,6 +183,25 @@ test.describe('interactions', () => {
     expect(text).toContain(t.testKit.tasks.p1)
     expect(text).toContain('Bigger buttons')
   })
+
+  test('testing kit: answers survive a reload; a refused clipboard shows the text to copy by hand', async ({ page }) => {
+    await page.addInitScript(() => {
+      Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText: () => Promise.reject(new Error('denied')) } })
+    })
+    await page.goto('/en/test')
+    await page.getByLabel(t.testKit.overall1).fill('Yes, tomorrow')
+    await page.getByRole('radio', { name: t.testKit.easyScale.split('|')[4] }).first().check({ force: true })
+    await page.waitForFunction(() => (sessionStorage.getItem('forsa.testkit') ?? '').includes('tomorrow'))
+    await page.reload()
+    await expect(page.getByLabel(t.testKit.overall1)).toHaveValue('Yes, tomorrow')
+    await expect(page.getByRole('radio', { name: t.testKit.easyScale.split('|')[4] }).first()).toBeChecked()
+    await page.getByRole('button', { name: t.testKit.copy }).click()
+    await expect(page.getByRole('alert').filter({ hasText: t.testKit.copyFailed })).toBeVisible()
+    const box = page.getByLabel(t.testKit.manualLabel)
+    await expect(box).toBeVisible()
+    await expect(box).toHaveValue(/Yes, tomorrow/)
+    await expect(box).toBeFocused()
+  })
   test('profile: a bad link is caught, the public page opens', async ({ page }) => {
     await page.goto('/en/me/profile')
     await page.getByLabel(t.profile.links).fill('www.example')

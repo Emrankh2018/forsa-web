@@ -18,6 +18,7 @@ export const enSite = {
     label: 'Site links',
     about: 'About Forsa',
     faq: 'Questions',
+    contact: 'Contact',
     partners: 'For organisations',
     trainers: 'Become a trainer',
     guides: 'Free guides',

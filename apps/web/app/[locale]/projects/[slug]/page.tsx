@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
@@ -10,10 +11,18 @@ import { PhoneActionBar } from '@/components/site/phone-action-bar'
 import { SectionHeading, Divider } from '@/components/ui/section-heading'
 import { SignInPrompt } from '@/components/ui/sign-in-prompt'
 import { listProjects, projectLookup, fields, seatsLeft } from '@/lib/data'
+import { publicMeta } from '@/lib/seo'
 
 export async function generateStaticParams() {
   const sampleProjects = await listProjects()
   return sampleProjects.map((p) => ({ slug: p.slug }))
+}
+
+export async function generateMetadata({ params }: PageProps<'/[locale]/projects/[slug]'>): Promise<Metadata> {
+  const projectBySlug = await projectLookup()
+  const { locale, slug } = await params
+  const p = projectBySlug(slug)
+  return p ? publicMeta(locale as Locale, `/projects/${slug}`, p.title[locale as Locale], p.summary[locale as Locale]) : {}
 }
 
 export default async function ProjectPage({ params }: PageProps<'/[locale]/projects/[slug]'>) {

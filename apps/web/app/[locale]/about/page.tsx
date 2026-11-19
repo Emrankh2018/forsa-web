@@ -3,10 +3,12 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
 import { ArticlePage } from '@/components/site/article-page'
 import { localeOf, type MetaProps } from '@/lib/locale-param'
+import { publicMeta } from '@/lib/seo'
 
 export async function generateMetadata({ params }: MetaProps): Promise<Metadata> {
-  const t = await getTranslations({ locale: await localeOf(params), namespace: 'about' })
-  return { title: t('title'), description: t('lead') }
+  const locale = await localeOf(params)
+  const t = await getTranslations({ locale, namespace: 'about' })
+  return publicMeta(locale, '/about', t('title'), t('lead'))
 }
 
 export default async function AboutPage({ params }: PageProps<'/[locale]/about'>) {

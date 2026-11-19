@@ -9,10 +9,12 @@ import { Door } from '@/components/site/door'
 import { RoomHeader } from '@/components/ui/room-header'
 import { listCourses, listSessionTypes, listWorkshops } from '@/lib/data'
 import { localeOf, type MetaProps } from '@/lib/locale-param'
+import { publicMeta } from '@/lib/seo'
 
 export async function generateMetadata({ params }: MetaProps): Promise<Metadata> {
-  const t = await getTranslations({ locale: await localeOf(params), namespace: 'learn' })
-  return { title: t('title') }
+  const locale = await localeOf(params)
+  const t = await getTranslations({ locale, namespace: 'learn' })
+  return publicMeta(locale, '/learn', t('title'), t('lead'))
 }
 
 /** The training hall: four doorways, one per kind of learning. */

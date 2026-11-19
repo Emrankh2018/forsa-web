@@ -33,6 +33,7 @@ const pages = [
   '/trainers',
   '/about',
   '/faq',
+  '/contact',
   '/privacy',
   '/terms',
   '/sign-in',

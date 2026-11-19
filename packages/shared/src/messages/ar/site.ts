@@ -18,6 +18,7 @@ export const arSite = {
     label: 'روابط الموقع',
     about: 'عن فرصة',
     faq: 'أسئلة شائعة',
+    contact: 'تواصل معنا',
     partners: 'للشركات والجهات',
     trainers: 'كن مدرّبًا',
     guides: 'أدلة مجانية',

@@ -9,10 +9,12 @@ import { RoomHeader } from '@/components/ui/room-header'
 import { SectionHeading } from '@/components/ui/section-heading'
 import { InterestForm } from '@/components/partners/interest-form'
 import { localeOf, type MetaProps } from '@/lib/locale-param'
+import { publicMeta } from '@/lib/seo'
 
 export async function generateMetadata({ params }: MetaProps): Promise<Metadata> {
-  const t = await getTranslations({ locale: await localeOf(params), namespace: 'partners' })
-  return { title: t('title'), description: t('lead') }
+  const locale = await localeOf(params)
+  const t = await getTranslations({ locale, namespace: 'partners' })
+  return publicMeta(locale, '/partners', t('title'), t('lead'))
 }
 
 /** Ways to partner, the interest form (stored for the admin queue), and direct registration. */

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { Link } from '@/i18n/navigation'
 import { TextArea } from '@/components/ui/field'
@@ -9,14 +9,47 @@ type Task = { id: string; text: string; href: string }
 
 /**
  * The user-testing kit: guided tasks, an ease scale and a note after each one, two questions at the
- * end and a button that copies everything as plain text. Nothing is sent or stored.
+ * end and a button that copies everything as plain text. Nothing is sent. Answers are kept in this
+ * tab's session storage so a reload does not lose them; if the browser refuses the clipboard, the
+ * text is shown in a box to copy by hand.
  */
+const storageKey = 'forsa.testkit'
+
 export function TestKit({ groups }: { groups: Array<{ title: string; tasks: Task[] }> }) {
   const t = useTranslations('testKit')
   const scale = t('easyScale').split('|')
   const [easy, setEasy] = useState<Record<string, number>>({})
   const [notes, setNotes] = useState<Record<string, string>>({})
   const [copied, setCopied] = useState(false)
+  const [manual, setManual] = useState<string | null>(null)
+  const manualRef = useRef<HTMLTextAreaElement>(null)
+  const restored = useRef(false)
+
+  useEffect(() => {
+    try {
+      const saved = JSON.parse(sessionStorage.getItem(storageKey) ?? 'null') as { easy?: Record<string, number>; notes?: Record<string, string> } | null
+      /* eslint-disable react-hooks/set-state-in-effect -- read once from session storage after hydration */
+      if (saved?.easy) setEasy(saved.easy)
+      if (saved?.notes) setNotes(saved.notes)
+      /* eslint-enable react-hooks/set-state-in-effect */
+    } catch {
+      // storage blocked or unreadable: start empty
+    }
+    restored.current = true
+  }, [])
+
+  useEffect(() => {
+    if (!restored.current) return
+    try {
+      sessionStorage.setItem(storageKey, JSON.stringify({ easy, notes }))
+    } catch {
+      // storage blocked: answers live only on the page
+    }
+  }, [easy, notes])
+
+  useEffect(() => {
+    if (manual !== null) manualRef.current?.select()
+  }, [manual])
 
   function summary() {
     const lines: string[] = []
@@ -35,11 +68,15 @@ export function TestKit({ groups }: { groups: Array<{ title: string; tasks: Task
   }
 
   async function copy() {
+    const text = summary()
     try {
-      await navigator.clipboard.writeText(summary())
+      if (!navigator.clipboard) throw new Error('no clipboard')
+      await navigator.clipboard.writeText(text)
       setCopied(true)
+      setManual(null)
     } catch {
       setCopied(false)
+      setManual(text)
     }
   }
 
@@ -88,6 +125,13 @@ export function TestKit({ groups }: { groups: Array<{ title: string; tasks: Task
           <button type="button" className="btn-arch" onClick={copy}>{t('copy')}</button>
           <p role="status" className="text-sm font-medium text-maroon">{copied ? t('copied') : ''}</p>
         </div>
+        {manual !== null ? (
+          <div className="mt-6">
+            <p className="font-medium text-maroon" role="alert">{t('copyFailed')}</p>
+            <label htmlFor="testkit-manual" className="mt-3 block text-sm font-medium">{t('manualLabel')}</label>
+            <textarea id="testkit-manual" ref={manualRef} readOnly value={manual} rows={10} className="mt-2 w-full rounded-lg border border-line bg-paper p-3 text-sm" />
+          </div>
+        ) : null}
         <p className="mt-3 text-sm text-ink-soft">{t('note')}</p>
       </section>
     </div>

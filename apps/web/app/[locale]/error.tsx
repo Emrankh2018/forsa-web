@@ -19,6 +19,7 @@ export default function ErrorPage({ error, reset }: { error: Error & { digest?: 
       <div className="first-line first-line-static max-w-sm" aria-hidden="true" />
       <h1 className="font-display mt-8 text-4xl font-bold sm:text-5xl">{t('title')}</h1>
       <p className="mt-4 text-lg text-ink-soft" role="alert">{t('body')}</p>
+      {error.digest ? <p className="mt-3 text-sm text-ink-soft">{t.rich('reference', { code: () => <span dir="ltr" className="font-mono">{error.digest}</span> })}</p> : null}
       <div className="mt-8 flex flex-wrap gap-3">
         <button type="button" className="btn-arch" onClick={() => reset()}>{t('retry')}</button>
         <Link href="/" className="btn-quiet underline underline-offset-4">{t('home')}</Link>

@@ -12,6 +12,7 @@ import { RoomHeader } from '@/components/ui/room-header'
 import { SectionHeading } from '@/components/ui/section-heading'
 import { SignInPrompt } from '@/components/ui/sign-in-prompt'
 import { listWorkshops, workshopLookup } from '@/lib/data'
+import { publicMeta } from '@/lib/seo'
 
 export async function generateStaticParams() {
   const sampleWorkshops = await listWorkshops()
@@ -22,7 +23,7 @@ export async function generateMetadata({ params }: PageProps<'/[locale]/workshop
   const workshopBySlug = await workshopLookup()
   const { locale, slug } = await params
   const ws = workshopBySlug(slug)
-  return ws ? { title: ws.title[locale as Locale] } : {}
+  return ws ? publicMeta(locale as Locale, `/workshops/${slug}`, ws.title[locale as Locale], ws.summary[locale as Locale]) : {}
 }
 
 export default async function WorkshopPage({ params }: PageProps<'/[locale]/workshops/[slug]'>) {
