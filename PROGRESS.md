@@ -210,3 +210,9 @@ The "Come in" page's chosen door links to its area. Sample data: `packages/share
 - New shared rules: profile, team invite, organisation settings, session type, trainer profile, guide card, skill, workshop (31 shared tests).
 - Checks: copy, lint, typecheck, unit tests, build; full browser suite 627 passed, 0 failed (the one failing test had an ambiguous selector, fixed).
 
+### Step 4 (done)
+- "Not for your account" screen (`components/ui/not-yours.tsx`) and every screen state on one reference page `/showcase/states`.
+- "Projects for you" on `/me`, ordered by `rankForYou` in shared (fields overlap first, ties keep order; 2 unit tests).
+- Search and filters on `/workshops` (topic, online or in person) and `/courses` (topic) with a shared `ListFilters` (plain GET, works without scripts), empty states with a reset.
+- Checks: 33 shared tests; full browser suite 666 passed, 0 failed after fixing one real issue (the filter area and the search box had the same accessible name).
+

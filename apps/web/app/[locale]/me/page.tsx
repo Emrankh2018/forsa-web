@@ -1,6 +1,9 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
-import { projectBySlug, sampleParticipant, sampleWorkshops } from '@forsa/shared/seed'
+import { rankForYou } from '@forsa/shared'
+import { projectBySlug, sampleParticipant, sampleProjects, sampleWorkshops } from '@forsa/shared/seed'
+import { sampleRecord } from '@forsa/shared/seed/app'
+import { ProjectCard } from '@/components/site/project-card'
 import { Link } from '@/i18n/navigation'
 import { formatters } from '@/lib/format'
 import { Door } from '@/components/site/door'
@@ -21,6 +24,8 @@ export default async function ParticipantHome({ params }: PageProps<'/[locale]/m
   const next = active.steps[me.stepsDone]!
   const angle = Math.round(8 + 72 * (me.stepsDone / total))
   const workshop = sampleWorkshops.find((w) => w.slug === me.bookedWorkshopSlug)!
+  const fy = await getTranslations('forYou')
+  const forYou = rankForYou(sampleProjects.filter((p) => p.slug !== me.activeProjectSlug), (p) => [p.field], sampleRecord.fields).slice(0, 4)
 
   return (
     <>
@@ -83,6 +88,18 @@ export default async function ParticipantHome({ params }: PageProps<'/[locale]/m
           </section>
         </div>
       </div>
+      <section className="mt-16" aria-labelledby="for-you">
+        <SectionHeading id="for-you">{fy('title')}</SectionHeading>
+        <p className="mt-3 text-ink-soft">{fy('lead')}</p>
+        <ul className="mt-6 grid grid-cols-2 gap-x-4 gap-y-10 sm:gap-x-6 lg:grid-cols-4" role="list" data-testid="for-you">
+          {forYou.map((p) => (
+            <li key={p.slug}>
+              <ProjectCard project={p} locale={locale} headingLevel="h3" />
+            </li>
+          ))}
+        </ul>
+        <Link href="/projects" className="btn-quiet -ms-3 mt-6 underline underline-offset-4">{fy('all')}</Link>
+      </section>
     </>
   )
 }

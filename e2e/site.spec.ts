@@ -44,6 +44,11 @@ const pages = [
   '/sessions/cv-clinic/book',
   '/test',
   '/p/reem',
+  '/showcase/states',
+  '/workshops?topic=career&where=online',
+  '/workshops?q=zzzz-nothing',
+  '/courses?topic=applied_ai',
+  '/courses?q=zzzz-nothing',
   '/join',
   '/join?as=organisation&next=/partners',
   '/showcase',
@@ -261,3 +266,24 @@ for (const locale of ['ar', 'en'] as const) {
     await expect(page.locator('.arrival-door')).toHaveCount(0)
   })
 }
+
+test('workshops and courses: search and filters narrow the list and keep their address', async ({ page }) => {
+  const t = messages.en
+  await page.goto('/en/workshops')
+  await page.getByLabel(t.listFilters.workshopsSearch).fill('linkedin')
+  await page.getByRole('button', { name: t.projectsPage.apply }).click()
+  await expect(page).toHaveURL(/\/en\/workshops\?q=linkedin/)
+  await expect(page.getByRole('heading', { level: 3, name: /LinkedIn/ }).first()).toBeVisible()
+  await page.goto('/en/courses?q=zzzz-nothing')
+  await expect(page.getByText(t.listFilters.coursesEmpty)).toBeVisible()
+  await page.getByRole('link', { name: t.projectsPage.reset }).first().click()
+  await expect(page).toHaveURL(/\/en\/courses$/)
+})
+
+test('states: the not-for-your-account screen leads back to the participant page', async ({ page }) => {
+  const t = messages.en
+  await page.goto('/en/showcase/states')
+  await expect(page.getByText(t.notYours.title)).toBeVisible()
+  await page.getByRole('link', { name: t.notYours.back }).click()
+  await expect(page).toHaveURL(/\/en\/me$/)
+})

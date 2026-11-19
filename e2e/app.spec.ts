@@ -254,4 +254,11 @@ test.describe('interactions', () => {
     await page.getByRole('button', { name: t.workshopForm.send }).click()
     await expect(page.getByText(t.workshopForm.sentTitle)).toBeVisible()
   })
+  test('for you: projects in the participant\'s field come first', async ({ page }) => {
+    await page.goto('/en/me')
+    const cards = page.getByTestId('for-you').getByRole('listitem')
+    await expect(cards).toHaveCount(4)
+    await expect(cards.first()).toContainText('Marketing and media')
+    await expect(cards.last()).toContainText('Applied AI')
+  })
 })
