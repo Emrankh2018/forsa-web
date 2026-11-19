@@ -8,6 +8,8 @@
  *   node scripts/package-standalone.mjs --serve    prepare, then run it on PORT (default 8765)
  *
  * The browser suite uses --serve when E2E_STANDALONE=1, so the same files the VPS gets are tested.
+ * --serve listens on every local address (IPv4 and IPv6, so `localhost` works everywhere); on the VPS
+ * the systemd service sets HOSTNAME=127.0.0.1 instead.
  */
 import { cpSync, existsSync, rmSync } from 'node:fs'
 import { spawn } from 'node:child_process'
@@ -38,7 +40,7 @@ if (process.argv.includes('--serve')) {
   const child = spawn(process.execPath, [server], {
     cwd: standalone,
     stdio: 'inherit',
-    env: { ...process.env, NODE_ENV: 'production', PORT: process.env.PORT ?? '8765', HOSTNAME: process.env.HOSTNAME_BIND ?? '127.0.0.1' },
+    env: { ...process.env, NODE_ENV: 'production', PORT: process.env.PORT ?? '8765', HOSTNAME: process.env.HOSTNAME_BIND ?? '::' },
   })
   const stop = () => child.kill()
   process.on('SIGINT', stop)

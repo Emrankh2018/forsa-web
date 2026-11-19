@@ -35,10 +35,11 @@ jobs:
         run: npm run build
       - name: Install browser
         run: npx playwright install --with-deps chromium
-      - name: Browser journeys (public pages)
+      - name: Browser journeys (against the standalone server the VPS runs)
         run: npx playwright test
         env:
           CI: 'true'
+          E2E_STANDALONE: '1'
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
