@@ -1,12 +1,13 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
-import { sampleTrainer } from '@forsa/shared/seed/app'
 import { formatters } from '@/lib/format'
 import { AvailabilityGrid } from '@/components/app/trainer-widgets'
+import { getTrainer } from '@/lib/data'
 
 const hours = [16, 17, 18, 19]
 
 export default async function Availability({ params }: PageProps<'/[locale]/trainer/availability'>) {
+  const sampleTrainer = await getTrainer()
   const { locale: raw } = await params
   const locale = raw as Locale
   setRequestLocale(locale)

@@ -1,14 +1,16 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
-import { courseBySlug, workshopBySlug } from '@forsa/shared/seed'
-import { sampleLearning } from '@forsa/shared/seed/app'
 import { Link } from '@/i18n/navigation'
 import { formatters } from '@/lib/format'
 import { SectionHeading } from '@/components/ui/section-heading'
 import { Tag } from '@/components/ui/states'
+import { courseLookup, getMyLearning, workshopLookup } from '@/lib/data'
 
 /** My learning: booked workshops (link hidden until confirmed), 1-to-1 sessions, courses in progress. */
 export default async function MyLearning({ params }: PageProps<'/[locale]/me/learning'>) {
+  const courseBySlug = await courseLookup()
+  const workshopBySlug = await workshopLookup()
+  const sampleLearning = await getMyLearning()
   const { locale: raw } = await params
   const locale = raw as Locale
   setRequestLocale(locale)

@@ -1,13 +1,13 @@
 import type { Metadata } from 'next'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
-import { sampleCourses, sampleSessionTypes, sampleWorkshops } from '@forsa/shared/seed'
 import { Link } from '@/i18n/navigation'
 import { formatters } from '@/lib/format'
 import { SiteHeader } from '@/components/site/header'
 import { SiteFooter } from '@/components/site/footer'
 import { Door } from '@/components/site/door'
 import { RoomHeader } from '@/components/ui/room-header'
+import { listCourses, listSessionTypes, listWorkshops } from '@/lib/data'
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('learn')
@@ -16,6 +16,9 @@ export async function generateMetadata(): Promise<Metadata> {
 
 /** The training hall: four doorways, one per kind of learning. */
 export default async function LearnHub({ params }: PageProps<'/[locale]/learn'>) {
+  const sampleCourses = await listCourses()
+  const sampleSessionTypes = await listSessionTypes()
+  const sampleWorkshops = await listWorkshops()
   const { locale: raw } = await params
   const locale = raw as Locale
   setRequestLocale(locale)

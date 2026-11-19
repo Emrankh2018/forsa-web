@@ -1,20 +1,22 @@
 import { notFound } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
-import { courseBySlug, sampleCourses } from '@forsa/shared/seed'
-import { sampleLearning } from '@forsa/shared/seed/app'
 import { Link } from '@/i18n/navigation'
 import { formatters } from '@/lib/format'
 import { DoorSymbol } from '@/components/door-symbol'
 import { Tag } from '@/components/ui/states'
 import { LessonProgress } from '@/components/flows/player'
+import { courseLookup, getMyLearning, listCourses } from '@/lib/data'
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const sampleCourses = await listCourses()
   return sampleCourses.flatMap((c) => c.modules.flatMap((m) => m.lessons).map((_, i) => ({ slug: c.slug, lesson: String(i + 1) })))
 }
 
 /** The course player: the lesson (video by reference), its notes, progress and the course outline. */
 export default async function Lesson({ params }: PageProps<'/[locale]/me/learning/courses/[slug]/[lesson]'>) {
+  const courseBySlug = await courseLookup()
+  const sampleLearning = await getMyLearning()
   const { locale: raw, slug, lesson: lessonParam } = await params
   const locale = raw as Locale
   setRequestLocale(locale)

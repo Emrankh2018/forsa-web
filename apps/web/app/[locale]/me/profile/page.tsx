@@ -1,12 +1,13 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
-import { sampleRecord } from '@forsa/shared/seed/app'
 import { Link } from '@/i18n/navigation'
 import { formatters } from '@/lib/format'
 import { ProfileForm } from '@/components/more/forms'
+import { getMyRecord } from '@/lib/data'
 
 /** The participant's profile: what companies see, and what the public record shows. */
 export default async function ProfilePage({ params }: PageProps<'/[locale]/me/profile'>) {
+  const sampleRecord = await getMyRecord()
   const { locale: raw } = await params
   const locale = raw as Locale
   setRequestLocale(locale)

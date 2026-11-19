@@ -1,10 +1,11 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
-import { sampleAudit } from '@forsa/shared/seed/app'
 import { formatters } from '@/lib/format'
 import { AuditTable } from '@/components/more/tables'
+import { listAudit } from '@/lib/data'
 
 export default async function AdminAudit({ params }: PageProps<'/[locale]/admin/audit'>) {
+  const sampleAudit = await listAudit()
   const { locale: raw } = await params
   const locale = raw as Locale
   setRequestLocale(locale)

@@ -1,10 +1,11 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
-import { guides } from '@forsa/shared/content'
 import { formatters } from '@/lib/format'
 import { GuideEditor } from '@/components/more/forms'
+import { listGuides } from '@/lib/data'
 
 export default async function AdminGuides({ params }: PageProps<'/[locale]/admin/guides'>) {
+  const guides = await listGuides()
   const { locale: raw } = await params
   const locale = raw as Locale
   setRequestLocale(locale)

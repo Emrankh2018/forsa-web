@@ -1,15 +1,17 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
-import { projectBySlug, sampleParticipant } from '@forsa/shared/seed'
-import { sampleApplications } from '@forsa/shared/seed/app'
 import { Link } from '@/i18n/navigation'
 import { formatters } from '@/lib/format'
 import { Door } from '@/components/site/door'
 import { SectionHeading } from '@/components/ui/section-heading'
 import { Tag } from '@/components/ui/states'
+import { getParticipantHome, listMyApplications, projectLookup } from '@/lib/data'
 
 /** My projects: what I am working on, what I applied to, what I finished. Each a door at its own angle. */
 export default async function MyProjects({ params }: PageProps<'/[locale]/me/projects'>) {
+  const projectBySlug = await projectLookup()
+  const sampleParticipant = await getParticipantHome()
+  const sampleApplications = await listMyApplications()
   const { locale: raw } = await params
   const locale = raw as Locale
   setRequestLocale(locale)

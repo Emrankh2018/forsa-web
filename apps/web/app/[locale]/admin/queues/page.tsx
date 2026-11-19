@@ -1,12 +1,13 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
-import { sampleQueues } from '@forsa/shared/seed/app'
 import { formatters } from '@/lib/format'
 import { SectionHeading } from '@/components/ui/section-heading'
 import { QueueItem } from '@/components/app/trainer-widgets'
+import { getQueues } from '@/lib/data'
 
 /** Every queue on one page, each item with the decisions an admin can take. */
 export default async function AdminQueues({ params }: PageProps<'/[locale]/admin/queues'>) {
+  const sampleQueues = await getQueues()
   const { locale: raw } = await params
   const locale = raw as Locale
   setRequestLocale(locale)

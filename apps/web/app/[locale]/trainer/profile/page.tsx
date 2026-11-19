@@ -1,10 +1,12 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
-import { sampleTrainer, sampleTrainerProfile } from '@forsa/shared/seed/app'
 import { formatters } from '@/lib/format'
 import { TrainerProfileForm } from '@/components/more/forms'
+import { getTrainer, getTrainerProfile } from '@/lib/data'
 
 export default async function TrainerProfile({ params }: PageProps<'/[locale]/trainer/profile'>) {
+  const sampleTrainer = await getTrainer()
+  const sampleTrainerProfile = await getTrainerProfile()
   const { locale: raw } = await params
   const locale = raw as Locale
   setRequestLocale(locale)

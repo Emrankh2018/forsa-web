@@ -105,6 +105,8 @@ export function CourseBuilder({ modules, moduleLabels }: { modules: Array<{ titl
   const app = useTranslations('app')
   const [state, setState] = useState(modules)
   const [touched, setTouched] = useState(false)
+  const [sent, setSent] = useState(false)
+  const w = useTranslations('workshopForm')
   return (
     <div className="space-y-8">
       {state.map((m, mi) => (
@@ -143,7 +145,11 @@ export function CourseBuilder({ modules, moduleLabels }: { modules: Array<{ titl
         </section>
       ))}
       {touched ? <p className="text-sm text-maroon" role="status">{app('savedLocally')}</p> : null}
-      <button type="button" className="btn-arch">{t('sendCourse')}</button>
+      {sent ? (
+        <p role="status" className="font-medium">{w('sentTitle')} <span className="block text-sm font-normal text-maroon">{app('savedLocally')}</span></p>
+      ) : (
+        <button type="button" className="btn-arch" onClick={() => setSent(true)}>{t('sendCourse')}</button>
+      )}
     </div>
   )
 }

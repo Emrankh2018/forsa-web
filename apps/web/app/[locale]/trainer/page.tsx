@@ -1,15 +1,16 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
-import { workshopBySlug } from '@forsa/shared/seed'
-import { sampleTrainer } from '@forsa/shared/seed/app'
 import { Link } from '@/i18n/navigation'
 import { formatters } from '@/lib/format'
 import { Door, seatAngle } from '@/components/site/door'
 import { SectionHeading } from '@/components/ui/section-heading'
 import { Tag } from '@/components/ui/states'
+import { getTrainer, workshopLookup } from '@/lib/data'
 
 /** Trainer home: what is coming up, each workshop a door opened by how full it is. */
 export default async function TrainerHome({ params }: PageProps<'/[locale]/trainer'>) {
+  const workshopBySlug = await workshopLookup()
+  const sampleTrainer = await getTrainer()
   const { locale: raw } = await params
   const locale = raw as Locale
   setRequestLocale(locale)

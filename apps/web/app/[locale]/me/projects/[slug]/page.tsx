@@ -1,19 +1,21 @@
 import { notFound } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
-import { projectBySlug, sampleParticipant } from '@forsa/shared/seed'
-import { sampleWorkspace } from '@forsa/shared/seed/app'
 import { Link } from '@/i18n/navigation'
 import { formatters } from '@/lib/format'
 import { Door } from '@/components/site/door'
 import { Workspace } from '@/components/app/workspace'
+import { getMyWorkspace, getParticipantHome, projectLookup } from '@/lib/data'
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const sampleParticipant = await getParticipantHome()
   return [{ slug: sampleParticipant.activeProjectSlug }]
 }
 
 /** The workspace for one project: the door shows how far along you are. */
 export default async function WorkspacePage({ params }: PageProps<'/[locale]/me/projects/[slug]'>) {
+  const projectBySlug = await projectLookup()
+  const sampleWorkspace = await getMyWorkspace()
   const { locale: raw, slug } = await params
   const locale = raw as Locale
   setRequestLocale(locale)

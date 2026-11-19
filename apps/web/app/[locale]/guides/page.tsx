@@ -1,13 +1,13 @@
 import type { Metadata } from 'next'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
-import { guides } from '@forsa/shared/content'
 import { Link } from '@/i18n/navigation'
 import { formatters } from '@/lib/format'
 import { SiteHeader } from '@/components/site/header'
 import { SiteFooter } from '@/components/site/footer'
 import { Door } from '@/components/site/door'
 import { RoomHeader } from '@/components/ui/room-header'
+import { listGuides } from '@/lib/data'
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('guidesPage')
@@ -15,6 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function GuidesPage({ params }: PageProps<'/[locale]/guides'>) {
+  const guides = await listGuides()
   const { locale: raw } = await params
   const locale = raw as Locale
   setRequestLocale(locale)

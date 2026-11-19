@@ -1,15 +1,19 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
-import { projectBySlug } from '@forsa/shared/seed'
-import { sampleApplicants, sampleOrg, sampleProjectPeople, sampleWorkspace } from '@forsa/shared/seed/app'
 import { Link } from '@/i18n/navigation'
 import { formatters } from '@/lib/format'
 import { Door } from '@/components/site/door'
 import { SectionHeading } from '@/components/ui/section-heading'
 import { Tag } from '@/components/ui/states'
+import { getMyOrganisation, getMyWorkspace, listApplicants, listProjectPeople, projectLookup } from '@/lib/data'
 
 /** Organisation home: what needs you now, as three doors you can walk through, then your projects. */
 export default async function OrgHome({ params }: PageProps<'/[locale]/org'>) {
+  const projectBySlug = await projectLookup()
+  const sampleApplicants = await listApplicants('loyalty-programme')
+  const sampleOrg = await getMyOrganisation()
+  const sampleProjectPeople = await listProjectPeople('cafe-launch-campaign')
+  const sampleWorkspace = await getMyWorkspace()
   const { locale: raw } = await params
   const locale = raw as Locale
   setRequestLocale(locale)

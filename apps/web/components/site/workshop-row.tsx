@@ -1,9 +1,9 @@
 import { getTranslations } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
-import type { SampleWorkshop } from '@forsa/shared/seed'
 import { Link } from '@/i18n/navigation'
 import { formatters } from '@/lib/format'
 import { Divider } from '@/components/ui/section-heading'
+import { type SampleWorkshop } from '@/lib/data'
 
 /** One workshop in the corridor: its day in a small arch, title and facts, price at the line's end. */
 export async function WorkshopRow({ workshop: ws, locale, headingLevel = 'h3' }: { workshop: SampleWorkshop; locale: Locale; headingLevel?: 'h2' | 'h3' }) {

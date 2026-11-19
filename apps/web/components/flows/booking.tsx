@@ -2,7 +2,7 @@
 
 import { useRef, useState } from 'react'
 import { useTranslations } from 'next-intl'
-import { slotBookingSchema } from '@forsa/shared'
+import { makeIcs, slotBookingSchema } from '@forsa/shared'
 import { Door } from '@/components/site/door'
 import { SuccessState, Tag } from '@/components/ui/states'
 import { useFormCheck } from '@/lib/use-form-check'
@@ -12,7 +12,7 @@ import { useFormCheck } from '@/lib/use-form-check'
  * Forsa team to confirm payment, then the ticket with the meeting link. The confirmation step is
  * simulated in the prototype.
  */
-export function WorkshopBooking({ title, when, where, price, holdText, meetingLink }: { title: string; when: string; where: string; price: string; holdText: string; meetingLink: string }) {
+export function WorkshopBooking({ title, when, where, price, holdText, meetingLink, calendar }: { title: string; when: string; where: string; price: string; holdText: string; meetingLink: string; calendar: { slug: string; startsAt: string; minutes: number; location: string } }) {
   const t = useTranslations('booking')
   const st = useTranslations('app.state')
   const app = useTranslations('app')
@@ -62,7 +62,21 @@ export function WorkshopBooking({ title, when, where, price, holdText, meetingLi
             </div>
             <div className="mt-6 flex flex-wrap items-center gap-3">
               <span className="inline-flex rounded-sm bg-sand px-2 py-0.5 text-sm font-medium text-ink">{t('ticketConfirmed')}</span>
-              <button type="button" className="btn-arch btn-arch--sand btn-arch--compact">{t('addToCalendar')}</button>
+              <button
+                type="button"
+                className="btn-arch btn-arch--sand btn-arch--compact"
+                onClick={() => {
+                  const ics = makeIcs({ uid: calendar.slug, title, startsAt: calendar.startsAt, minutes: calendar.minutes, location: calendar.location, url: window.location.origin })
+                  const url = URL.createObjectURL(new Blob([ics], { type: 'text/calendar;charset=utf-8' }))
+                  const a = document.createElement('a')
+                  a.href = url
+                  a.download = `forsa-${calendar.slug}.ics`
+                  a.click()
+                  URL.revokeObjectURL(url)
+                }}
+              >
+                {t('addToCalendar')}
+              </button>
             </div>
             <p className="mt-6 text-sm text-on-night-soft">{t('cancelNote')}</p>
           </article>

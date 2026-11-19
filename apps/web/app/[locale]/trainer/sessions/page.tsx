@@ -1,14 +1,16 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
-import { sampleSessionBookings, sampleSessionTypes } from '@forsa/shared/seed/app'
 import { Link } from '@/i18n/navigation'
 import { formatters } from '@/lib/format'
 import { SectionHeading } from '@/components/ui/section-heading'
 import { Tag } from '@/components/ui/states'
 import { BookingMarks, SessionTypeForm } from '@/components/more/forms'
+import { listTrainerBookings, listTrainerSessionTypes } from '@/lib/data'
 
 /** 1-to-1 sessions: the kinds offered, and the bookings (upcoming and earlier). */
 export default async function TrainerSessions({ params }: PageProps<'/[locale]/trainer/sessions'>) {
+  const sampleSessionBookings = await listTrainerBookings()
+  const sampleSessionTypes = await listTrainerSessionTypes()
   const { locale: raw } = await params
   const locale = raw as Locale
   setRequestLocale(locale)

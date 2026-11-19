@@ -1,6 +1,5 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
-import { sampleProjects, sampleWorkshops, seatsLeft } from '@forsa/shared/seed'
 import { Link } from '@/i18n/navigation'
 import { formatters } from '@/lib/format'
 import { ArrivalGate } from '@/components/arrival/arrival-gate'
@@ -12,8 +11,11 @@ import { ScrollSwing } from '@/components/motion/scroll-swing'
 import { SiteHeader } from '@/components/site/header'
 import { SiteFooter } from '@/components/site/footer'
 import { SectionHeading } from '@/components/ui/section-heading'
+import { listProjects, listWorkshops, seatsLeft } from '@/lib/data'
 
 export default async function Home({ params }: PageProps<'/[locale]'>) {
+  const sampleProjects = await listProjects()
+  const sampleWorkshops = await listWorkshops()
   const { locale: raw } = await params
   const locale = raw as Locale
   setRequestLocale(locale)

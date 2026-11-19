@@ -1,13 +1,12 @@
 import { notFound } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
-import { projectBySlug } from '@forsa/shared/seed'
-import { sampleApplicants, sampleProjectPeople, sampleWorkspace } from '@forsa/shared/seed/app'
 import { Link } from '@/i18n/navigation'
 import { formatters } from '@/lib/format'
 import { SectionHeading } from '@/components/ui/section-heading'
 import { Tag } from '@/components/ui/states'
 import { AnswerQuestion, ApplicantPicker } from '@/components/app/org-widgets'
+import { getMyWorkspace, listApplicants, listProjectPeople, projectLookup } from '@/lib/data'
 
 export function generateStaticParams() {
   return [{ slug: 'cafe-launch-campaign' }, { slug: 'loyalty-programme' }]
@@ -18,7 +17,11 @@ export function generateStaticParams() {
  * applications to choose from (apply first), and the participants' questions.
  */
 export default async function OrgProject({ params }: PageProps<'/[locale]/org/projects/[slug]'>) {
+  const projectBySlug = await projectLookup()
+  const sampleWorkspace = await getMyWorkspace()
   const { locale: raw, slug } = await params
+  const sampleApplicants = await listApplicants(slug)
+  const sampleProjectPeople = await listProjectPeople(slug)
   const locale = raw as Locale
   setRequestLocale(locale)
   if (slug !== 'cafe-launch-campaign' && slug !== 'loyalty-programme') notFound()

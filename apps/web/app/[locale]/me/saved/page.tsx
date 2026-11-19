@@ -1,10 +1,12 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
-import { projectBySlug, sampleParticipant } from '@forsa/shared/seed'
 import { ProjectCard } from '@/components/site/project-card'
+import { getParticipantHome, projectLookup } from '@/lib/data'
 
 /** Saved projects and workshops (the hearts from the public pages). */
 export default async function Saved({ params }: PageProps<'/[locale]/me/saved'>) {
+  const projectBySlug = await projectLookup()
+  const sampleParticipant = await getParticipantHome()
   const { locale: raw } = await params
   const locale = raw as Locale
   setRequestLocale(locale)

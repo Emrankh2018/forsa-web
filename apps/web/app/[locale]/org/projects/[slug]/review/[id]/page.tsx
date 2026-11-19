@@ -1,22 +1,24 @@
 import { notFound } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
-import { projectBySlug } from '@forsa/shared/seed'
-import { sampleHandIns, sampleProjectPeople } from '@forsa/shared/seed/app'
 import { Link } from '@/i18n/navigation'
 import { formatters } from '@/lib/format'
 import { SectionHeading } from '@/components/ui/section-heading'
 import { ReviewForm } from '@/components/app/review-form'
+import { listHandIns, listProjectPeople, projectLookup } from '@/lib/data'
 
-const submittedIds = Object.keys(sampleHandIns)
-
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const submittedIds = Object.keys(await listHandIns('cafe-launch-campaign'))
   return submittedIds.map((id) => ({ slug: 'cafe-launch-campaign', id }))
 }
 
 /** Review one hand-in; switch between the submitted ones to compare them. */
 export default async function ReviewPage({ params }: PageProps<'/[locale]/org/projects/[slug]/review/[id]'>) {
+  const projectBySlug = await projectLookup()
   const { locale: raw, slug, id } = await params
+  const sampleHandIns = await listHandIns(slug)
+  const sampleProjectPeople = await listProjectPeople(slug)
+  const submittedIds = Object.keys(sampleHandIns)
   const locale = raw as Locale
   setRequestLocale(locale)
   const handIn = sampleHandIns[id]

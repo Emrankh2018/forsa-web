@@ -1,10 +1,11 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
-import { sampleInvitation } from '@forsa/shared/seed/app'
 import { formatters } from '@/lib/format'
 import { InvitationCard } from '@/components/app/invitation-card'
+import { getMyInvitation } from '@/lib/data'
 
 export default async function Invitations({ params }: PageProps<'/[locale]/me/invitations'>) {
+  const sampleInvitation = await getMyInvitation()
   const { locale: raw } = await params
   const locale = raw as Locale
   setRequestLocale(locale)

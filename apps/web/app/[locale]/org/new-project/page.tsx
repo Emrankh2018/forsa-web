@@ -1,8 +1,8 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
-import { fields } from '@forsa/shared/seed'
 import { formatters } from '@/lib/format'
 import { NewProjectWizard } from '@/components/app/new-project-wizard'
+import { fields } from '@/lib/data'
 
 export default async function NewProject({ params }: PageProps<'/[locale]/org/new-project'>) {
   const { locale: raw } = await params

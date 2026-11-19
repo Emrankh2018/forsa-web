@@ -1,11 +1,13 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
-import { sampleCourses, sampleWorkshops } from '@forsa/shared/seed'
-import { sampleTrainer } from '@forsa/shared/seed/app'
 import { formatters } from '@/lib/format'
 import { AdminList } from '@/components/more/admin-list'
+import { getTrainer, listCourses, listWorkshops } from '@/lib/data'
 
 export default async function AdminTraining({ params }: PageProps<'/[locale]/admin/training'>) {
+  const sampleTrainer = await getTrainer()
+  const sampleWorkshops = await listWorkshops()
+  const sampleCourses = await listCourses()
   const { locale: raw } = await params
   const locale = raw as Locale
   setRequestLocale(locale)

@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
-import { fields, sampleCourses } from '@forsa/shared/seed'
 import { Link } from '@/i18n/navigation'
 import { formatters } from '@/lib/format'
 import { SiteHeader } from '@/components/site/header'
@@ -10,6 +9,7 @@ import { RoomHeader } from '@/components/ui/room-header'
 import { Divider } from '@/components/ui/section-heading'
 import { EmptyState } from '@/components/ui/states'
 import { ListFilters } from '@/components/ui/list-filters'
+import { listCourses, fields } from '@/lib/data'
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('coursesPage')
@@ -19,6 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
 const topics = ['career', 'marketing_media', 'applied_ai'] as const
 
 export default async function CoursesPage({ params, searchParams }: PageProps<'/[locale]/courses'>) {
+  const sampleCourses = await listCourses()
   const { locale: raw } = await params
   const locale = raw as Locale
   setRequestLocale(locale)

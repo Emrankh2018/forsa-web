@@ -1,12 +1,12 @@
 import type { Metadata } from 'next'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
-import { sampleSessionTypes } from '@forsa/shared/seed'
 import { Link } from '@/i18n/navigation'
 import { formatters } from '@/lib/format'
 import { SiteHeader } from '@/components/site/header'
 import { SiteFooter } from '@/components/site/footer'
 import { RoomHeader } from '@/components/ui/room-header'
+import { listSessionTypes } from '@/lib/data'
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('sessionsPage')
@@ -15,6 +15,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 /** 1-to-1 session types. Booking opens with trainers' availability (phase 6). */
 export default async function SessionsPage({ params }: PageProps<'/[locale]/sessions'>) {
+  const sampleSessionTypes = await listSessionTypes()
   const { locale: raw } = await params
   const locale = raw as Locale
   setRequestLocale(locale)

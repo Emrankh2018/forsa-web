@@ -2,15 +2,15 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
-import { sampleSessionTypes } from '@forsa/shared/seed'
-import { sampleTrainer } from '@forsa/shared/seed/app'
 import { Link } from '@/i18n/navigation'
 import { formatters } from '@/lib/format'
 import { SiteHeader } from '@/components/site/header'
 import { PrototypeBand } from '@/components/flows/prototype-band'
 import { SlotPicker } from '@/components/flows/booking'
+import { getTrainer, listSessionTypes } from '@/lib/data'
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const sampleSessionTypes = await listSessionTypes()
   return sampleSessionTypes.map((s) => ({ slug: s.slug }))
 }
 
@@ -22,6 +22,8 @@ export async function generateMetadata(): Promise<Metadata> {
 const weekStart = Date.parse('2026-12-13T00:00:00+03:00')
 
 export default async function BookSession({ params }: PageProps<'/[locale]/sessions/[slug]/book'>) {
+  const sampleSessionTypes = await listSessionTypes()
+  const sampleTrainer = await getTrainer()
   const { locale: raw, slug } = await params
   const locale = raw as Locale
   setRequestLocale(locale)

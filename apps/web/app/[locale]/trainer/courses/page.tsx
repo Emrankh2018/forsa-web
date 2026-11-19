@@ -1,10 +1,11 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
-import { courseBySlug } from '@forsa/shared/seed'
 import { formatters } from '@/lib/format'
 import { CourseBuilder } from '@/components/app/trainer-widgets'
+import { courseLookup } from '@/lib/data'
 
 export default async function TrainerCourses({ params }: PageProps<'/[locale]/trainer/courses'>) {
+  const courseBySlug = await courseLookup()
   const { locale: raw } = await params
   const locale = raw as Locale
   setRequestLocale(locale)

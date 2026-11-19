@@ -1,5 +1,5 @@
 import { formatDate, formatMoney, formatNumber, type Locale } from '@forsa/shared'
-import type { Bilingual } from '@forsa/shared/seed'
+import { type Bilingual } from '@/lib/data'
 
 /** Formatting helpers bound to the page's language (Qatar time, Arabic-Indic numerals in Arabic). */
 export function formatters(locale: Locale) {

@@ -1,10 +1,11 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
-import { sampleOrgTeam } from '@forsa/shared/seed/app'
 import { formatters } from '@/lib/format'
 import { TeamManager } from '@/components/more/forms'
+import { listTeam } from '@/lib/data'
 
 export default async function OrgTeam({ params }: PageProps<'/[locale]/org/team'>) {
+  const sampleOrgTeam = await listTeam()
   const { locale: raw } = await params
   const locale = raw as Locale
   setRequestLocale(locale)

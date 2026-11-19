@@ -1,7 +1,6 @@
 import type { Metadata } from 'next'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
-import { fields, sampleWorkshops } from '@forsa/shared/seed'
 import { Link } from '@/i18n/navigation'
 import { formatters } from '@/lib/format'
 import { SiteHeader } from '@/components/site/header'
@@ -11,6 +10,7 @@ import { RoomHeader } from '@/components/ui/room-header'
 import { SectionHeading } from '@/components/ui/section-heading'
 import { EmptyState } from '@/components/ui/states'
 import { ListFilters } from '@/components/ui/list-filters'
+import { listWorkshops, fields } from '@/lib/data'
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations('workshopsPage')
@@ -22,6 +22,7 @@ const places = ['online', 'in_person'] as const
 
 /** Coming workshops with text search and filters by topic and place (plain GET, no scripts needed). */
 export default async function WorkshopsPage({ params, searchParams }: PageProps<'/[locale]/workshops'>) {
+  const sampleWorkshops = await listWorkshops()
   const { locale: raw } = await params
   const locale = raw as Locale
   setRequestLocale(locale)

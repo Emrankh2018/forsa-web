@@ -1,17 +1,21 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
 import { rankForYou } from '@forsa/shared'
-import { projectBySlug, sampleParticipant, sampleProjects, sampleWorkshops } from '@forsa/shared/seed'
-import { sampleRecord } from '@forsa/shared/seed/app'
 import { ProjectCard } from '@/components/site/project-card'
 import { Link } from '@/i18n/navigation'
 import { formatters } from '@/lib/format'
 import { Door } from '@/components/site/door'
 import { SectionHeading } from '@/components/ui/section-heading'
 import { Tag } from '@/components/ui/states'
+import { getMyRecord, getParticipantHome, listProjects, listWorkshops, projectLookup } from '@/lib/data'
 
 /** Participant home: one next step in your doorway, then your projects, learning and notices. */
 export default async function ParticipantHome({ params }: PageProps<'/[locale]/me'>) {
+  const projectBySlug = await projectLookup()
+  const sampleParticipant = await getParticipantHome()
+  const sampleProjects = await listProjects()
+  const sampleWorkshops = await listWorkshops()
+  const sampleRecord = await getMyRecord()
   const { locale: raw } = await params
   const locale = raw as Locale
   setRequestLocale(locale)

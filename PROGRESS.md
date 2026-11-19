@@ -216,3 +216,9 @@ The "Come in" page's chosen door links to its area. Sample data: `packages/share
 - Search and filters on `/workshops` (topic, online or in person) and `/courses` (topic) with a shared `ListFilters` (plain GET, works without scripts), empty states with a reset.
 - Checks: 33 shared tests; full browser suite 666 passed, 0 failed after fixing one real issue (the filter area and the search box had the same accessible name).
 
+### Steps 5 to 7
+- Step 5, data seam: every page reads through `apps/web/lib/data/index.ts` (async reads, sample data today); 49 write functions in `apps/web/lib/data/writes.ts` already check input with the shared rules; `docs/BACKEND-CONTRACT.md` maps each read and write to plan V4 tables and access rules. `scripts/check-seam.mjs` fails if a screen imports sample data directly. Per-project reads now take the project (people and hand-ins on the café launch, applicants on the loyalty programme).
+- Step 6, emails: 14 templates (Arabic and English, HTML and plain text, placeholders listed and tested, escaping, copy rules) in `packages/shared/src/emails/templates.ts`; `/showcase/emails` renders the real HTML; `docs/EMAILS.md`.
+- Step 7, hardening: `scripts/check-controls.mjs` (no button without an action), `e2e/links.spec.ts` (crawls every internal link from both languages and all areas, all 200). Fixed: "Send the course for publishing" did nothing; "Add to calendar" now downloads a real calendar file (`makeIcs`, tested).
+- Checks: copy, seam, controls, lint, typecheck, 39 shared + 31 database tests, build; full browser suite 667 passed, 0 failed.
+

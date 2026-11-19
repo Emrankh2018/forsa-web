@@ -2,8 +2,6 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
-import { fields, workshopBySlug } from '@forsa/shared/seed'
-import { sampleRecord } from '@forsa/shared/seed/app'
 import { Link } from '@/i18n/navigation'
 import { formatters } from '@/lib/format'
 import { SiteHeader } from '@/components/site/header'
@@ -11,12 +9,15 @@ import { SiteFooter } from '@/components/site/footer'
 import { SectionHeading } from '@/components/ui/section-heading'
 import { Tag } from '@/components/ui/states'
 import { PrototypeBand } from '@/components/flows/prototype-band'
+import { getMyRecord, workshopLookup, fields } from '@/lib/data'
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const sampleRecord = await getMyRecord()
   return [{ handle: sampleRecord.handle }]
 }
 
 export async function generateMetadata({ params }: PageProps<'/[locale]/p/[handle]'>): Promise<Metadata> {
+  const sampleRecord = await getMyRecord()
   const { locale, handle } = await params
   if (handle !== sampleRecord.handle) return {}
   return { title: sampleRecord.name[locale as Locale], robots: { index: false, follow: false } }
@@ -27,6 +28,8 @@ export async function generateMetadata({ params }: PageProps<'/[locale]/p/[handl
  * workshops attended. No contact details: companies reach people through Forsa.
  */
 export default async function PublicRecord({ params }: PageProps<'/[locale]/p/[handle]'>) {
+  const workshopBySlug = await workshopLookup()
+  const sampleRecord = await getMyRecord()
   const { locale: raw, handle } = await params
   const locale = raw as Locale
   setRequestLocale(locale)

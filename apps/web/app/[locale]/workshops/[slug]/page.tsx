@@ -2,7 +2,6 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
-import { sampleWorkshops, workshopBySlug } from '@forsa/shared/seed'
 import { Link } from '@/i18n/navigation'
 import { formatters } from '@/lib/format'
 import { SiteHeader } from '@/components/site/header'
@@ -12,18 +11,22 @@ import { Door, seatAngle } from '@/components/site/door'
 import { RoomHeader } from '@/components/ui/room-header'
 import { SectionHeading } from '@/components/ui/section-heading'
 import { SignInPrompt } from '@/components/ui/sign-in-prompt'
+import { listWorkshops, workshopLookup } from '@/lib/data'
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const sampleWorkshops = await listWorkshops()
   return sampleWorkshops.map((w) => ({ slug: w.slug }))
 }
 
 export async function generateMetadata({ params }: PageProps<'/[locale]/workshops/[slug]'>): Promise<Metadata> {
+  const workshopBySlug = await workshopLookup()
   const { locale, slug } = await params
   const ws = workshopBySlug(slug)
   return ws ? { title: ws.title[locale as Locale] } : {}
 }
 
 export default async function WorkshopPage({ params }: PageProps<'/[locale]/workshops/[slug]'>) {
+  const workshopBySlug = await workshopLookup()
   const { locale: raw, slug } = await params
   const locale = raw as Locale
   setRequestLocale(locale)

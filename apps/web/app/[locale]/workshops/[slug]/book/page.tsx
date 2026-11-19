@@ -2,14 +2,15 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
-import { sampleWorkshops, workshopBySlug } from '@forsa/shared/seed'
 import { Link } from '@/i18n/navigation'
 import { formatters } from '@/lib/format'
 import { SiteHeader } from '@/components/site/header'
 import { PrototypeBand } from '@/components/flows/prototype-band'
 import { WorkshopBooking } from '@/components/flows/booking'
+import { listWorkshops, workshopLookup } from '@/lib/data'
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const sampleWorkshops = await listWorkshops()
   return sampleWorkshops.filter((w) => w.booked < w.capacity).map((w) => ({ slug: w.slug }))
 }
 
@@ -18,6 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function BookWorkshop({ params }: PageProps<'/[locale]/workshops/[slug]/book'>) {
+  const workshopBySlug = await workshopLookup()
   const { locale: raw, slug } = await params
   const locale = raw as Locale
   setRequestLocale(locale)
@@ -40,6 +42,7 @@ export default async function BookWorkshop({ params }: PageProps<'/[locale]/work
               when={`${f.dayWeekday(ws.startsAt)} ${f.time(ws.startsAt)}`}
               where={`${ws.online ? w('online') : w('inPerson')} ${w('minutes', { count: ws.minutes, n: f.num(ws.minutes) })}`}
               price={f.money(ws.priceDirhams)}
+              calendar={{ slug: ws.slug, startsAt: ws.startsAt, minutes: ws.minutes, location: ws.online ? w('online') : w('inPerson') }}
               holdText={t('hold', { hours: f.num(48) })}
               meetingLink="https://meet.example.com/forsa-cv"
             />

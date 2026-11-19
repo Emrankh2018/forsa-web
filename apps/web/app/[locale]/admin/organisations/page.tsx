@@ -1,10 +1,11 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
-import { sampleOrganisations } from '@forsa/shared/seed/app'
 import { formatters } from '@/lib/format'
 import { AdminList } from '@/components/more/admin-list'
+import { listOrganisations } from '@/lib/data'
 
 export default async function AdminOrganisations({ params }: PageProps<'/[locale]/admin/organisations'>) {
+  const sampleOrganisations = await listOrganisations()
   const { locale: raw } = await params
   const locale = raw as Locale
   setRequestLocale(locale)

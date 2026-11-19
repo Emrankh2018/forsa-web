@@ -2,7 +2,6 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
-import { guideBySlug, guides } from '@forsa/shared/content'
 import { Link } from '@/i18n/navigation'
 import { formatters } from '@/lib/format'
 import { SiteHeader } from '@/components/site/header'
@@ -13,12 +12,15 @@ import { StarBuilder } from '@/components/guides/star-builder'
 import { PrintButton } from '@/components/guides/print-button'
 import { PitchBuilder } from '@/components/guides/pitch-builder'
 import { CvChecker } from '@/components/guides/cv-checker'
+import { guideLookup, listGuides } from '@/lib/data'
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const guides = await listGuides()
   return guides.map((g) => ({ slug: g.slug }))
 }
 
 export async function generateMetadata({ params }: PageProps<'/[locale]/guides/[slug]'>): Promise<Metadata> {
+  const guideBySlug = await guideLookup()
   const { locale, slug } = await params
   const g = guideBySlug(slug)
   return g ? { title: g.title[locale as Locale], description: g.summary[locale as Locale] } : {}
@@ -26,6 +28,7 @@ export async function generateMetadata({ params }: PageProps<'/[locale]/guides/[
 
 /** A guide: an "on this page" index, sections with checklists, a tool where it helps, next steps. */
 export default async function GuidePage({ params }: PageProps<'/[locale]/guides/[slug]'>) {
+  const guideBySlug = await guideLookup()
   const { locale: raw, slug } = await params
   const locale = raw as Locale
   setRequestLocale(locale)

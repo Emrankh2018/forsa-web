@@ -1,11 +1,12 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
-import { projectBySlug, seatsLeft } from '@forsa/shared/seed'
 import { Link } from '@/i18n/navigation'
 import { formatters } from '@/lib/format'
 import { Door, seatAngle } from '@/components/site/door'
+import { projectLookup, seatsLeft } from '@/lib/data'
 
 export default async function OrgProjects({ params }: PageProps<'/[locale]/org/projects'>) {
+  const projectBySlug = await projectLookup()
   const { locale: raw } = await params
   const locale = raw as Locale
   setRequestLocale(locale)

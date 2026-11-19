@@ -1,10 +1,10 @@
 import { getTranslations } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
-import { fields, seatsLeft, type SampleProject } from '@forsa/shared/seed'
 import { Link } from '@/i18n/navigation'
 import { formatters } from '@/lib/format'
 import { Door, seatAngle } from '@/components/site/door'
 import { Divider } from '@/components/ui/section-heading'
+import { type SampleProject, fields, seatsLeft } from '@/lib/data'
 
 /** A project as a narrow door standing ajar: the wider the gap, the more seats are left. */
 export async function ProjectCard({ project: x, locale, headingLevel = 'h3' }: { project: SampleProject; locale: Locale; headingLevel?: 'h2' | 'h3' }) {

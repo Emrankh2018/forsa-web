@@ -2,7 +2,6 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
-import { courseBySlug, fields, sampleCourses } from '@forsa/shared/seed'
 import { Link } from '@/i18n/navigation'
 import { formatters } from '@/lib/format'
 import { SiteHeader } from '@/components/site/header'
@@ -12,18 +11,22 @@ import { RoomHeader } from '@/components/ui/room-header'
 import { SectionHeading } from '@/components/ui/section-heading'
 import { SignInPrompt } from '@/components/ui/sign-in-prompt'
 import { Tag } from '@/components/ui/states'
+import { courseLookup, listCourses, fields } from '@/lib/data'
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const sampleCourses = await listCourses()
   return sampleCourses.map((c) => ({ slug: c.slug }))
 }
 
 export async function generateMetadata({ params }: PageProps<'/[locale]/courses/[slug]'>): Promise<Metadata> {
+  const courseBySlug = await courseLookup()
   const { locale, slug } = await params
   const c = courseBySlug(slug)
   return c ? { title: c.title[locale as Locale] } : {}
 }
 
 export default async function CoursePage({ params }: PageProps<'/[locale]/courses/[slug]'>) {
+  const courseBySlug = await courseLookup()
   const { locale: raw, slug } = await params
   const locale = raw as Locale
   setRequestLocale(locale)

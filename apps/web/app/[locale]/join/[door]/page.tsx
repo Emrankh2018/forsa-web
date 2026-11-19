@@ -2,13 +2,13 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
-import { fields } from '@forsa/shared/seed'
 import { Link } from '@/i18n/navigation'
 import { formatters } from '@/lib/format'
 import { SiteHeader } from '@/components/site/header'
 import { PrototypeBand } from '@/components/flows/prototype-band'
 import { Onboarding } from '@/components/flows/onboarding'
 import { OrgRegistration, TrainerApplication } from '@/components/flows/org-and-trainer'
+import { fields } from '@/lib/data'
 
 const doors = ['participant', 'organisation', 'trainer'] as const
 

@@ -1,7 +1,6 @@
 import { notFound } from 'next/navigation'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
-import { fields, projectBySlug, sampleProjects, seatsLeft } from '@forsa/shared/seed'
 import { Link } from '@/i18n/navigation'
 import { formatters } from '@/lib/format'
 import { Door, seatAngle } from '@/components/site/door'
@@ -10,12 +9,15 @@ import { SiteFooter } from '@/components/site/footer'
 import { PhoneActionBar } from '@/components/site/phone-action-bar'
 import { SectionHeading, Divider } from '@/components/ui/section-heading'
 import { SignInPrompt } from '@/components/ui/sign-in-prompt'
+import { listProjects, projectLookup, fields, seatsLeft } from '@/lib/data'
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const sampleProjects = await listProjects()
   return sampleProjects.map((p) => ({ slug: p.slug }))
 }
 
 export default async function ProjectPage({ params }: PageProps<'/[locale]/projects/[slug]'>) {
+  const projectBySlug = await projectLookup()
   const { locale: raw, slug } = await params
   const locale = raw as Locale
   setRequestLocale(locale)
