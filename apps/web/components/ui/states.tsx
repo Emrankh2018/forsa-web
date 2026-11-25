@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import type { ReactNode, Ref } from 'react'
 
 /**
  * The four states every screen has. Each one says what happened and what to do next, in the
@@ -28,14 +28,14 @@ export function ErrorState({ title, body, action }: { title: string; body: strin
   )
 }
 
-export function SuccessState({ title, body, action }: { title: string; body: string; action?: ReactNode }) {
+export function SuccessState({ title, body, action, headingRef }: { title: string; body: string; action?: ReactNode; headingRef?: Ref<HTMLHeadingElement> }) {
   return (
     <div className="flex flex-col items-start gap-4 border-y border-line py-8 sm:flex-row sm:items-end sm:gap-8" role="status">
       <div className="door door--open-mark h-24 w-16 flex-none" aria-hidden="true">
         <div className="door__leaf" style={{ transform: 'rotateY(calc(80deg * var(--sign)))' }} />
       </div>
       <div>
-        <p className="font-display text-2xl font-bold">{title}</p>
+        {headingRef ? <h2 ref={headingRef} tabIndex={-1} className="font-display text-2xl font-bold">{title}</h2> : <p className="font-display text-2xl font-bold">{title}</p>}
         <p className="mt-2 max-w-xl">{body}</p>
         {action ? <div className="mt-4">{action}</div> : null}
       </div>

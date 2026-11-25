@@ -1,5 +1,6 @@
 'use client'
 
+import { PrototypeForm } from '@/components/ui/prototype-form'
 import { useState, type ReactNode } from 'react'
 import { useTranslations } from 'next-intl'
 import { guideCardSchema, orgSettingsSchema, profileSchema, sessionTypeSchema, teamInviteSchema, teamRoles, trainerProfileSchema } from '@forsa/shared'
@@ -34,7 +35,7 @@ export function ProfileForm({ initial, publicLink }: { initial: { headline: stri
   const { errors, check } = useFormCheck()
   const [saved, setSaved] = useState(false)
   return (
-    <form
+    <PrototypeForm
       noValidate
       className="max-w-2xl space-y-6"
       onChange={() => setSaved(false)}
@@ -50,7 +51,7 @@ export function ProfileForm({ initial, publicLink }: { initial: { headline: stri
       <TextField id="links" type="url" label={t('links')} hint={t('linksHint')} error={errors.links} />
       <Actions label={t('save')} saved={saved} savedText={t('saved')} />
       <div>{publicLink}</div>
-    </form>
+    </PrototypeForm>
   )
 }
 
@@ -84,7 +85,7 @@ export function TeamManager({ members }: { members: Member[] }) {
       </section>
       <section aria-labelledby="invite" className="panel p-5">
         <h2 id="invite" className="font-display text-2xl font-bold">{t('invite')}</h2>
-        <form
+        <PrototypeForm
           noValidate
           className="mt-4 space-y-5"
           onSubmit={(e) => {
@@ -97,7 +98,7 @@ export function TeamManager({ members }: { members: Member[] }) {
           <TextField id="email" type="email" label={t('email')} autoComplete="off" error={errors.email} />
           <SelectField id="role" label={t('role')} options={teamRoles.filter((r) => r !== 'owner').map((r) => ({ value: r, label: t(`roles.${r}`) }))} error={errors.role} />
           <button type="submit" className="btn-arch w-full">{t('inviteCta')}</button>
-        </form>
+        </PrototypeForm>
       </section>
       {note ? <div className="lg:col-span-2"><SavedNote text={note} /></div> : null}
     </div>
@@ -110,7 +111,7 @@ export function OrgSettingsForm({ initial }: { initial: { orgName: string; secto
   const { errors, check } = useFormCheck()
   const [saved, setSaved] = useState(false)
   return (
-    <form
+    <PrototypeForm
       noValidate
       className="max-w-2xl space-y-10"
       onChange={() => setSaved(false)}
@@ -144,7 +145,7 @@ export function OrgSettingsForm({ initial }: { initial: { orgName: string; secto
         </div>
       </fieldset>
       <Actions label={t('save')} saved={saved} savedText={t('saved')} />
-    </form>
+    </PrototypeForm>
   )
 }
 
@@ -154,7 +155,7 @@ export function SessionTypeForm() {
   const { errors, check } = useFormCheck()
   const [added, setAdded] = useState(false)
   return (
-    <form
+    <PrototypeForm
       noValidate
       className="panel space-y-5 p-5"
       onChange={() => setAdded(false)}
@@ -169,7 +170,7 @@ export function SessionTypeForm() {
       <TextField id="minutes" label={t('typeMinutes')} inputMode="numeric" defaultValue="30" error={errors.minutes} />
       <button type="submit" className="btn-arch">{t('addCta')}</button>
       {added ? <SavedNote text={t('added')} /> : null}
-    </form>
+    </PrototypeForm>
   )
 }
 
@@ -193,7 +194,7 @@ export function TrainerProfileForm({ name, initial }: { name: string; initial: {
   const [live, setLive] = useState(initial)
   return (
     <div className="grid max-w-5xl gap-12 lg:grid-cols-[1fr_20rem]">
-      <form
+      <PrototypeForm
         noValidate
         className="space-y-6"
         onChange={(e) => {
@@ -215,7 +216,7 @@ export function TrainerProfileForm({ name, initial }: { name: string; initial: {
           {t('remote')}
         </label>
         <Actions label={t('save')} saved={saved} savedText={t('saved')} />
-      </form>
+      </PrototypeForm>
       <aside aria-labelledby="preview" className="lg:sticky lg:top-6 lg:self-start">
         <h2 id="preview" className="text-sm font-medium text-ink-soft">{t('preview')}</h2>
         <div className="panel mt-3 p-5">
@@ -261,7 +262,7 @@ export function GuideEditor({ guides, locale }: { guides: GuideCard[]; locale: '
         ))}
       </ul>
       <div className="grid gap-10 xl:grid-cols-[1fr_20rem]">
-        <form
+        <PrototypeForm
           noValidate
           className="space-y-5"
           onSubmit={(e) => {
@@ -275,7 +276,7 @@ export function GuideEditor({ guides, locale }: { guides: GuideCard[]; locale: '
           <TextField id="titleEn" lang="en" dir="ltr" label={t('titleEn')} value={g.titleEn} onChange={set('titleEn')} error={errors.titleEn} />
           <TextArea id="summaryEn" lang="en" dir="ltr" label={t('summaryEn')} rows={3} value={g.summaryEn} onChange={set('summaryEn')} error={errors.summaryEn} />
           <Actions label={t('save')} saved={saved} savedText={t('saved')} />
-        </form>
+        </PrototypeForm>
         <aside aria-labelledby="guide-preview">
           <h2 id="guide-preview" className="text-sm font-medium text-ink-soft">{t('preview')}</h2>
           <div className="panel mt-3 p-5">

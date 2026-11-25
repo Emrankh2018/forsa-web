@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl'
 import { signInCodeSchema, signInEmailSchema } from '@forsa/shared'
 import { Link } from '@/i18n/navigation'
 import { TextField } from '@/components/ui/field'
+import { PrototypeForm } from '@/components/ui/prototype-form'
 import { SuccessState } from '@/components/ui/states'
 import { useFormCheck } from '@/lib/use-form-check'
 
@@ -24,12 +25,18 @@ export function SignInFlow({ next }: { next: string | null }) {
     setStep(s)
     requestAnimationFrame(() => heading.current?.focus())
   }
+  const focusField = (form: HTMLFormElement, name: string) => {
+    const field = form.elements.namedItem(name)
+    if (field instanceof HTMLInputElement) requestAnimationFrame(() => field.focus())
+  }
 
   if (step === 'done') {
+    const goesToBooking = next?.startsWith('/workshops/') && next.endsWith('/book')
+    const label = goesToBooking ? t('continueBooking') : next ? a('backTo') : me('home')
     return (
       <div>
-        <SuccessState title={t('doneTitle')} body={t('doneBody')} />
-        <Link href={next ?? '/me'} className="btn-arch mt-6">{next ? a('backTo') : me('home')}</Link>
+        <SuccessState title={t('doneTitle')} body={t('doneBody')} headingRef={heading} />
+        <Link href={next ?? '/me'} className="btn-arch mt-6">{label}</Link>
       </div>
     )
   }
@@ -39,7 +46,7 @@ export function SignInFlow({ next }: { next: string | null }) {
       <h2 ref={heading} tabIndex={-1} className="font-display text-3xl font-bold outline-none">{step === 'email' ? t('title') : t('sentTitle')}</h2>
       <p className="mt-2 text-ink-soft">{step === 'email' ? t('lead') : t('sentBody')}</p>
       {step === 'email' ? (
-        <form
+        <PrototypeForm
           noValidate
           className="mt-6 space-y-4"
           onSubmit={(e) => {
@@ -48,7 +55,7 @@ export function SignInFlow({ next }: { next: string | null }) {
             if (v) {
               setEmail(v.email)
               go('code')
-            }
+            } else focusField(e.currentTarget, 'email')
           }}
         >
           <TextField id="email" type="email" label={t('email')} autoComplete="email" defaultValue={email} error={errors.email} />
@@ -58,14 +65,15 @@ export function SignInFlow({ next }: { next: string | null }) {
             <span className="font-bold" aria-hidden="true">G</span>
             {t('google')}
           </button>
-        </form>
+        </PrototypeForm>
       ) : (
-        <form
+        <PrototypeForm
           noValidate
           className="mt-6 space-y-4"
           onSubmit={(e) => {
             e.preventDefault()
             if (check(signInCodeSchema, { code: new FormData(e.currentTarget).get('code') ?? '' })) go('done')
+            else focusField(e.currentTarget, 'code')
           }}
         >
           <p className="text-sm" dir="ltr">{email}</p>
@@ -73,7 +81,7 @@ export function SignInFlow({ next }: { next: string | null }) {
           <button type="submit" className="btn-arch w-full">{t('verify')}</button>
           <button type="button" className="btn-quiet -ms-3 underline underline-offset-4" onClick={() => go('email')}>{t('otherEmail')}</button>
           <p className="text-sm text-maroon">{t('prototypeHint')}</p>
-        </form>
+        </PrototypeForm>
       )}
     </div>
   )

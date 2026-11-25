@@ -9,7 +9,7 @@ import { getTrainer, workshopLookup } from '@/lib/data'
 
 /** Trainer home: what is coming up, each workshop a door opened by how full it is. */
 export default async function TrainerHome({ params }: PageProps<'/[locale]/trainer'>) {
-  const workshopBySlug = await workshopLookup()
+  const workshopBySlug = await workshopLookup('all')
   const sampleTrainer = await getTrainer()
   const { locale: raw } = await params
   const locale = raw as Locale
@@ -35,7 +35,7 @@ export default async function TrainerHome({ params }: PageProps<'/[locale]/train
                   <span>
                     <span className="font-display block text-2xl font-bold">{f.pick(ws.title)}</span>
                     <span className="mt-1 block text-sm text-ink-soft">{f.dayWeekday(ws.startsAt)}</span>
-                    <span className="mt-1 block text-sm">{w('seatsLeft', { count: left, n: f.num(left) })}</span>
+                    {x.state === 'published' ? <span className="mt-1 block text-sm">{w('seatsLeft', { count: left, n: f.num(left) })}</span> : null}
                     <span className="mt-2 block"><Tag tone={x.state === 'published' ? 'accent' : 'plain'}>{st(x.state)}</Tag></span>
                   </span>
                 </Link>

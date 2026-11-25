@@ -2,12 +2,12 @@ import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
 import { formatters } from '@/lib/format'
 import { AdminList } from '@/components/more/admin-list'
-import { listProjectStates, listProjects, fields } from '@/lib/data'
+import { listPendingProjects, listProjectStates, listProjects, fields } from '@/lib/data'
 
 const states = ['awaiting_approval', 'open', 'in_progress', 'closed'] as const
 
 export default async function AdminProjects({ params }: PageProps<'/[locale]/admin/projects'>) {
-  const sampleProjects = await listProjects()
+  const sampleProjects = [...await listProjects(), ...await listPendingProjects()]
   const sampleProjectStates = await listProjectStates()
   const { locale: raw } = await params
   const locale = raw as Locale
@@ -22,7 +22,7 @@ export default async function AdminProjects({ params }: PageProps<'/[locale]/adm
       filter: state,
       state: t(`projects.states.${state}`),
       attention: state === 'awaiting_approval',
-      actions: state === 'awaiting_approval' ? [{ label: t('projects.approve'), done: t('projects.approved', { name: f.pick(p.title) }) }] : [],
+      actions: state === 'awaiting_approval' ? [{ label: t('projects.approve'), done: t('projects.approved', { name: f.pick(p.title) }), nextFilter: 'open' }] : [],
     }
   })
   return (

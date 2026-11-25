@@ -1,6 +1,7 @@
 /** English text for the sign-up, booking, learning and settings flows (prototypes) and the testing kit. */
 export const enFlows = {
   forms: {
+    requiresScript: 'Turn on JavaScript to use this sample form.',
     errors: {
       required: 'This field is required.',
       tooShort: 'A little longer, please.',
@@ -35,19 +36,20 @@ export const enFlows = {
   },
   signInFlow: {
     title: 'Sign in',
-    lead: 'No passwords: we send a code to your email.',
-    email: 'Your email',
-    send: 'Send the code',
-    google: 'Sign in with Google',
+    lead: 'Try signing in with a sample email and code. This preview sends no email.',
+    email: 'Sample email',
+    send: 'Continue to the code',
+    google: 'Try Google sign-in',
     or: 'or',
-    sentTitle: 'We sent a code to your email',
-    sentBody: 'Type the six-digit code. It expires in ten minutes.',
+    sentTitle: 'Enter a sample code',
+    sentBody: 'Use any six digits to continue.',
     code: 'Code',
     verify: 'Sign in',
     otherEmail: 'Use another email',
-    doneTitle: 'You are in',
-    doneBody: 'In the real product you now return to the page you came from.',
-    prototypeHint: 'Prototype: any six-digit code works, and no email is sent.',
+    doneTitle: 'Sample sign-in complete',
+    doneBody: 'You can now continue the sample journey.',
+    continueBooking: 'Continue to sample booking',
+    prototypeHint: 'For example, 123456.',
   },
   onboarding: {
     title: 'Let us get to know you',
@@ -124,13 +126,13 @@ export const enFlows = {
     simulate: 'Prototype: imagine the team confirmed it',
     ticketTitle: 'Your ticket',
     ticketConfirmed: 'Confirmed booking',
-    meetingLink: 'Workshop link',
+    meetingLink: 'Sample workshop link',
     addToCalendar: 'Add to calendar',
     cancelNote: 'You can cancel for a full refund up to 48 hours before the workshop.',
   },
   slots: {
     title: 'Choose a time',
-    lead: 'Open times this week, shown in Qatar time.',
+    lead: 'Open times in the sample week starting {date}, shown in Qatar time.',
     trainer: 'With {name}',
     confirm: 'Book this time',
     chosen: 'You chose: {when}',
@@ -139,7 +141,7 @@ export const enFlows = {
   },
   player: {
     lessonOf: 'Lesson {n} of {total}',
-    video: 'The video plays here (an unlisted YouTube or Vimeo link)',
+    video: 'This sample lesson shows where the course video will appear.',
     notes: 'Lesson notes',
     notesBody: 'Sample text that goes with the lesson: the main points, a short example, and a question to think about before the next lesson.',
     markDone: 'I finished this lesson',
@@ -149,7 +151,8 @@ export const enFlows = {
     contents: 'Course contents',
     progress: '{done} of {total} lessons',
     completeTitle: 'You finished the course',
-    completeBody: 'In the real product Forsa issues your certificate now.',
+    completeBody: 'You completed every lesson in this sample course.',
+    progressNote: 'Progress stays in this tab. A reload keeps it when browser storage is available.',
   },
   settings: {
     title: 'Settings',

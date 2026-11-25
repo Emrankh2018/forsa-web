@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url'
 
 const web = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', 'apps', 'web')
 const allowed = path.join(web, 'lib', 'data') + path.sep
-const banned = /from ['"]@forsa\/shared\/(seed|seed\/app|content)['"]/
+const banned = /from ['"]@forsa\/shared\/(seed|seed\/app|content|content\/legal)['"]/
 
 function walk(dir, out = []) {
   for (const name of readdirSync(dir)) {

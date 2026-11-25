@@ -1,5 +1,6 @@
 'use client'
 
+import { PrototypeForm } from '@/components/ui/prototype-form'
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { skillSchema } from '@forsa/shared'
@@ -38,7 +39,7 @@ export function ContentEditor({ groups }: { groups: FieldGroup[] }) {
             </div>
           ))}
         </div>
-        <form
+        <PrototypeForm
           noValidate
           className="panel mt-8 grid gap-5 p-5 sm:grid-cols-3"
           onChange={() => setAdded('')}
@@ -57,10 +58,10 @@ export function ContentEditor({ groups }: { groups: FieldGroup[] }) {
             <button type="submit" className="btn-arch">{t('add')}</button>
             {added ? <p role="status" className="font-medium">{added} <span className="block text-sm font-normal text-maroon">{app('savedLocally')}</span></p> : null}
           </div>
-        </form>
+        </PrototypeForm>
       </section>
 
-      <form
+      <PrototypeForm
         aria-labelledby="switches-h"
         className="space-y-4"
         onChange={() => setSaved(false)}
@@ -87,7 +88,7 @@ export function ContentEditor({ groups }: { groups: FieldGroup[] }) {
           <button type="submit" className="btn-arch">{t('save')}</button>
           {saved ? <p role="status" className="font-medium">{t('saved')} <span className="block text-sm font-normal text-maroon">{app('savedLocally')}</span></p> : null}
         </div>
-      </form>
+      </PrototypeForm>
     </div>
   )
 }

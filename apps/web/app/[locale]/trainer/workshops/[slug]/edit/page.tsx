@@ -12,7 +12,7 @@ export async function generateStaticParams() {
 
 /** Editing one of the trainer's workshops: the form opens with what was sent before. */
 export default async function EditWorkshop({ params }: PageProps<'/[locale]/trainer/workshops/[slug]/edit'>) {
-  const workshopBySlug = await workshopLookup()
+  const workshopBySlug = await workshopLookup('all')
   const sampleTrainer = await getTrainer()
   const { locale: raw, slug } = await params
   const locale = raw as Locale

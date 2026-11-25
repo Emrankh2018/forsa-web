@@ -1,10 +1,11 @@
 'use client'
 
+import { PrototypeForm } from '@/components/ui/prototype-form'
 import { useRef, useState } from 'react'
-import { useTranslations } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { SelectField, TextArea, TextField } from '@/components/ui/field'
 import { SuccessState } from '@/components/ui/states'
-import { projectBriefSchema, projectJoinSchema, projectWorkSchema } from '@forsa/shared'
+import { formatDate, formatNumber, projectBriefSchema, projectJoinSchema, projectWorkSchema, type Locale } from '@forsa/shared'
 import { useFormCheck } from '@/lib/use-form-check'
 
 const steps = ['brief', 'work', 'join', 'review'] as const
@@ -17,6 +18,7 @@ export function NewProjectWizard({ fields, stepNumbers, stepOf }: { fields: Arra
   const t = useTranslations('org')
   const p = useTranslations('project')
   const app = useTranslations('app')
+  const locale = useLocale() as Locale
   const [step, setStep] = useState(0)
   const [values, setValues] = useState<Record<string, string>>({ mode: 'open', seats: '10', field: fields[0]?.value ?? '' })
   const { errors, check } = useFormCheck()
@@ -31,6 +33,19 @@ export function NewProjectWizard({ fields, stepNumbers, stepOf }: { fields: Arra
     value: values[k] ?? '',
     onChange: (e: { target: { value: string } }) => setValues((v) => ({ ...v, [k]: e.target.value })),
   })
+  const date = (value: string) => formatDate(value, locale, { year: 'numeric', month: 'long', day: 'numeric' })
+  const review = step === 3 ? [
+    [t('fTitle'), values.title],
+    [t('fBrief'), values.brief],
+    [t('fField'), fields.find((field) => field.value === values.field)?.label],
+    [t('fDeliverables'), values.deliverables],
+    [t('fAcceptance'), values.acceptance],
+    [t('fSteps'), values.steps],
+    [t('fMode'), p(values.mode === 'apply' ? 'modeApply' : 'modeOpen')],
+    [t('fSeats'), formatNumber(Number(values.seats), locale)],
+    ...(values.mode === 'apply' ? [[t('fApplyBy'), date(values.applyBy!)]] : []),
+    [t('fDue'), date(values.due!)],
+  ] : []
 
   if (sent) {
     return (
@@ -52,7 +67,7 @@ export function NewProjectWizard({ fields, stepNumbers, stepOf }: { fields: Arra
         ))}
       </ol>
 
-      <form
+      <PrototypeForm
         noValidate
         className="max-w-2xl space-y-6"
         onSubmit={(e) => {
@@ -113,10 +128,10 @@ export function NewProjectWizard({ fields, stepNumbers, stepOf }: { fields: Arra
         {step === 3 ? (
           <>
             <dl className="divide-y divide-line border-y border-line">
-              {(['title', 'brief', 'deliverables', 'steps', 'seats', 'due'] as const).map((k) => (
-                <div key={k} className="grid gap-1 py-3 sm:grid-cols-[10rem_1fr]">
-                  <dt className="text-sm text-ink-soft">{t(`f${k[0]!.toUpperCase()}${k.slice(1)}` as 'fTitle')}</dt>
-                  <dd className="whitespace-pre-line">{values[k] || '—'}</dd>
+              {review.map(([label, value]) => (
+                <div key={label} className="grid gap-1 py-3 sm:grid-cols-[10rem_1fr]">
+                  <dt className="text-sm text-ink-soft">{label}</dt>
+                  <dd className="whitespace-pre-line wrap-anywhere">{value || '—'}</dd>
                 </div>
               ))}
             </dl>
@@ -128,7 +143,7 @@ export function NewProjectWizard({ fields, stepNumbers, stepOf }: { fields: Arra
           <button type="submit" className="btn-arch">{step < steps.length - 1 ? t('next') : t('sendForApproval')}</button>
           {step > 0 ? <button type="button" className="btn-quiet underline underline-offset-4" onClick={() => go(step - 1)}>{t('previous')}</button> : null}
         </div>
-      </form>
+      </PrototypeForm>
     </div>
   )
 }

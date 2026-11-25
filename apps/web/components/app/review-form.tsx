@@ -1,5 +1,6 @@
 'use client'
 
+import { PrototypeForm } from '@/components/ui/prototype-form'
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { TextArea } from '@/components/ui/field'
@@ -37,7 +38,7 @@ export function ReviewForm({ ratingMarks }: { ratingMarks: string[] }) {
   ]
 
   return (
-    <form
+    <PrototypeForm
       noValidate
       className="space-y-6"
       onSubmit={(e) => {
@@ -73,6 +74,6 @@ export function ReviewForm({ ratingMarks }: { ratingMarks: string[] }) {
         </div>
       </fieldset>
       <button type="submit" className="btn-arch" disabled={!decision} aria-disabled={!decision || undefined}>{t('sendReview')}</button>
-    </form>
+    </PrototypeForm>
   )
 }

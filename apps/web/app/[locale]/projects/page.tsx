@@ -54,7 +54,7 @@ export default async function ProjectsPage({ params, searchParams }: PageProps<'
 
   return (
     <>
-      <SiteHeader />
+      <SiteHeader query={href({}).query} />
       <main id="content" tabIndex={-1} className="outline-none">
         <RoomHeader title={t('title')} lead={t('lead')} />
 

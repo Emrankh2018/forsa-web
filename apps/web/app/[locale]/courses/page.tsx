@@ -41,7 +41,7 @@ export default async function CoursesPage({ params, searchParams }: PageProps<'/
   })
   return (
     <>
-      <SiteHeader />
+      <SiteHeader query={{ q: q || undefined, topic }} />
       <main id="content" tabIndex={-1} className="outline-none">
         <RoomHeader title={t('title')} lead={t('lead')} />
         <ListFilters

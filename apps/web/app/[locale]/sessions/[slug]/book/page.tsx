@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import type { Locale } from '@forsa/shared'
+import { formatDate, type Locale } from '@forsa/shared'
 import { Link } from '@/i18n/navigation'
 import { formatters } from '@/lib/format'
 import { SiteHeader } from '@/components/site/header'
@@ -32,6 +32,7 @@ export default async function BookSession({ params }: PageProps<'/[locale]/sessi
   const t = await getTranslations('slots')
   const f = formatters(locale)
   const iso = (day: number, hour: number) => new Date(weekStart + day * 86_400_000 + hour * 3_600_000).toISOString()
+  const sampleWeek = formatDate(iso(0, 12), locale, { day: 'numeric', month: 'long', year: 'numeric' })
   const free = sampleTrainer.slots.filter((s) => !sampleTrainer.booked.some((b) => b.day === s.day && b.hour === s.hour))
   const dayNums = [...new Set(free.map((s) => s.day))]
   const days = dayNums.map((d) => ({
@@ -46,7 +47,7 @@ export default async function BookSession({ params }: PageProps<'/[locale]/sessi
         <section className="mx-auto max-w-6xl px-4 pb-24 pt-8 sm:px-8">
           <Link href="/sessions" className="btn-quiet -ms-3 text-ink-soft underline underline-offset-4">{f.pick(st.title)}</Link>
           <h1 className="font-display mt-3 text-4xl font-bold">{t('title')}</h1>
-          <p className="mt-3 text-lg text-ink-soft">{t('lead')}</p>
+          <p className="mt-3 text-lg text-ink-soft">{t('lead', { date: sampleWeek })}</p>
           <p className="mt-1 font-medium">{t('trainer', { name: f.pick(sampleTrainer.name) })}</p>
           <div className="mt-8">
             <SlotPicker days={days} />

@@ -1,5 +1,6 @@
 'use client'
 
+import { PrototypeForm } from '@/components/ui/prototype-form'
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { workshopSchema } from '@forsa/shared'
@@ -31,7 +32,7 @@ export function WorkshopForm({ initial, price }: { initial?: WorkshopValues; pri
   }
 
   return (
-    <form
+    <PrototypeForm
       noValidate
       className="max-w-2xl space-y-6"
       onSubmit={(e) => {
@@ -74,6 +75,6 @@ export function WorkshopForm({ initial, price }: { initial?: WorkshopValues; pri
         <button type="submit" className="btn-arch">{t('send')}</button>
         <Link href="/trainer/workshops" className="btn-quiet underline underline-offset-4">{t('back')}</Link>
       </div>
-    </form>
+    </PrototypeForm>
   )
 }

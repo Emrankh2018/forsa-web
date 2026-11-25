@@ -12,6 +12,7 @@
     "./messages/fallback": "./src/messages/fallback.ts",
     "./seed": "./src/seed/sample.ts",
     "./content": "./src/content/guides.ts",
+    "./content/legal": "./src/content/legal.ts",
     "./seed/app": "./src/seed/app-sample.ts"
   },
   "scripts": {

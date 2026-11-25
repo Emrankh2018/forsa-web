@@ -1,5 +1,6 @@
 'use client'
 
+import { PrototypeForm } from '@/components/ui/prototype-form'
 import { useRef, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { participantOnboardingSchema, participantStatuses } from '@forsa/shared'
@@ -19,7 +20,8 @@ const steps = [
  * Participant onboarding in four short steps, checked with the shared rules step by step. Values
  * stay when going back. The door at the side opens a little more with each step.
  */
-export function Onboarding({ fieldOptions, stepNumbers }: { fieldOptions: Array<{ value: string; label: string }>; stepNumbers: string[] }) {
+export function Onboarding({ fieldOptions, stepNumbers, next }: { fieldOptions: Array<{ value: string; label: string }>; stepNumbers: string[]; next: string | null }) {
+  const account = useTranslations('account')
   const t = useTranslations('onboarding')
   const f = useTranslations('forms')
   const app = useTranslations('app')
@@ -42,7 +44,7 @@ export function Onboarding({ fieldOptions, stepNumbers }: { fieldOptions: Array<
   if (done) {
     return (
       <>
-        <SuccessState title={t('doneTitle')} body={t('doneBody')} action={<Link href="/me" className="btn-arch">{t('goHome')}</Link>} />
+        <SuccessState title={t('doneTitle')} body={t('doneBody')} action={<Link href={next ?? '/me'} className="btn-arch">{next ? account('backTo') : t('goHome')}</Link>} />
         <p className="mt-3 text-sm text-maroon">{app('savedLocally')}</p>
       </>
     )
@@ -59,7 +61,7 @@ export function Onboarding({ fieldOptions, stepNumbers }: { fieldOptions: Array<
           </li>
         ))}
       </ol>
-      <form
+      <PrototypeForm
         noValidate
         className="max-w-2xl space-y-6"
         onSubmit={(e) => {
@@ -147,7 +149,7 @@ export function Onboarding({ fieldOptions, stepNumbers }: { fieldOptions: Array<
           <button type="submit" className="btn-arch">{step < steps.length - 1 ? o('next') : t('finish')}</button>
           {step > 0 ? <button type="button" className="btn-quiet underline underline-offset-4" onClick={() => setStep(step - 1)}>{o('previous')}</button> : null}
         </div>
-      </form>
+      </PrototypeForm>
     </div>
   )
 }

@@ -1,30 +1,33 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { EmptyState, Tag } from '@/components/ui/states'
 
 export type ListRow = {
   id: string
-  /** Cells in column order; the first is the row's name. The last column is the state tag. */
+  /** Cells in column order before the state and actions. The first cell is the row's name. */
   cells: string[]
   filter: string
   state: string
   attention?: boolean
-  actions?: Array<{ label: string; done: string }>
+  actions?: Array<{ label: string; done: string; nextFilter: string }>
 }
 
 /**
  * One list for every admin table: search across the row, filter by state, a state tag, and the
- * decisions an admin can take on a row (the prototype only says what would happen).
+ * decisions an admin can try on a row. Changes are local to this prototype screen.
  */
 export function AdminList({ label, columns, rows, filters, counts }: { label: string; columns: string[]; rows: ListRow[]; filters: Array<{ value: string; label: string }>; counts: string[] }) {
   const t = useTranslations('adminLists')
   const [q, setQ] = useState('')
   const [filter, setFilter] = useState('all')
-  const [done, setDone] = useState<Record<string, string>>({})
+  const [changes, setChanges] = useState<Record<string, string>>({})
+  const [message, setMessage] = useState('')
+  const status = useRef<HTMLParagraphElement>(null)
+  const labels = new Map(filters.map(({ value, label }) => [value, label]))
   const needle = q.trim().toLowerCase()
-  const shown = rows.filter((r) => (filter === 'all' || r.filter === filter) && (!needle || r.cells.join(' ').toLowerCase().includes(needle)))
+  const shown = rows.filter((r) => (filter === 'all' || (changes[r.id] ?? r.filter) === filter) && (!needle || r.cells.join(' ').toLowerCase().includes(needle)))
   const searchId = `${label}-q`.replace(/\s+/g, '-')
   return (
     <div className="max-w-6xl">
@@ -42,6 +45,7 @@ export function AdminList({ label, columns, rows, filters, counts }: { label: st
         </div>
       </div>
       <p className="mt-4 text-sm text-ink-soft" aria-live="polite">{counts[shown.length]}</p>
+      <p ref={status} role="status" tabIndex={-1} className={message ? 'mt-3 text-sm font-medium' : 'sr-only'}>{message}</p>
       {shown.length === 0 ? (
         <div className="mt-4"><EmptyState title={t('none')} body={t('noneBody')} /></div>
       ) : (
@@ -58,19 +62,21 @@ export function AdminList({ label, columns, rows, filters, counts }: { label: st
                 <tr key={r.id} className="border-b border-line align-top">
                   <th scope="row" className="py-3 pe-4 text-start font-medium">{r.cells[0]}</th>
                   {r.cells.slice(1).map((c, i) => <td key={i} className="py-3 pe-4">{c}</td>)}
-                  <td className="py-3 pe-4"><Tag tone={r.attention ? 'accent' : 'plain'}>{r.state}</Tag></td>
+                  <td className="py-3 pe-4"><Tag tone={r.attention && !changes[r.id] ? 'accent' : 'plain'}>{labels.get(changes[r.id] ?? r.filter) ?? r.state}</Tag></td>
                   <td className="py-3">
-                    {done[r.id] ? (
-                      <p role="status" className="max-w-56 text-sm font-medium">{done[r.id]}</p>
-                    ) : (
+                    {!changes[r.id] ? (
                       <span className="flex flex-wrap gap-2">
                         {r.actions?.map((a) => (
-                          <button key={a.label} type="button" className="min-h-11 rounded-full border border-ink px-4 text-sm" onClick={() => setDone((d) => ({ ...d, [r.id]: a.done }))}>
+                          <button key={a.label} type="button" className="min-h-11 rounded-full border border-ink px-4 text-sm" onClick={() => {
+                            setChanges((current) => ({ ...current, [r.id]: a.nextFilter }))
+                            setMessage(a.done)
+                            requestAnimationFrame(() => status.current?.focus())
+                          }}>
                             {a.label}
                           </button>
                         ))}
                       </span>
-                    )}
+                    ) : null}
                   </td>
                 </tr>
               ))}

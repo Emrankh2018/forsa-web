@@ -44,7 +44,7 @@ export default async function BookWorkshop({ params }: PageProps<'/[locale]/work
               price={f.money(ws.priceDirhams)}
               calendar={{ slug: ws.slug, startsAt: ws.startsAt, minutes: ws.minutes, location: ws.online ? w('online') : w('inPerson') }}
               holdText={t('hold', { hours: f.num(48) })}
-              meetingLink="https://meet.example.com/forsa-cv"
+              meetingLink={ws.online ? `https://example.com/meet/${ws.slug}` : undefined}
             />
           </div>
         </section>

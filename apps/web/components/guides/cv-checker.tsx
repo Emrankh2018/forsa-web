@@ -1,5 +1,6 @@
 'use client'
 
+import { PrototypeForm } from '@/components/ui/prototype-form'
 import { useId, useState } from 'react'
 import { useLocale, useTranslations } from 'next-intl'
 import { checkCvLine, formatNumber, isLocale, type CvIssue } from '@forsa/shared'
@@ -17,7 +18,7 @@ export function CvChecker() {
     <section className="arch bg-paper-deep px-5 pb-8 pt-24 sm:px-10" aria-labelledby={`${base}-t`}>
       <h2 id={`${base}-t`} className="font-display text-3xl font-bold">{t('title')}</h2>
       <p className="mt-2 max-w-2xl text-ink-soft">{t('lead')}</p>
-      <form
+      <PrototypeForm
         className="mt-6"
         onSubmit={(e) => {
           e.preventDefault()
@@ -35,7 +36,7 @@ export function CvChecker() {
           className="mt-2 block w-full rounded-md border border-line bg-paper px-3 py-2.5 focus:border-ink focus:outline-none focus-visible:outline-3 focus-visible:outline-maroon"
         />
         <button type="submit" className="btn-arch mt-4">{t('check')}</button>
-      </form>
+      </PrototypeForm>
       {results ? (
         <div className="mt-8" aria-live="polite">
           <h3 className="font-medium">{t('results')}</h3>

@@ -17,7 +17,7 @@ export default async function AdminOrganisations({ params }: PageProps<'/[locale
     filter: o.state,
     state: t(`organisations.states.${o.state}`),
     attention: o.state === 'pending',
-    actions: o.state === 'pending' ? [{ label: t('organisations.verify'), done: t('organisations.verified', { name: f.pick(o.name) }) }] : [],
+    actions: o.state === 'pending' ? [{ label: t('organisations.verify'), done: t('organisations.verified', { name: f.pick(o.name) }), nextFilter: 'verified' }] : [],
   }))
   return (
     <>

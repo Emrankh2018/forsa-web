@@ -15,16 +15,18 @@ export default async function OgCard({ params }: PageProps<'/[locale]/showcase/o
   const t = await getTranslations('home')
   const c = await getTranslations('common')
   return (
-    <main id="content" className="grid h-[630px] w-[1200px] grid-cols-[1fr_330px] items-center gap-16 bg-night px-20 text-on-night">
-      <div>
-        <p className="font-display text-4xl font-bold text-sand">{c('brand')}</p>
-        <div className="mt-6 flex h-1 items-center" aria-hidden="true">
-          <span className="h-1 w-10 bg-sand" />
-          <span className="h-px flex-1 bg-night-line" />
+    <main id="content" tabIndex={0} aria-labelledby="share-card-title" className="max-w-[1200px] overflow-x-auto">
+      <div className="grid h-[630px] w-[1200px] grid-cols-[1fr_330px] items-center gap-16 bg-night px-20 text-on-night">
+        <div>
+          <p className="font-display text-4xl font-bold text-sand">{c('brand')}</p>
+          <div className="mt-6 flex h-1 items-center" aria-hidden="true">
+            <span className="h-1 w-10 bg-sand" />
+            <span className="h-px flex-1 bg-night-line" />
+          </div>
+          <h1 id="share-card-title" className="font-display mt-10 text-[76px] font-bold leading-[1.1]">{t('promise')}</h1>
         </div>
-        <h1 className="font-display mt-10 text-[76px] font-bold leading-[1.1]">{t('promise')}</h1>
+        <DoorSymbol tone="night" className="h-[420px] w-auto" />
       </div>
-      <DoorSymbol tone="night" className="h-[420px] w-auto" />
     </main>
   )
 }

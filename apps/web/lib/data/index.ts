@@ -9,6 +9,7 @@
  */
 import { courseBySlug, projectBySlug, sampleCourses, sampleParticipant, sampleProjects, sampleSessionTypes as publicSessionTypes, sampleWorkshops, workshopBySlug } from '@forsa/shared/seed'
 import { guideBySlug, guides } from '@forsa/shared/content'
+import { legalDocs, type LegalKind } from '@forsa/shared/content/legal'
 import * as app from '@forsa/shared/seed/app'
 
 export * from './reference'
@@ -23,10 +24,16 @@ export async function getCourse(slug: string) { return courseBySlug(slug) }
 export async function listSessionTypes() { return publicSessionTypes }
 export async function listGuides() { return guides }
 export async function getGuide(slug: string) { return guideBySlug(slug) }
+/** Privacy notice or terms (launch draft in shared content; the `pages` table later). */
+export async function getLegalPage(kind: LegalKind) { return legalDocs[kind] }
 
 /** Lookups for screens that resolve several items by slug in one render (one read, many finds). */
 export async function projectLookup() { const all = await listProjects(); return (slug: string) => all.find((p) => p.slug === slug) }
-export async function workshopLookup() { const all = await listWorkshops(); return (slug: string) => all.find((w) => w.slug === slug) }
+export async function workshopLookup(visibility: 'public' | 'all' = 'public') {
+  const published = await listWorkshops()
+  const workshops = visibility === 'all' ? [...published, ...await listPendingWorkshops()] : published
+  return (slug: string) => workshops.find((w) => w.slug === slug)
+}
 export async function courseLookup() { const all = await listCourses(); return (slug: string) => all.find((c) => c.slug === slug) }
 export async function guideLookup() { const all = await listGuides(); return (slug: string) => all.find((g) => g.slug === slug) }
 
@@ -61,6 +68,8 @@ export async function listTrainerBookings() { return app.sampleSessionBookings }
 
 // The Forsa team (admin only).
 export async function getQueues() { return app.sampleQueues }
+export async function listPendingProjects() { return [app.samplePendingProject] }
+export async function listPendingWorkshops() { return [app.samplePendingWorkshop] }
 export async function listPeople() { return app.samplePeople }
 export async function listOrganisations() { return app.sampleOrganisations }
 export async function listProjectStates() { return app.sampleProjectStates }

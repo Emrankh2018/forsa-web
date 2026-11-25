@@ -1,5 +1,6 @@
 'use client'
 
+import { PrototypeForm } from '@/components/ui/prototype-form'
 import { useRef, useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { makeIcs, slotBookingSchema } from '@forsa/shared'
@@ -12,7 +13,7 @@ import { useFormCheck } from '@/lib/use-form-check'
  * Forsa team to confirm payment, then the ticket with the meeting link. The confirmation step is
  * simulated in the prototype.
  */
-export function WorkshopBooking({ title, when, where, price, holdText, meetingLink, calendar }: { title: string; when: string; where: string; price: string; holdText: string; meetingLink: string; calendar: { slug: string; startsAt: string; minutes: number; location: string } }) {
+export function WorkshopBooking({ title, when, where, price, holdText, meetingLink, calendar }: { title: string; when: string; where: string; price: string; holdText: string; meetingLink?: string; calendar: { slug: string; startsAt: string; minutes: number; location: string } }) {
   const t = useTranslations('booking')
   const st = useTranslations('app.state')
   const app = useTranslations('app')
@@ -56,10 +57,12 @@ export function WorkshopBooking({ title, when, where, price, holdText, meetingLi
             <p className="font-display mt-2 text-3xl font-bold">{title}</p>
             <p className="mt-3 text-on-night-soft">{when}</p>
             <p className="text-on-night-soft">{where}</p>
-            <div className="mt-6 border-t border-night-line pt-4">
-              <p className="text-sm text-on-night-soft">{t('meetingLink')}</p>
-              <p className="mt-1 font-medium" dir="ltr">{meetingLink}</p>
-            </div>
+            {meetingLink ? (
+              <div className="mt-6 border-t border-night-line pt-4">
+                <p className="text-sm text-on-night-soft">{t('meetingLink')}</p>
+                <p className="mt-1 wrap-anywhere font-medium" dir="ltr">{meetingLink}</p>
+              </div>
+            ) : null}
             <div className="mt-6 flex flex-wrap items-center gap-3">
               <span className="inline-flex rounded-sm bg-sand px-2 py-0.5 text-sm font-medium text-ink">{t('ticketConfirmed')}</span>
               <button
@@ -110,7 +113,7 @@ export function SlotPicker({ days }: { days: Array<{ label: string; slots: Array
     )
   }
   return (
-    <form
+    <PrototypeForm
       noValidate
       onSubmit={(e) => {
         e.preventDefault()
@@ -140,6 +143,6 @@ export function SlotPicker({ days }: { days: Array<{ label: string; slots: Array
       </fieldset>
       {chosen ? <p className="mt-4 font-medium" aria-live="polite">{t('chosen', { when: chosenFull })}</p> : null}
       <button type="submit" className="btn-arch mt-6">{t('confirm')}</button>
-    </form>
+    </PrototypeForm>
   )
 }

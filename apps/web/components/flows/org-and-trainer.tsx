@@ -1,7 +1,9 @@
 'use client'
 
+import { PrototypeForm } from '@/components/ui/prototype-form'
 import { useRef, useState, type FormEvent } from 'react'
 import { useTranslations } from 'next-intl'
+import { Link } from '@/i18n/navigation'
 import { orgCapabilities, orgRegistrationSchema, trainerApplicationSchema } from '@forsa/shared'
 import { CheckboxGroup, TextArea, TextField } from '@/components/ui/field'
 import { ErrorState } from '@/components/ui/states'
@@ -20,8 +22,9 @@ function useSubmit<T>(run: (form: FormData) => T | null) {
 }
 
 /** "Under review": the request waits behind a closed door, with what happens next. */
-function UnderReview({ title, body, steps }: { title: string; body: string; steps?: string[] }) {
+function UnderReview({ title, body, steps, next }: { title: string; body: string; steps?: string[]; next: string | null }) {
   const app = useTranslations('app')
+  const account = useTranslations('account')
   return (
     <div className="grid items-end gap-8 sm:grid-cols-[9rem_1fr]" role="status">
       <Door open={6} className="h-48" />
@@ -39,12 +42,13 @@ function UnderReview({ title, body, steps }: { title: string; body: string; step
           </ol>
         ) : null}
         <p className="mt-4 text-sm text-maroon">{app('savedLocally')}</p>
+        {next ? <Link href={next} className="btn-arch mt-6">{account('backTo')}</Link> : null}
       </div>
     </div>
   )
 }
 
-export function OrgRegistration() {
+export function OrgRegistration({ next }: { next: string | null }) {
   const t = useTranslations('orgReg')
   const f = useTranslations('forms')
   const { errors, check } = useFormCheck()
@@ -56,9 +60,9 @@ export function OrgRegistration() {
       consent: form.get('consent') === 'on',
     }),
   )
-  if (done) return <UnderReview title={t('reviewTitle')} body={t('reviewBody')} steps={[t('reviewStep1'), t('reviewStep2'), t('reviewStep3')]} />
+  if (done) return <UnderReview title={t('reviewTitle')} body={t('reviewBody')} steps={[t('reviewStep1'), t('reviewStep2'), t('reviewStep3')]} next={next} />
   return (
-    <form noValidate onSubmit={onSubmit} className="max-w-2xl space-y-6">
+    <PrototypeForm noValidate onSubmit={onSubmit} className="max-w-2xl space-y-6">
       {Object.keys(errors).length ? <div ref={summary} tabIndex={-1} className="outline-none"><ErrorState title={f('fix')} body={Object.values(errors).join(' ')} /></div> : null}
       <div className="grid gap-6 sm:grid-cols-2">
         <TextField id="orgName" label={t('orgName')} autoComplete="organization" error={errors.orgName} />
@@ -85,11 +89,11 @@ export function OrgRegistration() {
         {errors.consent ? <p id="consent-error" className="mt-1 text-sm font-medium text-maroon">{errors.consent}</p> : null}
       </div>
       <button type="submit" className="btn-arch">{t('submit')}</button>
-    </form>
+    </PrototypeForm>
   )
 }
 
-export function TrainerApplication() {
+export function TrainerApplication({ next }: { next: string | null }) {
   const t = useTranslations('trainerApp')
   const f = useTranslations('forms')
   const { errors, check } = useFormCheck()
@@ -99,9 +103,9 @@ export function TrainerApplication() {
       links: form.get('links') ?? '', topics: form.get('topics') ?? '', remoteOk: form.get('remoteOk') === 'on', consent: form.get('consent') === 'on',
     }),
   )
-  if (done) return <UnderReview title={t('reviewTitle')} body={t('reviewBody')} />
+  if (done) return <UnderReview title={t('reviewTitle')} body={t('reviewBody')} next={next} />
   return (
-    <form noValidate onSubmit={onSubmit} className="max-w-2xl space-y-6">
+    <PrototypeForm noValidate onSubmit={onSubmit} className="max-w-2xl space-y-6">
       {Object.keys(errors).length ? <div ref={summary} tabIndex={-1} className="outline-none"><ErrorState title={f('fix')} body={Object.values(errors).join(' ')} /></div> : null}
       <div className="grid gap-6 sm:grid-cols-2">
         <TextField id="fullName" label={t('fullName')} autoComplete="name" error={errors.fullName} />
@@ -122,6 +126,6 @@ export function TrainerApplication() {
         {errors.consent ? <p id="consent-error" className="mt-1 text-sm font-medium text-maroon">{errors.consent}</p> : null}
       </div>
       <button type="submit" className="btn-arch">{t('submit')}</button>
-    </form>
+    </PrototypeForm>
   )
 }

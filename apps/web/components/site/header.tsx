@@ -9,7 +9,7 @@ import { SmoothScroll } from '@/components/motion/smooth-scroll'
  * the door row at the end of every other page). It holds the logo, the language, and "Come in":
  * an arch with a small door that swings open when you point at it or focus it.
  */
-export async function SiteHeader() {
+export async function SiteHeader({ query, languageHash }: { query?: Record<string, string | undefined>; languageHash?: string }) {
   const t = await getTranslations('nav')
   const c = await getTranslations('common')
   return (
@@ -20,7 +20,7 @@ export async function SiteHeader() {
         <span className="font-display text-2xl font-bold">{c('brand')}</span>
       </Link>
       <div className="ms-auto flex items-center gap-2">
-        <LanguageSwitch />
+        <LanguageSwitch query={query} hash={languageHash} />
         <Link href="/join" aria-label={t('enterLabel')} className="come-in">
           <span className="come-in__door" aria-hidden="true">
             <span className="come-in__leaf" />

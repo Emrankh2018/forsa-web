@@ -31,14 +31,14 @@ export default async function JoinPage({ params, searchParams }: PageProps<'/[lo
 
   return (
     <>
-      <SiteHeader />
+      <SiteHeader query={{ as: chosen, next: next ?? undefined }} />
       <main id="content" tabIndex={-1} className="outline-none">
         <section className="mx-auto max-w-6xl px-4 pt-10 sm:px-8 sm:pt-16">
           <h1 className="font-display text-[clamp(2.4rem,5.5vw,4.5rem)] font-bold">{t('chooseTitle')}</h1>
           <div className="first-line mt-4 max-w-sm" aria-hidden="true" />
           <p className="mt-5 max-w-2xl text-lg leading-relaxed text-ink-soft">{t('chooseLead')}</p>
 
-          <ul className="mt-12 grid grid-cols-3 gap-3 sm:gap-8" role="list">
+          <ul className="mt-12 grid grid-cols-3 gap-2 min-[390px]:gap-3 sm:gap-8" role="list">
             {doors.map((d) => {
               const on = chosen === d
               return (
@@ -51,7 +51,7 @@ export default async function JoinPage({ params, searchParams }: PageProps<'/[lo
                   >
                     <Door open={on ? 82 : chosen ? 8 : 30} openHover={on ? 82 : 70} className="door--framed h-40 sm:h-72" />
                     <div className="floor mx-[8%] -mt-[10px]" aria-hidden="true" />
-                    <span className="font-display mt-4 block text-xl font-bold sm:text-3xl">{t(d)}</span>
+                    <span className="font-display mt-4 block wrap-anywhere text-base font-bold min-[400px]:text-xl sm:text-3xl">{t(d)}</span>
                     <span className="mt-1 hidden text-ink-soft sm:block">{t(`${d}Line`)}</span>
                   </Link>
                 </li>
@@ -64,7 +64,7 @@ export default async function JoinPage({ params, searchParams }: PageProps<'/[lo
               <>
                 <p className="font-medium text-maroon">{t('chosen', { door: t(chosen) })}</p>
                 <div className="mt-4 flex flex-wrap gap-3">
-                  <Link href={`/join/${chosen}`} className="btn-arch">{t('continue')}</Link>
+                  <Link href={{ pathname: `/join/${chosen}`, query: next ? { next } : undefined }} className="btn-arch">{t('continue')}</Link>
                 </div>
                 <Link href={inside[chosen]} className="btn-quiet -ms-3 mt-4 underline underline-offset-4">{app('lookInside')}</Link>
               </>

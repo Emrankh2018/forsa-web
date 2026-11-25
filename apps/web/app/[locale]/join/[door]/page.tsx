@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { getTranslations, setRequestLocale } from 'next-intl/server'
-import type { Locale } from '@forsa/shared'
+import { safeReturnPath, type Locale } from '@forsa/shared'
 import { Link } from '@/i18n/navigation'
 import { formatters } from '@/lib/format'
 import { SiteHeader } from '@/components/site/header'
@@ -21,11 +21,13 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 /** Behind each door of "Come in": onboarding, organisation registration, trainer application. */
-export default async function JoinDoor({ params }: PageProps<'/[locale]/join/[door]'>) {
+export default async function JoinDoor({ params, searchParams }: PageProps<'/[locale]/join/[door]'>) {
   const { locale: raw, door } = await params
   const locale = raw as Locale
   setRequestLocale(locale)
   if (!doors.includes(door as (typeof doors)[number])) notFound()
+  const next = safeReturnPath((await searchParams).next)
+  const query = next ? { next } : undefined
   const a = await getTranslations('account')
   const ob = await getTranslations('onboarding')
   const org = await getTranslations('orgReg')
@@ -36,21 +38,21 @@ export default async function JoinDoor({ params }: PageProps<'/[locale]/join/[do
 
   return (
     <>
-      <SiteHeader />
+      <SiteHeader query={query} />
       <main id="content" tabIndex={-1} className="outline-none">
         <PrototypeBand />
         <section className="mx-auto max-w-6xl px-4 pb-24 pt-8 sm:px-8">
-          <Link href={{ pathname: '/join', query: { as: door } }} className="btn-quiet -ms-3 text-ink-soft underline underline-offset-4">{a('chooseTitle')}</Link>
+          <Link href={{ pathname: '/join', query: { as: door, ...query } }} className="btn-quiet -ms-3 text-ink-soft underline underline-offset-4">{a('chooseTitle')}</Link>
           <h1 className="font-display mt-3 text-4xl font-bold sm:text-5xl">{title}</h1>
           <div className="first-line mt-4 max-w-sm" aria-hidden="true" />
           {lead ? <p className="mt-5 max-w-2xl text-lg text-ink-soft">{lead}</p> : null}
           <div className="mt-10">
             {door === 'participant' ? (
-              <Onboarding fieldOptions={Object.entries(fields).map(([value, label]) => ({ value, label: f.pick(label) }))} stepNumbers={[1, 2, 3, 4].map(f.num)} />
+              <Onboarding fieldOptions={Object.entries(fields).map(([value, label]) => ({ value, label: f.pick(label) }))} stepNumbers={[1, 2, 3, 4].map(f.num)} next={next} />
             ) : door === 'organisation' ? (
-              <OrgRegistration />
+              <OrgRegistration next={next} />
             ) : (
-              <TrainerApplication />
+              <TrainerApplication next={next} />
             )}
           </div>
         </section>

@@ -84,9 +84,10 @@ async function loadShared() {
   const { messages } = await import(pathToFileURL(path.join(out, 'messages/index.mjs')).href)
   const seed = await import(pathToFileURL(path.join(out, 'seed/sample.mjs')).href)
   const content = await import(pathToFileURL(path.join(out, 'content/guides.mjs')).href)
+  const legal = await import(pathToFileURL(path.join(out, 'content/legal.mjs')).href)
   const appSeed = await import(pathToFileURL(path.join(out, 'seed/app-sample.mjs')).href)
   rmSync(out, { recursive: true, force: true })
-  return { messages, seed, content, appSeed }
+  return { messages, seed, content, legal, appSeed }
 }
 
 /** Every bilingual { ar, en } pair inside the sample data. */
@@ -98,13 +99,13 @@ function bilingual(value, at = 'seed') {
 
 async function main() {
   const failures = []
-  const { messages, seed, content, appSeed } = await loadShared()
+  const { messages, seed, content, legal, appSeed } = await loadShared()
   for (const lang of ['ar', 'en']) {
     for (const [key, text] of strings(messages[lang])) {
       for (const why of checkText(text, lang)) failures.push(`messages/${lang}: ${key}: ${why}: "${text}"`)
     }
   }
-  for (const [key, pair] of bilingual({ projects: seed.sampleProjects, workshops: seed.sampleWorkshops, participant: seed.sampleParticipant, fields: seed.fields, guides: content.guides, app: appSeed })) {
+  for (const [key, pair] of bilingual({ projects: seed.sampleProjects, workshops: seed.sampleWorkshops, participant: seed.sampleParticipant, fields: seed.fields, guides: content.guides, legal: legal.legalDocs, app: appSeed })) {
     for (const lang of ['ar', 'en']) {
       for (const why of checkText(pair[lang], lang)) failures.push(`${key}.${lang}: ${why}: "${pair[lang]}"`)
     }

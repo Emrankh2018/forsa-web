@@ -6,14 +6,15 @@ import { otherLocale } from '@forsa/shared/locale'
 import { Link, usePathname } from '@/i18n/navigation'
 
 /** Same page in the other language. */
-export function LanguageSwitch() {
+export function LanguageSwitch({ query, hash }: { query?: Record<string, string | undefined>; hash?: string }) {
   const t = useTranslations('common')
   const locale = useLocale()
   const pathname = usePathname()
   const target = otherLocale(locale)
+  const params = query && Object.fromEntries(Object.entries(query).filter(([, value]) => value !== undefined))
   return (
     <Link
-      href={pathname}
+      href={{ pathname, query: params, hash }}
       locale={target}
       hrefLang={target}
       lang={target}

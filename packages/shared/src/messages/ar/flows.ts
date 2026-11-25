@@ -1,6 +1,7 @@
 /** Arabic text for the sign-up, booking, learning and settings flows (prototypes) and the testing kit. */
 export const arFlows = {
   forms: {
+    requiresScript: 'فعّل جافاسكربت لاستخدام هذا النموذج التجريبي.',
     errors: {
       required: 'هذا الحقل مطلوب.',
       tooShort: 'أطول قليلًا من فضلك.',
@@ -35,19 +36,20 @@ export const arFlows = {
   },
   signInFlow: {
     title: 'الدخول',
-    lead: 'لا كلمات مرور: نرسل رمزًا إلى بريدك.',
-    email: 'بريدك الإلكتروني',
-    send: 'أرسل الرمز',
-    google: 'الدخول بحساب Google',
+    lead: 'جرّب تسجيل الدخول ببريد ورمز تجريبيين. هذه النسخة لا ترسل بريدًا.',
+    email: 'بريد إلكتروني تجريبي',
+    send: 'تابع إلى الرمز',
+    google: 'جرّب الدخول بحساب Google',
     or: 'أو',
-    sentTitle: 'أرسلنا رمزًا إلى بريدك',
-    sentBody: 'اكتب الرمز المكوّن من ست خانات. ينتهي بعد عشر دقائق.',
+    sentTitle: 'أدخل رمزًا تجريبيًا',
+    sentBody: 'اكتب أي ست خانات للمتابعة.',
     code: 'الرمز',
     verify: 'ادخل',
     otherEmail: 'استعمل بريدًا آخر',
-    doneTitle: 'دخلت',
-    doneBody: 'في النسخة الحقيقية تعود الآن إلى الصفحة التي جئت منها.',
-    prototypeHint: 'نموذج: أي رمز من ست خانات يعمل، ولا يُرسل بريد.',
+    doneTitle: 'اكتمل تسجيل الدخول التجريبي',
+    doneBody: 'يمكنك الآن متابعة التجربة.',
+    continueBooking: 'تابع إلى الحجز التجريبي',
+    prototypeHint: 'مثلًا، ١٢٣٤٥٦.',
   },
   onboarding: {
     title: 'لنتعرّف إليك',
@@ -124,13 +126,13 @@ export const arFlows = {
     simulate: 'نموذج: تخيّل أن الفريق أكّد الحجز',
     ticketTitle: 'تذكرتك',
     ticketConfirmed: 'حجز مؤكد',
-    meetingLink: 'رابط الورشة',
+    meetingLink: 'رابط تجريبي للورشة',
     addToCalendar: 'أضف إلى التقويم',
     cancelNote: 'تستطيع الإلغاء واسترداد المبلغ كاملًا حتى ٤٨ ساعة قبل الورشة.',
   },
   slots: {
     title: 'اختر موعدًا',
-    lead: 'المواعيد المفتوحة هذا الأسبوع. تُعرض بتوقيت قطر.',
+    lead: 'المواعيد المتاحة في الأسبوع التجريبي الذي يبدأ في {date}، بتوقيت قطر.',
     trainer: 'مع {name}',
     confirm: 'احجز هذا الموعد',
     chosen: 'اخترت: {when}',
@@ -139,7 +141,7 @@ export const arFlows = {
   },
   player: {
     lessonOf: 'الدرس {n} من {total}',
-    video: 'يُعرض الفيديو هنا (رابط YouTube أو Vimeo غير مدرج)',
+    video: 'يوضح هذا الدرس التجريبي مكان عرض فيديو الدورة.',
     notes: 'ملاحظات الدرس',
     notesBody: 'هذا نص تجريبي يرافق الدرس: النقاط الرئيسية، ومثال قصير، وسؤال تفكر فيه قبل الدرس التالي.',
     markDone: 'أنهيت الدرس',
@@ -149,7 +151,8 @@ export const arFlows = {
     contents: 'محتوى الدورة',
     progress: '{done} من {total} دروس',
     completeTitle: 'أكملت الدورة',
-    completeBody: 'في النسخة الحقيقية تصدر لك شهادة من فرصة الآن.',
+    completeBody: 'أكملت جميع دروس هذه الدورة التجريبية.',
+    progressNote: 'يبقى تقدّمك في هذا التبويب، ويستمر عند تحديث الصفحة إذا كان تخزين المتصفح متاحًا.',
   },
   settings: {
     title: 'الإعدادات',

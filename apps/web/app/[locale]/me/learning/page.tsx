@@ -1,9 +1,9 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server'
 import type { Locale } from '@forsa/shared'
-import { Link } from '@/i18n/navigation'
 import { formatters } from '@/lib/format'
 import { SectionHeading } from '@/components/ui/section-heading'
 import { Tag } from '@/components/ui/states'
+import { CourseProgressOverview } from '@/components/flows/player'
 import { courseLookup, getMyLearning, workshopLookup } from '@/lib/data'
 
 /** My learning: booked workshops (link hidden until confirmed), 1-to-1 sessions, courses in progress. */
@@ -15,6 +15,7 @@ export default async function MyLearning({ params }: PageProps<'/[locale]/me/lea
   const locale = raw as Locale
   setRequestLocale(locale)
   const t = await getTranslations('learningPage')
+  const player = await getTranslations('player')
   const me = await getTranslations('me')
   const st = await getTranslations('app.state')
   const f = formatters(locale)
@@ -52,11 +53,14 @@ export default async function MyLearning({ params }: PageProps<'/[locale]/me/lea
           <SectionHeading id="l-courses">{t('courses')}</SectionHeading>
           <div className="panel mt-6 p-5">
             <p className="font-display text-xl font-bold">{f.pick(course.title)}</p>
-            <p className="mt-2 text-sm">{t('lessons', { done: f.num(done), total: f.num(lessons.length) })}</p>
-            <div className="mt-2 h-2 overflow-hidden rounded-full bg-paper-deep" aria-hidden="true">
-              <div className="h-full bg-maroon" style={{ width: `${(100 * done) / lessons.length}%` }} />
-            </div>
-            <Link href={`/me/learning/courses/${course.slug}/${done + 1}`} className="btn-quiet -ms-3 mt-3 underline underline-offset-4">{t('continue')}</Link>
+            <CourseProgressOverview
+              courseSlug={course.slug}
+              total={lessons.length}
+              initialDone={done}
+              progressTexts={Array.from({ length: lessons.length + 1 }, (_, count) => t('lessons', { done: f.num(count), total: f.num(lessons.length) }))}
+              resumeLabel={t('continue')}
+              completeLabel={player('completeTitle')}
+            />
           </div>
         </section>
       </div>

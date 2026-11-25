@@ -47,7 +47,7 @@ export default async function WorkshopsPage({ params, searchParams }: PageProps<
   })
   return (
     <>
-      <SiteHeader />
+      <SiteHeader query={{ q: q || undefined, topic, where }} />
       <main id="content" tabIndex={-1} className="outline-none">
         <RoomHeader title={t('title')} lead={t('lead')} />
         <ListFilters

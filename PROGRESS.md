@@ -3,7 +3,9 @@
 ## Resume here
 **HOLD (D-115): no phase 3, no database or back-end work until the owner's Hostinger VPS exists.** Front-end only. Certificates are deferred by the owner (not designed until the owner says).
 Latest: roadmap 2 (`../../production/ROADMAP-VPS-READY.md`) steps 1 to 7 are done (the website runs as a standalone Node server for the VPS, security headers, search basics, contact page, resilience, lighter pages, patch updates); step 8 audit: `docs/AUDIT-2026-11-19-B.md`. Deploying the website to the VPS: `docs/VPS-DEPLOY.md`. Last commit: see `git log -1`.
-Next exact step: nothing open in the front end. When the owner says the VPS is ready: follow `docs/VPS-DEPLOY.md` for the website, then plan PostgreSQL and sign-in on the VPS before phase 3. Re-point `forsa-demo.vercel.app` after any push to `main` that changes the site.
+2026-11-20: privacy and terms were rewritten as launch drafts (see "Legal pages" below). The partner pack is in `../../production/partner-pack/`.
+2026-11-25: the frontend repair pass closed all 11 audit findings and related issues. The [final frontend audit](docs/FRONTEND-AUDIT-2026-11-25.md) records the release candidate and verification.
+Next exact step: wait for the owner to confirm the VPS is available. Use the verified frontend recorded in the final audit as the handoff for backend and database implementation.
 
 ---
 
@@ -237,3 +239,15 @@ The "Come in" page's chosen door links to its area. Sample data: `packages/share
 | 7 | Patch updates: next-intl 4.15.3, supabase-js 2.119.2, pglite 0.5.17, vitest 5.1.1; `npm audit` 0 | 276c7c0 |
 
 Checks: copy (with the new browser-messages guard), lint, typecheck, 41 shared + 31 database tests, build; full browser suite against the standalone server **714 passed, 0 failed** (three runs: after steps 1-5, after trimming messages, after the updates); go-live, shell and link crawl after the audit fixes 42 passed. Running the suite with 2 workers avoids this machine running out of memory (4 workers crashed tabs) and is faster (about 9.5 minutes).
+
+## Legal pages (2026-11-20, owner chose "Legal + partner pack")
+
+| What | Where |
+|---|---|
+| Privacy notice (13 sections) and terms (15 sections), Arabic and English, written against Qatar's Law No. 13 of 2016: who is responsible, what is collected per role, purposes and basis, who sees what, storage outside Qatar, retention, rights and how to use them (30-day reply, complaint to the competent authority), security, age 18+, cookies and browser storage, changes, contact (Instagram and the contact page). Terms: accounts, proper use, projects (no money, two join modes, review duty), shared work rights (D-118), contact and hiring, workshops and refunds, certificates, no job promise, content, responsibility, suspension, Qatari law with the Arabic text prevailing | `packages/shared/src/content/legal.ts` (export `@forsa/shared/content/legal`) |
+| Page layout: "on this page" index, draft notice and date, lists, contact buttons (Instagram, contact page, email when set) | `apps/web/components/site/legal-page.tsx`; pages `/privacy`, `/terms` |
+| The legal pages read through the frontend data seam (`getLegalPage`). The seam guard and copy checker cover the legal content. | `lib/data/index.ts`, `scripts/check-seam.mjs`, `scripts/check-copy.mjs` |
+| No cookie banner (D-121): the site sets no cookies of its own; only session storage | privacy page, section "Cookies and browser storage" |
+| Values for the owner and legal adviser to confirm: D-122 | `production/DECISION-LOG.md` |
+
+Checks: copy (with legal content), seam, controls, client messages, lint, typecheck, 41 shared + 31 database tests, build (the first build attempt failed fetching Google Fonts; the network check right after returned 200 and the rebuild passed); browser checks for `/privacy` and `/terms` at 390/820/1366 in both languages (status, one h1, direction, no sideways overflow, axe clean, no console errors): **12 passed**. By eye: Arabic phone (index, list section, contact buttons) and English desktop. Not run: the full 714-check suite (only these two pages changed) and a live deploy (nothing pushed).

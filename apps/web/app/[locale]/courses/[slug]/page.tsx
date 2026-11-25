@@ -9,7 +9,6 @@ import { SiteFooter } from '@/components/site/footer'
 import { PhoneActionBar } from '@/components/site/phone-action-bar'
 import { RoomHeader } from '@/components/ui/room-header'
 import { SectionHeading } from '@/components/ui/section-heading'
-import { SignInPrompt } from '@/components/ui/sign-in-prompt'
 import { Tag } from '@/components/ui/states'
 import { courseLookup, listCourses, fields } from '@/lib/data'
 import { publicMeta } from '@/lib/seo'
@@ -34,11 +33,11 @@ export default async function CoursePage({ params }: PageProps<'/[locale]/course
   const c = courseBySlug(slug)
   if (!c) notFound()
   const t = await getTranslations('coursesPage')
-  const s = await getTranslations('signInPrompt')
   const u = await getTranslations('ui')
   const f = formatters(locale)
   const lessons = c.modules.flatMap((m) => m.lessons)
   const minutes = lessons.reduce((n, l) => n + l.minutes, 0)
+  const sampleLesson = `/me/learning/courses/${c.slug}/1`
 
   return (
     <>
@@ -82,7 +81,7 @@ export default async function CoursePage({ params }: PageProps<'/[locale]/course
               <p className="text-ink-soft">{t('totalMinutes', { count: minutes, n: f.num(minutes) })}</p>
               <p className="mt-4 text-sm text-ink-soft">{t('priceLater')}</p>
               <div className="mt-6 hidden lg:block">
-                <SignInPrompt label={t('enrol')} returnTo={`/courses/${c.slug}`} title={s('title')} body={s('body')} continueLabel={s('continue')} notNowLabel={s('notNow')} />
+                <Link href={sampleLesson} className="btn-arch w-full">{t('enrol')}</Link>
               </div>
             </div>
           </aside>
@@ -91,7 +90,7 @@ export default async function CoursePage({ params }: PageProps<'/[locale]/course
       <SiteFooter sample />
       <div className="h-20 lg:hidden" aria-hidden="true" />
       <PhoneActionBar label={u('pageAction')} fact={<><span className="block font-medium">{t('lessons', { count: lessons.length, n: f.num(lessons.length) })}</span><span className="text-ink-soft">{t('priceLater')}</span></>}>
-        <SignInPrompt variant="compact" label={t('enrol')} returnTo={`/courses/${c.slug}`} title={s('title')} body={s('body')} continueLabel={s('continue')} notNowLabel={s('notNow')} />
+        <Link href={sampleLesson} className="btn-arch btn-arch--compact">{t('enrol')}</Link>
       </PhoneActionBar>
     </>
   )

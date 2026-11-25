@@ -27,7 +27,7 @@ export default async function PartnersPage({ params, searchParams }: PageProps<'
 
   return (
     <>
-      <SiteHeader />
+      <SiteHeader query={preselect ? { way: preselect } : undefined} languageHash={preselect ? 'interest' : undefined} />
       <main id="content" tabIndex={-1} className="outline-none">
         <RoomHeader title={t('title')} lead={t('lead')} />
 
@@ -50,6 +50,7 @@ export default async function PartnersPage({ params, searchParams }: PageProps<'
           <div className="max-w-3xl">
             <SectionHeading id="form-title">{t('formTitle')}</SectionHeading>
             <p className="mt-4 text-lg text-ink-soft">{t('formLead')}</p>
+            <Link href="/contact#instagram" className="mt-3 inline-block font-medium text-maroon underline underline-offset-4">{t('contactLink')}</Link>
             <div className="mt-8">
               <InterestForm key={preselect ?? 'none'} preselect={preselect} />
             </div>

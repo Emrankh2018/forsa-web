@@ -23,7 +23,7 @@ export default async function SignInPage({ params, searchParams }: PageProps<'/[
   const t = await getTranslations('account')
   return (
     <>
-      <SiteHeader />
+      <SiteHeader query={next ? { next } : undefined} />
       <main id="content" tabIndex={-1} className="outline-none">
         <PrototypeBand />
         <section className="mx-auto grid max-w-5xl items-start gap-12 px-4 pt-12 sm:px-8 md:grid-cols-[14rem_1fr]">

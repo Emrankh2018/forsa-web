@@ -3,7 +3,7 @@
  * is fictional and every screen that shows it says so. When the back end exists, these shapes are
  * replaced by real reads; the screens keep their structure.
  */
-import type { Bilingual } from './sample'
+import type { Bilingual, SampleProject, SampleWorkshop } from './sample'
 
 export type ProgressState = 'active' | 'submitted' | 'changes_requested' | 'accepted' | 'declined'
 
@@ -99,12 +99,37 @@ export const sampleTalent = [
   { id: 'p3', name: { ar: 'يوسف', en: 'Yousef' }, project: { ar: 'حملة إطلاق لفرع جديد على إنستغرام', en: 'An Instagram launch campaign for a new branch' }, state: 'sent' as const },
 ]
 
+export const samplePendingWorkshop: SampleWorkshop = {
+  slug: 'interview-practice',
+  title: { ar: 'تدريب عملي على مقابلة العمل', en: 'Practise a job interview' },
+  summary: { ar: 'جرّب مقابلة قصيرة وتعلّم كيف تربط إجاباتك بتجاربك ومشاريعك.', en: 'Try a short interview and learn how to connect your answers to your experience and projects.' },
+  outcomes: [
+    { ar: 'إجابتان تستندان إلى تجاربك', en: 'Two answers grounded in your experience' },
+    { ar: 'ملاحظات تساعدك على تطوير إجاباتك', en: 'Feedback to improve your answers' },
+  ],
+  field: 'career',
+  startsAt: '2026-12-22T17:00:00+03:00',
+  minutes: 90,
+  online: true,
+  priceDirhams: 25_000,
+  capacity: 20,
+  booked: 0,
+}
+
+export const samplePendingProject: Pick<SampleProject, 'slug' | 'title' | 'company' | 'field'> = {
+  slug: 'takeaway-order-campaign',
+  title: { ar: 'حملة للطلبات الخارجية', en: 'A campaign for takeaway orders' },
+  company: { ar: 'مقهى الرملة', en: 'Al Ramla Café' },
+  field: 'marketing_media',
+}
+
 /** The trainer (Hala). */
 export const sampleTrainer = {
   name: { ar: 'هالة', en: 'Hala' },
   workshops: [
     { slug: 'cv-thirty-seconds', state: 'published' as const },
-    { slug: 'linkedin-profile', state: 'awaiting_approval' as const },
+    { slug: 'linkedin-profile', state: 'published' as const },
+    { slug: samplePendingWorkshop.slug, state: 'awaiting_approval' as const },
   ],
   attendees: [
     { name: { ar: 'ريم', en: 'Reem' }, state: 'confirmed' as const },
@@ -114,7 +139,7 @@ export const sampleTrainer = {
     { name: { ar: 'ليلى', en: 'Layla' }, state: 'confirmed' as const },
     { name: { ar: 'حمد', en: 'Hamad' }, state: 'reserved' as const },
   ],
-  /** Open slots this week: day index (0 = Sunday) and hour. */
+  /** Open slots in the sample week: day index (0 = Sunday) and hour. */
   slots: [
     { day: 0, hour: 16 }, { day: 0, hour: 17 }, { day: 1, hour: 18 }, { day: 2, hour: 16 }, { day: 3, hour: 17 }, { day: 3, hour: 18 },
   ],
@@ -127,9 +152,9 @@ export const sampleQueues = {
     { name: { ar: 'استوديو نخيل للتصميم', en: 'Nakheel Design Studio' }, at: '2026-12-15', sector: { ar: 'التصميم', en: 'Design' } },
     { name: { ar: 'شركة مدار للحلول', en: 'Madar Solutions' }, at: '2026-12-16', sector: { ar: 'التقنية', en: 'Technology' } },
   ],
-  projects: [{ title: { ar: 'برنامج نقاط لزبائن المقهى', en: 'A points programme for café customers' }, org: { ar: 'مقهى الرملة', en: 'Al Ramla Café' }, at: '2026-12-14' }],
+  projects: [{ title: samplePendingProject.title, org: samplePendingProject.company, at: '2026-12-14' }],
   trainers: [{ name: { ar: 'طارق', en: 'Tariq' }, expertise: { ar: 'تحليل البيانات للتسويق', en: 'Data analysis for marketing' }, at: '2026-12-13' }],
-  training: [{ title: { ar: 'ملف لينكدإن يعرّف بك', en: 'A LinkedIn profile that introduces you' }, trainer: { ar: 'هالة', en: 'Hala' }, at: '2026-12-12' }],
+  training: [{ title: samplePendingWorkshop.title, trainer: sampleTrainer.name, at: samplePendingWorkshop.startsAt }],
   bookings: [
     { name: { ar: 'يوسف', en: 'Yousef' }, item: { ar: 'سيرة ذاتية تُقرأ في ثلاثين ثانية', en: 'A CV that reads in thirty seconds' }, dirhams: 25_000, at: '2026-12-15' },
     { name: { ar: 'حمد', en: 'Hamad' }, item: { ar: 'سيرة ذاتية تُقرأ في ثلاثين ثانية', en: 'A CV that reads in thirty seconds' }, dirhams: 25_000, at: '2026-12-16' },
@@ -233,7 +258,8 @@ export const sampleProjectStates: Record<string, 'awaiting_approval' | 'open' | 
   'store-support-assistant': 'open',
   'gallery-visual-identity': 'open',
   'review-sorting': 'open',
-  'loyalty-programme': 'awaiting_approval',
+  'loyalty-programme': 'open',
+  [samplePendingProject.slug]: 'awaiting_approval',
 }
 
 /** Orders: workshop seats paid by hand (bank transfer or cash), confirmed by the team. */

@@ -1,5 +1,6 @@
 'use client'
 
+import { PrototypeForm } from '@/components/ui/prototype-form'
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { TextArea } from '@/components/ui/field'
@@ -67,7 +68,7 @@ export function AnswerQuestion({ id }: { id: string }) {
     )
   }
   return (
-    <form
+    <PrototypeForm
       className="mt-3 space-y-3"
       onSubmit={(e) => {
         e.preventDefault()
@@ -77,6 +78,6 @@ export function AnswerQuestion({ id }: { id: string }) {
     >
       <TextArea id={id} label={t('answerLabel')} rows={2} />
       <button type="submit" className="btn-arch btn-arch--compact">{t('answer')}</button>
-    </form>
+    </PrototypeForm>
   )
 }

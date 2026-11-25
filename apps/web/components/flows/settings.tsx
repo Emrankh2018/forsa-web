@@ -1,5 +1,6 @@
 'use client'
 
+import { PrototypeForm } from '@/components/ui/prototype-form'
 import { useState } from 'react'
 import { useLocale, useTranslations } from 'next-intl'
 import { deleteAccountSchema, settingsSchema } from '@forsa/shared'
@@ -19,7 +20,7 @@ export function Settings() {
 
   return (
     <div className="max-w-2xl space-y-14">
-      <form
+      <PrototypeForm
         noValidate
         className="space-y-8"
         onSubmit={(e) => {
@@ -73,7 +74,7 @@ export function Settings() {
           <button type="submit" className="btn-arch">{t('save')}</button>
           {saved ? <p role="status" className="font-medium">{t('saved')} <span className="block text-sm text-maroon">{app('savedLocally')}</span></p> : null}
         </div>
-      </form>
+      </PrototypeForm>
 
       <section aria-labelledby="danger" className="rounded-lg border border-maroon p-6">
         <h2 id="danger" className="font-display text-2xl font-bold text-maroon">{t('danger')}</h2>
@@ -83,7 +84,7 @@ export function Settings() {
             <SuccessState title={t('deletedTitle')} body={t('deletedBody')} />
           </div>
         ) : (
-          <form
+          <PrototypeForm
             noValidate
             className="mt-4 space-y-4"
             onSubmit={(e) => {
@@ -93,7 +94,7 @@ export function Settings() {
           >
             <TextField id="confirm" label={t('deleteLabel')} autoComplete="off" error={del.errors.confirm} />
             <button type="submit" className="min-h-12 rounded-md bg-maroon px-5 font-medium text-on-night">{t('deleteCta')}</button>
-          </form>
+          </PrototypeForm>
         )}
       </section>
     </div>

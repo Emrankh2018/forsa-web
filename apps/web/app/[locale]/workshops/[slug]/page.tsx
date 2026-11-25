@@ -100,7 +100,7 @@ export default async function WorkshopPage({ params }: PageProps<'/[locale]/work
                 {full ? (
                   <span className="btn-arch w-full" aria-disabled="true">{t('full')}</span>
                 ) : (
-                  <SignInPrompt label={t('book')} returnTo={`/workshops/${ws.slug}`} title={s('title')} body={s('body')} continueLabel={s('continue')} notNowLabel={s('notNow')} />
+                  <SignInPrompt label={t('book')} returnTo={`/workshops/${ws.slug}/book`} title={s('title')} body={s('workshopBody')} continueLabel={s('continue')} notNowLabel={s('notNow')} />
                 )}
               </div>
               <p className="mt-3 text-sm text-ink-soft">{t('bookNote')}</p>
@@ -114,7 +114,7 @@ export default async function WorkshopPage({ params }: PageProps<'/[locale]/work
         {full ? (
           <span className="btn-arch btn-arch--compact" aria-disabled="true">{t('full')}</span>
         ) : (
-          <SignInPrompt variant="compact" label={t('book')} returnTo={`/workshops/${ws.slug}`} title={s('title')} body={s('body')} continueLabel={s('continue')} notNowLabel={s('notNow')} />
+          <SignInPrompt variant="compact" label={t('book')} returnTo={`/workshops/${ws.slug}/book`} title={s('title')} body={s('workshopBody')} continueLabel={s('continue')} notNowLabel={s('notNow')} />
         )}
       </PhoneActionBar>
     </>

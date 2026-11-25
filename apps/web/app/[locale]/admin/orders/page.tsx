@@ -23,8 +23,8 @@ export default async function AdminOrders({ params }: PageProps<'/[locale]/admin
     actions:
       o.state === 'reserved'
         ? [
-            { label: t('orders.markPaid'), done: t('orders.markedPaid', { name: f.pick(o.who) }) },
-            { label: t('orders.waive'), done: t('orders.waived', { name: f.pick(o.who) }) },
+            { label: t('orders.markPaid'), done: t('orders.markedPaid', { name: f.pick(o.who) }), nextFilter: 'paid' },
+            { label: t('orders.waive'), done: t('orders.waived', { name: f.pick(o.who) }), nextFilter: 'waived' },
           ]
         : [],
   }))
