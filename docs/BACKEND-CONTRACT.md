@@ -18,6 +18,7 @@ When the VPS exists, the back end reimplements these functions against PostgreSQ
 | `listCourses`, `getCourse(slug)`, `courseLookup` | Published courses with modules and lessons | Anyone; lesson video only for enrolled or preview | `courses`, `course_modules`, `lessons` |
 | `listSessionTypes` | Published 1-to-1 offers | Anyone | `session_types` |
 | `listGuides`, `getGuide(slug)`, `guideLookup` | Published guides | Anyone | `guides` |
+| `getLegalPage(kind)` | Privacy notice or terms (`privacy`, `terms`), both languages, sections with lists | Anyone | `pages` |
 | `getPublicRecord(handle)` | Only fields the participant marked public, accepted work, attended workshops; never contact details | Anyone | `participant_profiles`, `enrollments`, `reviews`, `workshop_bookings` |
 | `getParticipantHome` | Next step, active project, booked workshop, saved, finished | The participant | `enrollments`, `step_progress`, `workshop_bookings`, `saved_items` |
 | `getMyWorkspace` | Steps, updates, questions, hand-ins, review of one project | The participant | `enrollments`, `step_progress`, `progress_updates`, `project_questions`, `submissions`, `reviews` |
